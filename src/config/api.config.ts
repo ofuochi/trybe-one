@@ -33,14 +33,11 @@ api.interceptors.response.use(undefined, (err) => {
   const status = err.response.status;
   const data = err.response.data;
 
-  console.log("I'm here");
   if (status >= 400 && status < 500) {
     if (status === 401)
       authService
         .logout()
-        .then(() =>
-          toast.warn(data?.message || "You are doing something wrong", opt)
-        );
+        .then(() => toast.warn(data?.message || "Invalid login details", opt));
     else toast.warn(data?.message || "You are doing something wrong", opt);
   }
 
