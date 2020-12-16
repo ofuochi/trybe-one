@@ -1,5 +1,5 @@
 import React from "react";
-import { NavLink, useHistory } from "react-router-dom";
+import { NavLink, Link, useHistory } from "react-router-dom";
 
 import { routePath } from "../constants/route-paths";
 import { authService } from "../services";
@@ -44,7 +44,7 @@ export const SideNavbar = () => {
             </NavLink>
           </div>
           <div className="mdc-list-item mdc-drawer-item">
-            <a className="mdc-drawer-link" href="spend-tracker.html">
+            <Link className="mdc-drawer-link" to="spend-tracker.html">
               Spend Tracker
               <i
                 className="mdc-list-item__start-detail mdc-drawer-item-icon ml-auto"
@@ -52,10 +52,10 @@ export const SideNavbar = () => {
               >
                 <img alt="" src="assets/images/ic-spendtracker.svg" />
               </i>
-            </a>
+            </Link>
           </div>
           <div className="mdc-list-item mdc-drawer-item">
-            <a className="mdc-drawer-link" href="target-savings.html">
+            <Link className="mdc-drawer-link" to="target-savings.html">
               Target Savings
               <i
                 className="mdc-list-item__start-detail mdc-drawer-item-icon ml-auto"
@@ -63,10 +63,10 @@ export const SideNavbar = () => {
               >
                 <img alt="" src="assets/images/ic-targetsaving.svg" />
               </i>
-            </a>
+            </Link>
           </div>
           <div className="mdc-list-item mdc-drawer-item">
-            <a className="mdc-drawer-link" href="accounts.html">
+            <Link className="mdc-drawer-link" to="accounts.html">
               Accounts
               <i
                 className="mdc-list-item__start-detail mdc-drawer-item-icon ml-auto"
@@ -74,7 +74,7 @@ export const SideNavbar = () => {
               >
                 <img alt="" src="assets/images/ic-account.svg" />
               </i>
-            </a>
+            </Link>
           </div>
           <div className="mdc-list-item mdc-drawer-item">
             <span

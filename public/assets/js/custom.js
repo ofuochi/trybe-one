@@ -1,3 +1,5 @@
+AOS.init();
+
 $('.cardslides').slick({
   slidesToShow: 1,
   slidesToScroll: 1,
@@ -8,7 +10,6 @@ $('.cardslides').slick({
   centerMode: true,
   focusOnSelect: true
 });
-
 
 document.addEventListener("DOMContentLoaded", function(event) {
   var element = document.querySelector('.mdc-drawer');

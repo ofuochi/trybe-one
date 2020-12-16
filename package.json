@@ -10,8 +10,10 @@
     "@types/node": "^14.14.10",
     "@types/react": "^17.0.0",
     "@types/react-dom": "^17.0.0",
+    "aos": "^2.3.4",
     "axios": "^0.21.0",
     "axios-cache-adapter": "^2.5.0",
+    "bootstrap": "^4.5.3",
     "formik": "^2.2.5",
     "mobx": "^6.0.4",
     "mobx-react-lite": "^3.1.6",
@@ -19,6 +21,8 @@
     "moment": "^2.29.1",
     "numeral": "^2.0.6",
     "react": "^17.0.1",
+    "react-aos": "^1.0.1",
+    "react-bootstrap": "^1.4.0",
     "react-dom": "^17.0.1",
     "react-helmet": "^6.1.0",
     "react-router-dom": "^5.2.0",
@@ -52,12 +56,13 @@
     ]
   },
   "devDependencies": {
+    "@types/aos": "^3.0.3",
     "@types/numeral": "0.0.28",
     "@types/react-helmet": "^6.1.0",
     "@types/react-router-dom": "^5.1.6",
     "@types/yup": "^0.29.9",
     "mst-middlewares": "^4.0.2",
     "remotedev": "^0.2.9",
-    "sw2dts": "^2.6.3"
+    "sw2dts": "^2.5.0"
   }
 }
