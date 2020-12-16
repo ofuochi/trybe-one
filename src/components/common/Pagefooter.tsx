@@ -42,7 +42,7 @@ class Pagefooter extends React.Component{
       © 2020 Sterling Bank. All Rights Reserved
         </Col>  
       <Col sm={6} md={6} lg={6} className="m-15px-tb">
-      <div className="sterling-logo"></div>
+      <div className="sterling-logo ml-auto"></div>
         </Col>  
       </Row>
 </Container>

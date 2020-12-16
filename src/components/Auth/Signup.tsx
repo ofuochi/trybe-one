@@ -90,7 +90,8 @@ export const Signup = observer(() => {
       <Title title="Signup" />
 
       <div className="row align-items-center h-100">
-        <div className="col-lg-6 px-2">
+ 
+      <div className="col-lg-6 px-2">
           <div className="card bd-0">
             <div className="card-body card-repadd">
               <h5 className="mb-3 font-weight-normal text-left mb-5">
@@ -341,7 +342,8 @@ export const Signup = observer(() => {
             </div>
           </div>
         </div>
-        <div className="col-lg-6 my-auto bg-login h-100 bg-red fixed-right d-none d-lg-block d-md-block">
+    
+      <div className="col-lg-6 my-auto bg-login h-100 bg-red fixed-right d-none d-lg-block d-md-block">
           <div className="row justify-content-start">
             <div className="col-lg-8">
               <div className="card mt-5">
@@ -372,7 +374,8 @@ export const Signup = observer(() => {
             </div>
           </div>
         </div>
-      </div>
+      
+         </div>
     </div>
   );
 });

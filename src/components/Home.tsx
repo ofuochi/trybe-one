@@ -46,7 +46,7 @@ export const Home = () => {
             </Nav.Link>
             <Nav.Link href="#link">
               <span
-                className="padd-btn mr-4"
+                className="padd-btn text-primary mr-4"
                 onClick={() => history.push(routePath.login)}
               >
                 Login
@@ -70,7 +70,7 @@ export const Home = () => {
         <section className="mt-5">
           <Container>
             <Row>
-              <Col className="mb-5" data-aos="zoom-in-right" lg="5">
+              <Col data-aos="fade-up-right"  className="mb-5" lg="5">
                 <p className="faint-text">Introducing</p>
                 <h1 className="landing-texth1 text-bold">TrybeOne</h1>
                 <p className="landing-desc mb-4">
@@ -81,7 +81,7 @@ export const Home = () => {
 
                 <button className="btn btn-primary px-5">Join Trybe</button>
               </Col>
-              <Col data-aos="fade-up" className="land-imgbg mb-4" lg="7"></Col>
+              <Col data-aos="fade-up-left" className="land-imgbg mb-4" lg="7"></Col>
             </Row>
             <Row className="justify-content-center mt-3">
               <Col>
@@ -98,10 +98,10 @@ export const Home = () => {
         <section className="padd-b-50 pt-0">
           <Container>
             <Row>
-              <Col lg="12" className="text-center">
+              <Col ata-aos="fade-in" lg="12" className="text-center">
                 <h2 className="section-title">Why TrybeOne</h2>
               </Col>
-              <Col lg="4" md="4" sm="4">
+              <Col data-aos="fade-up" lg="4" md="4" sm="4">
               <Card className="bd-0">
                 <Card.Body>
                 <div className="card-image earn-image">
@@ -116,7 +116,7 @@ export const Home = () => {
                 </Card.Body>
               </Card>
               </Col>
-              <Col lg="4" md="4" sm="4">
+              <Col data-aos="fade-up" lg="4" md="4" sm="4">
               <Card className="bd-0">
                 <Card.Body>
                 <div className="card-image learn-image">
@@ -132,7 +132,7 @@ export const Home = () => {
                 </Card.Body>
               </Card>
               </Col>
-              <Col lg="4" md="4" sm="4">
+              <Col data-aos="fade-up" lg="4" md="4" sm="4">
               <Card className="bd-0">
                 <Card.Body>
                 <div className="card-image fun-image">
@@ -157,7 +157,7 @@ export const Home = () => {
           <Container>
             <Row>
             <Col data-aos="fade-up" className="about-image" lg="6" md="6" sm="6"></Col>
-              <Col className="pt-5" lg="6" md="6" sm="6">
+              <Col data-aos="fade-left" className="pt-5" lg="6" md="6" sm="6">
               <h2 className="section-head">About the Trybe</h2>
               <p className="card-text">
                         TrybeOne is the community that intersects between pop culture and finance, a world where you live
@@ -183,7 +183,7 @@ export const Home = () => {
         <section>
           <Container>
             <Row>
-              <Col lg="7" md="7" sm="6">
+              <Col data-aos="fade-up" lg="7" md="7" sm="6">
               <h2 className="section-head">Benefits of joining the Trybe</h2>
               <div className="card-text">
                 <ul className="list-unset"><li>Community access to a network of like-minded GenZs</li>
@@ -194,7 +194,7 @@ export const Home = () => {
                  <li >Access to fun and cool content</li></ul>
                  </div>
               </Col>
-              <Col className="benefit-image" lg="5" md="5" sm="6"></Col>
+              <Col data-aos="fade-left" className="benefit-image" lg="5" md="5" sm="6"></Col>
             </Row>
         
           </Container>

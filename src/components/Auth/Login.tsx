@@ -23,7 +23,7 @@ export const Login = () => {
       <Title title="Login" />
       <div className="row align-items-center h-100">
         <div className="col-lg-6 my-auto bg-login h-100">
-          <div className="row justify-content-end">
+          <div className="row justify-content-center">
             <div className="col-lg-8">
               <div className="card mt-5">
                 <div className="card-body">
@@ -70,33 +70,39 @@ export const Login = () => {
                 }}
               >
                 {({ isSubmitting }) => (
-                  <Form className="form-signin">
+                  <Form className="form-signin text-center">
                     <Link to={routePath.home}>
                       <img alt="logo" src="assets/images/logo.png" />
                     </Link>
-                    <h1 className="mb-3 text-primary font-weight-normal mt-5">
+                    <h2 className="mb-3 text-primary login-titile text-center mt-5">
                       Welcome to trybeOne
-                    </h1>
-                    <p className="lead mb-4">Please login below</p>
+                    </h2>
+                    <p className="desc-login mb-4 text-center">Please enter your details below to login</p>
                     <div className="form-group">
+                    <div className="input-group">
                       <Field
                         id="inputEmail"
                         name="nuban"
-                        className="form-control"
+                        className="form-control d-block w-100"
                         placeholder="Account Number"
                         autoFocus
                       />
+                      <label>Account Number</label>
                       <ErrorMsg inputName="nuban" />
+                      </div>
                     </div>
                     <div className="form-group">
+                    <div className="input-group">       
                       <Field
                         type="password"
                         id="inputPassword"
                         name="password"
-                        className="form-control"
+                        className="form-control d-block w-100"
                         placeholder="Password"
                       />
                       <ErrorMsg inputName="password" />
+                      <label>Password</label>
+                    </div>
                     </div>
 
                     <div className="form-group text-left">
