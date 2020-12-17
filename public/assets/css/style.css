@@ -19031,7 +19031,7 @@ a.mdc-list-item {
 }
 
 .text-dark {
-  color: #909090 !important;
+  color: #000000 !important;
 }
 .text-dark-title {
   color: rgba(0, 0, 0, 0.5) !important;
@@ -19236,7 +19236,7 @@ p {
 .h1,
 .mdc-typography--headline1,
 h1 {
-  font-size: 2.19rem;
+  font-size: 2rem;
 }
 
 .h2,
@@ -23159,6 +23159,9 @@ footer .vertical-divider {
 .ml-5-re {
   margin-left: 2rem !important;
 }
+.ml-6-re {
+  margin-left: 4rem !important;
+}
 .mt-6{
   margin-top: 4rem!important;
 }
@@ -23652,12 +23655,22 @@ padding: 100px 0px
   z-index: 99;
   color: #aaaaaa !important;
 }
-.ng-valid + label {
+input:not(:placeholder-shown) + label{
   opacity: 1 !important;
 }
-.ng-valid::placeholder {
-  opacity: 0 !important;
+.abs-apend {
+  position: absolute;
+  left: 0;
+  background: 0 0;
 }
+/*
+.form-control:valid + label {
+  opacity: 1 !important;
+}
+*/
 .form-control:focus::placeholder {
   opacity: 0;
+}
+.no-shadow{
+  box-shadow:none
 }

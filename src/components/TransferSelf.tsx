@@ -1,6 +1,9 @@
 import moment from "moment";
-import numeral from "numeral";
-import { useEffect, useState } from "react";
+import { Field } from 'formik';
+import { useFormik } from 'formik';
+
+
+import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
 
@@ -37,10 +40,18 @@ export const Transferself = () => {
       .post<API.GetCardResponseDto>("/User/GetActiveCard", getCardInput)
       .then(({ data }) => setCards(data));
   }, []);
+  const formik = useFormik({
+    initialValues: {
+      email: '',
+    },
+    onSubmit: values => {
+      alert(JSON.stringify(values, null, 2));
+    },
+  });
   return (
     <>
       <Title title="Transactions" />
-      <div className="col-lg-8 col-md-8 bd-right px-5">
+      <div className="col-lg-8 col-md-8 bd-right px-5 mt-4">
         <div className="page-content">
           <div className="mdc-card info-card info-card--danger overflow-x-auto re-shadow">
             <div className="card-inner row mb-0 d-flex">
@@ -119,64 +130,88 @@ export const Transferself = () => {
 
           <div className="mt-6">
             <p className="mb-0 lead mb-4 p-0">
-            Where would you like to send money to?
+              Where would you like to send money to?
             </p>
             <div className="mdc-card info-card info-card--danger no-shadow overflow-x-auto">
-            <div className="card-inner row mb-0 d-flex">
-              <div className="text-center">
-                <Link to="#">
-                  <div className="img-w-42">
-                    <img alt="" src="assets/images/icn-self.svg" />
-                  </div>
-                  <p className="d-block text-smaller text-dark mb-0 mt-0">
-                    Self
-                  </p>
-                </Link>
+              <div className="card-inner row mb-0 d-flex">
+                <div className="text-center">
+                  <Link to="#">
+                    <div className="img-w-42">
+                      <img alt="" src="assets/images/icn-self.svg" />
+                    </div>
+                    <p className="d-block text-smaller text-dark mb-0 mt-0">
+                      Self
+                    </p>
+                  </Link>
+                </div>
+                <div className="text-center ml-6-re">
+                  <Link to="#">
+                    <div className="img-w-42">
+                      <img alt="" src="assets/images/icn-trybe.svg" />
+                    </div>
+                    <p className="d-block text-smaller text-dark mb-0 mt-0">
+                      TrybeOne <br /> Account
+                    </p>
+                  </Link>
+                </div>
+                <div className="text-center ml-6-re">
+                  <Link to="#">
+                    <div className="img-w-42">
+                      <img alt="" src="assets/images/icn-sterling.svg" />
+                    </div>
+                    <p className="d-block text-smaller text-dark mb-0 mt-0">
+                      Sterling <br /> Account
+                    </p>
+                  </Link>
+                </div>
+                <div className="text-center ml-6-re">
+                  <Link to="#">
+                    <div className="img-w-42">
+                      <img alt="" src="assets/images/icn-bank.svg" />
+                    </div>
+                    <p className="d-block text-smaller text-dark mb-0 mt-0">
+                      Other <br /> Banks
+                    </p>
+                  </Link>
+                </div>
+                <div className="text-center ml-6-re">
+                  <Link to="#">
+                    <div className="img-w-42">
+                      <img alt="" src="assets/images/icn-foreign.svg" />
+                    </div>
+                    <p className="d-block text-smaller text-dark mb-0 mt-0">
+                      Foreign <br /> Accounts
+                    </p>
+                  </Link>
+                </div>
               </div>
-              <div className="text-center ml-5-re">
-                <Link to="#">
-                  <div className="img-w-42">
-                    <img alt="" src="assets/images/icn-more.svg" />
+            </div>
+
+            <div className="mt-3">
+              <form onSubmit={formik.handleSubmit}>
+                <div className="form-group">
+                  <div className="input-group">
+                    <div className="input-group-prepend">
+                      <span className="input-group-text no-bg bd-0">
+                        <img src="assets/images/ic-amount.svg" />
+                      </span>
+                    </div>
+                    <input
+                      id="email"
+                      name="email"
+                      type="email"
+                      placeholder="Amount"
+                      className="form-control d-block w-100 pl-5"
+                      onChange={formik.handleChange}
+                      value={formik.values.email}
+                    />
+                    <label>Amount</label>
                   </div>
-                  <p className="d-block text-smaller text-dark mb-0 mt-0">
-                    TrybeOne Account</p>
-                </Link>
-              </div>
-              <div className="text-center ml-5-re">
-                <Link to="#">
-                  <div className="img-w-42">
-                    <img alt="" src="assets/images/icn-more.svg" />
-                  </div>
-                  <p className="d-block text-smaller text-dark mb-0 mt-0">
-                  Sterling Account
-                  </p>
-                </Link>
-              </div>
-              <div className="text-center ml-5-re">
-                <Link to="#">
-                  <div className="img-w-42">
-                    <img alt="" src="assets/images/icn-subscription.svg" />
-                  </div>
-                  <p className="d-block text-smaller text-dark mb-0 mt-0">
-                  Other Banks
-                  </p>
-                </Link>
-              </div>
-              <div className="text-center ml-5-re">
-                <Link to="#">
-                  <div className="img-w-42">
-                    <img alt="" src="assets/images/icn-subscription.svg" />
-                  </div>
-                  <p className="d-block text-smaller text-dark mb-0 mt-0">
-                  Foreign  Accounts
-                  </p>
-                </Link>
-              </div>
-           
+                </div>
+
+              </form>
             </div>
           </div>
-
-      </div>
         </div>
       </div>
       <div className="col-lg-4 col-md-4">
