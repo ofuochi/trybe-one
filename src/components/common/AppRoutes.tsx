@@ -10,6 +10,7 @@ import { Dashboard } from "../Dashboard";
 import { Home } from "../Home";
 import { Investments } from "../Investments";
 import { Transactions } from "../Transactions";
+import { Transferself } from "../TransferSelf";
 import { AuthRoute } from "./AuthRoute";
 
 export const AppRoutes = () => {
@@ -29,6 +30,11 @@ export const AppRoutes = () => {
       <AuthRoute
         path={routePath.investments}
         component={Investments}
+        isPrivate
+      />
+          <AuthRoute
+        path={routePath.transferself}
+        component={Transferself}
         isPrivate
       />
       <AuthRoute path={routePath.login} component={Login} />

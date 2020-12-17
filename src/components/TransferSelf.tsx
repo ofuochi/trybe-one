@@ -3,12 +3,12 @@ import numeral from "numeral";
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
-import { routePath } from "../constants/route-paths";
+
 import api from "../config/api.config";
 import { localStoreService } from "../services";
 import { Title } from "./common/Title";
 
-export const Transactions = () => {
+export const Transferself = () => {
   const [
     txData,
     setTxData,
@@ -45,9 +45,9 @@ export const Transactions = () => {
           <div className="mdc-card info-card info-card--danger overflow-x-auto re-shadow">
             <div className="card-inner row mb-0 d-flex">
               <div className="text-center">
-                <Link to="transferself">
+                <Link to="#">
                   <div className="img-w-42">
-                    <img alt="" src="assets/images/icn-transfer.svg" />
+                    <img alt="" src="assets/images/icn-transfer-active.svg" />
                   </div>
                   <p className="d-block text-smaller text-dark mb-0 mt-0">
                     Transfer
@@ -118,37 +118,65 @@ export const Transactions = () => {
           </div>
 
           <div className="mt-6">
-            <h5 className="mdc-top-app-bar__title mb-0 mb-4 p-0">
-              Recent Transactions
-            </h5>
-            <table className="highlight table">
-              <tbody>
-                {txData.data?.map((tx, i) => (
-                  <tr key={i}>
-                    <td>
-                      <img
-                        alt=""
-                        className="w-40"
-                        src="assets/images/icn-transfer.svg"
-                      />
-                    </td>
-                    <td>{tx.remarks}</td>
-                    <td>{moment(tx.trA_DATE).format("D MMM YYYY")}</td>
-                    <td>
-                      <span
-                        className={`new badge blue-outline bg-white ${
-                          tx.deb_cre_ind === 1 ? "text-danger" : "text-success"
-                        }`}
-                      >
-                        {tx.deb_cre_ind === 1 ? "Debit" : "Credit"}
-                      </span>
-                    </td>
-                    <td>{`₦${numeral(tx.amt).format("0,0")}`}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+            <p className="mb-0 lead mb-4 p-0">
+            Where would you like to send money to?
+            </p>
+            <div className="mdc-card info-card info-card--danger no-shadow overflow-x-auto">
+            <div className="card-inner row mb-0 d-flex">
+              <div className="text-center">
+                <Link to="#">
+                  <div className="img-w-42">
+                    <img alt="" src="assets/images/icn-self.svg" />
+                  </div>
+                  <p className="d-block text-smaller text-dark mb-0 mt-0">
+                    Self
+                  </p>
+                </Link>
+              </div>
+              <div className="text-center ml-5-re">
+                <Link to="#">
+                  <div className="img-w-42">
+                    <img alt="" src="assets/images/icn-more.svg" />
+                  </div>
+                  <p className="d-block text-smaller text-dark mb-0 mt-0">
+                    TrybeOne Account</p>
+                </Link>
+              </div>
+              <div className="text-center ml-5-re">
+                <Link to="#">
+                  <div className="img-w-42">
+                    <img alt="" src="assets/images/icn-more.svg" />
+                  </div>
+                  <p className="d-block text-smaller text-dark mb-0 mt-0">
+                  Sterling Account
+                  </p>
+                </Link>
+              </div>
+              <div className="text-center ml-5-re">
+                <Link to="#">
+                  <div className="img-w-42">
+                    <img alt="" src="assets/images/icn-subscription.svg" />
+                  </div>
+                  <p className="d-block text-smaller text-dark mb-0 mt-0">
+                  Other Banks
+                  </p>
+                </Link>
+              </div>
+              <div className="text-center ml-5-re">
+                <Link to="#">
+                  <div className="img-w-42">
+                    <img alt="" src="assets/images/icn-subscription.svg" />
+                  </div>
+                  <p className="d-block text-smaller text-dark mb-0 mt-0">
+                  Foreign  Accounts
+                  </p>
+                </Link>
+              </div>
+           
+            </div>
           </div>
+
+      </div>
         </div>
       </div>
       <div className="col-lg-4 col-md-4">

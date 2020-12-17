@@ -14,7 +14,7 @@ export const PageHeader = observer(() => {
           <button className="material-icons mdc-top-app-bar__navigation-icon mdc-icon-button d-block d-md-none sidebar-toggler">
             menu
           </button>
-          <div>
+          <div className="px-5">
             <h1 className="mb-0 mt-4 p-0 text-bold">
               Hello, {currentUserStore.firstName}
             </h1>

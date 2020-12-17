@@ -143,197 +143,259 @@ export const Signup = observer(() => {
                     {/* Step One */}
                     <FormikStep validationSchema={StepOneSchema}>
                       <div className="form-group">
+                      <div className="input-group">
                         <Field
                           as="select"
                           name="title"
-                          className="form-control"
-                        >
+                          className="form-control d-block w-100">
                           <option value=""> -Select Title- </option>
                           <option value="Mr">Mr</option>
                           <option value="Mss">Mss</option>
                         </Field>
+                        <label>Select Title</label>
                         <ErrorMsg inputName="title" />
                       </div>
+                      </div>
                       <div className="form-group">
+                      <div className="input-group">
                         <Field
                           name="firstname"
-                          className="form-control"
+                          className="form-control d-block w-100"
                           placeholder="First name"
                         />
+                         <label>First name</label>
                         <ErrorMsg inputName="firstname" />
                       </div>
-                      <div className="form-group">
-                        <Field
-                          name="lastname"
-                          className="form-control"
-                          placeholder="Last name"
-                        />
-                        <ErrorMsg inputName="lastname" />
                       </div>
                       <div className="form-group">
+                      <div className="input-group">
+                        <Field
+                          name="lastname"
+                          className="form-control d-block w-100"
+                          placeholder="Last name"
+                        />
+                       <label>Last name</label>          
+                        <ErrorMsg inputName="lastname" />
+                      </div>
+                      </div>
+                      <div className="form-group">
+                      <div className="input-group">
                         <Field
                           name="email"
-                          className="form-control"
+                          className="form-control d-block w-100"
                           placeholder="Email"
                         />
+                        <label>Email</label>
                         <ErrorMsg inputName="email" />
+                      </div>
                       </div>
 
                       <div className="form-group">
+                      <div className="input-group">
                         <Field
                           name="schoolName"
-                          className="form-control"
+                          className="form-control d-block w-100"
                           placeholder="School name"
                         />
+                        <label>School name</label>
                         <ErrorMsg inputName="schoolName" />
                       </div>
+                      </div>
                       <div className="form-group">
+                      <div className="input-group">
                         <Field
                           name="courseDuration"
-                          className="form-control"
+                          className="form-control d-block w-100"
                           type="number"
                           min="1"
                           placeholder="Course Duration. e.g 4 years"
                         />
+                        <label>Course Duration</label>
                         <ErrorMsg inputName="courseDuration" />
                       </div>
+                      </div>
                       <div className="form-group">
+                      <div className="input-group">
                         <Field
                           as="select"
                           name="gender"
-                          className="form-control"
+                          className="form-control d-block w-100"
                         >
                           <option value=""> -Select Gender- </option>
                           <option value="Mr">Male</option>
                           <option value="Mss">Female</option>
                         </Field>
+                        <label>Gender</label>
                         <ErrorMsg inputName="gender" />
                       </div>
+                      </div>
                       <div className="form-group">
+                      <div className="input-group">
                         <Field
                           as="textarea"
                           name="address"
-                          className="form-control"
+                          className="form-control d-block w-100"
                           placeholder="Home address"
                         />
+                        <label>Home address</label>
                         <ErrorMsg inputName="address" />
+                      </div>
                       </div>
                     </FormikStep>
 
                     {/* Step Two */}
                     <FormikStep validationSchema={StepTwoSchema}>
                       <div className="form-group">
+                      <div className="input-group">
                         <Field
                           name="mobile"
-                          className="form-control"
+                          className="form-control d-block w-100"
                           placeholder="Phone number"
                         />
+                        <label>Phone number</label>
                         <ErrorMsg inputName="mobile" />
                       </div>
+                      </div>
                       <div className="form-group">
+                      <div className="input-group">
                         <Field
                           name="dob"
-                          className="form-control"
+                          className="form-control d-block w-100"
                           placeholder="Birthday"
                           type={dateInput}
                           onFocus={() => setDateInput("date")}
                           onBlur={() => setDateInput("text")}
                         />
+                         <label>Birthday</label>
                         <ErrorMsg inputName="dob" />
                       </div>
+                      </div>
                       <div className="form-group">
+                      <div className="input-group">
                         <Field
                           name="trybersCode"
-                          className="form-control"
+                          className="form-control d-block w-100"
                           placeholder="Trybers Code"
                         />
+                        <label>Trybers Code</label>
                         <ErrorMsg inputName="trybersCode" />
                       </div>
+                      </div>
                       <div className="form-group">
+                      <div className="input-group">
                         <Field
                           name="trybersReferralCode"
-                          className="form-control"
+                          className="form-control d-block w-100"
                           placeholder="Referral Code"
                         />
+                        <label>Referral Code</label>
                         <ErrorMsg inputName="trybersReferralCode" />
                       </div>
+                      </div>
                       <div className="form-group">
+                      <div className="input-group">
                         <Field
                           name="sideHustle"
-                          className="form-control"
+                          className="form-control d-block w-100"
                           placeholder="Side hustle"
                         />
+                        <label>Side hustle</label>
                         <ErrorMsg inputName="sideHustle" />
                       </div>
+                      </div>
                       <div className="form-group">
+                      <div className="input-group">
                         <Field
                           name="serviceProvider"
-                          className="form-control"
+                          className="form-control d-block w-100"
                           placeholder="Service provider"
                         />
+                        <label>Service provider</label>
                         <ErrorMsg inputName="serviceProvider" />
                       </div>
-                      <div className="form-group">
-                        <Field
-                          name="preferredName"
-                          className="form-control"
-                          placeholder="Nickname"
-                        />
-                        <ErrorMsg inputName="preferredName" />
                       </div>
                       <div className="form-group">
+                      <div className="input-group">
+                        <Field
+                          name="preferredName"
+                          className="form-control d-block w-100"
+                          placeholder="Nickname"
+                        />
+                        <label>Nickname</label>
+                        <ErrorMsg inputName="preferredName" />
+                      </div>
+                      </div>
+                      <div className="form-group">
+                      <div className="input-group">
                         <Field
                           name="level"
-                          className="form-control"
+                          className="form-control d-block w-100"
                           placeholder="Level"
                         />
+                        <label>Level</label>
                         <ErrorMsg inputName="level" />
+                      </div>
                       </div>
                     </FormikStep>
 
                     {/* Step Three */}
                     <FormikStep validationSchema={StepThreeSchema}>
                       <div className="form-group">
+                      <div className="input-group">
                         <Field
                           name="videoUrl"
-                          className="form-control"
+                          className="form-control d-block w-100"
                           placeholder="Video URL"
                         />
+                        <label>Video URL</label>
                         <ErrorMsg inputName="videoUrl" />
+                      </div>
                       </div>
 
                       <div className="form-group">
+                      <div className="input-group">
                         <Field
                           name="instagramHandle"
-                          className="form-control"
+                          className="form-control d-block w-100"
                           placeholder="Instagram handle"
                         />
+                         <label>Instagram handle</label>
                         <ErrorMsg inputName="instagramHandle" />
                       </div>
+                      </div>
                       <div className="form-group">
+                      <div className="input-group">
                         <Field
                           name="twitterHandle"
-                          className="form-control"
+                          className="form-control d-block w-100"
                           placeholder="Twitter handle"
                         />
+                      <label>Twitter handle</label>
                         <ErrorMsg inputName="twitterHandle" />
                       </div>
-                      <div className="form-group">
-                        <Field
-                          name="initialAccountSelected"
-                          className="form-control"
-                          placeholder="Account number"
-                        />
-                        <ErrorMsg inputName="initialAccountSelected" />
                       </div>
                       <div className="form-group">
+                      <div className="input-group">
+                        <Field
+                          name="initialAccountSelected"
+                          className="form-control d-block w-100"
+                          placeholder="Account number"
+                        />
+                       <label>Account number</label>
+                        <ErrorMsg inputName="initialAccountSelected" />
+                      </div>
+                      </div>
+                      <div className="form-group">
+                      <div className="input-group">
                         <Field
                           name="password"
                           type="password"
-                          className="form-control"
+                          className="form-control d-block w-100"
                           placeholder="Password"
                         />
+                      <label>Password</label>
                         <ErrorMsg inputName="password" />
+                      </div>
                       </div>
                     </FormikStep>
                   </FormikStepper>
@@ -342,9 +404,9 @@ export const Signup = observer(() => {
             </div>
           </div>
         </div>
-    
-      <div className="col-lg-6 my-auto bg-login h-100 bg-red fixed-right d-none d-lg-block d-md-block">
-          <div className="row justify-content-start">
+
+      <div className="col-lg-6 my-auto bg-signup h-100 bg-red fixed-right d-none d-lg-block d-md-block">
+          <div className="row justify-content-center">
             <div className="col-lg-8">
               <div className="card mt-5">
                 <div className="card-body">
