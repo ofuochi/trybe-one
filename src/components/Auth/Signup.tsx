@@ -1,13 +1,15 @@
 import { Field } from "formik";
 import { observer } from "mobx-react-lite";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
 import * as Yup from "yup";
+
+import api from "../../config/api.config";
+import { envConfig } from "../../config/env.config";
 import { routePath } from "../../constants/route-paths";
 import { useStore } from "../../hooks/use-store.hooks";
 import { authService } from "../../services";
-
 import { ErrorMsg } from "../common/ErrorMsg";
 import { FormikStep, FormikStepper } from "../common/FormikStepper";
 import { Title } from "../common/Title";
@@ -29,8 +31,8 @@ const StepTwoSchema = Yup.object().shape({
     .matches(phoneRegExp, "Phone number is not valid e.g 08074488857")
     .required("required"),
   dob: Yup.string().required("required"),
-  trybersCode: Yup.string().required("required"),
-  trybersReferralCode: Yup.string().required("required"),
+  trybersCode: Yup.string(),
+  trybersReferralCode: Yup.string(),
 
   preferredName: Yup.string().required("required"),
   sideHustle: Yup.string().required("required"),
@@ -38,364 +40,389 @@ const StepTwoSchema = Yup.object().shape({
   level: Yup.string().required("required"),
 });
 const StepThreeSchema = Yup.object().shape({
-  videoUrl: Yup.string().url("invalid url").required("required"),
+  videoUrl: Yup.string().url("invalid url"),
 
   instagramHandle: Yup.string().required("required"),
   twitterHandle: Yup.string().required("required"),
-  initialAccountSelected: Yup.string()
-    .matches(/^\d{10}$/, "NUBAN must be 10 digits")
-    .required("required"),
   password: Yup.string().required("required"),
 });
+const initSignupFormData: API.CreateWalletRequestDto = {
+  title: "",
+  firstname: "",
+  lastname: "",
+  email: "",
+  address: "",
+  mobile: "",
+  schoolName: "",
+  courseDuration: "",
+  gender: "Unspecified",
+
+  dob: "",
+  currencycode: "NGN",
+  trybersCode: "",
+  trybersReferralCode: "",
+  preferredName: "",
+  sideHustle: "",
+  phoneNumber: "",
+  level: "",
+
+  productCode: "CMPUS.HYPE1",
+  branch: "NG0020555",
+  sector: "4200",
+  industry: "4202",
+  nationality: "NG",
+
+  serviceProvider: "",
+  instagramHandle: "",
+  twitterHandle: "",
+  videoUrl: "",
+  password: "",
+};
 
 export const Signup = observer(() => {
   const [dateInput, setDateInput] = useState("text");
+  const [countries, setCountries] = useState<API.SchoolCountryList>({});
+  const [schools, setSchools] = useState<API.InstitutionList>({});
   const history = useHistory();
   const { signupFormStore } = useStore();
-  const initSignupFormData: API.CreateWalletRequestDto = {
-    title: "",
-    firstname: "",
-    lastname: "",
-    email: "",
-    address: "",
-    mobile: "",
-    schoolName: "",
-    courseDuration: "",
-    gender: "Unspecified",
 
-    dob: "",
-    currencycode: "NGN",
-    trybersCode: "",
-    trybersReferralCode: "",
-    preferredName: "",
-    sideHustle: "",
-    phoneNumber: "",
-    initialAccountSelected: "",
-    level: "",
-
-    productCode: "CMPUS.HYPE1",
-    branch: "NG0020555",
-    sector: "4200",
-    industry: "4202",
-    nationality: "NG",
-
-    serviceProvider: "",
-    instagramHandle: "",
-    twitterHandle: "",
-    videoUrl: "",
-    password: "",
+  useEffect(() => {
+    api
+      .get<API.SchoolCountryList>("/User/GetAllActiveCountries")
+      .then(({ data }) => setCountries(data));
+  }, []);
+  const handleSubmit = async (
+    values: API.CreateWalletRequestDto,
+    { setSubmitting }: any
+  ) => {
+    setSubmitting(true);
+    values.phoneNumber = values.mobile;
+    try {
+      await authService.signup(values);
+      setSubmitting(false);
+      toast.success("You've successfully registered. Please login.", {
+        position: "top-center",
+        delay: 0,
+      });
+      history.push(routePath.login);
+      const input: API.OTPRequestDto = {
+        email: values.email,
+        mobile: values.phoneNumber,
+        clientID: envConfig.apiKey,
+      };
+      api.post<API.OtpResponse>("User/GenerateOTP", input);
+    } catch (error) {
+      setSubmitting(false);
+    }
   };
   return (
     <div className="container-fluid vh-100">
       <Title title="Signup" />
 
       <div className="row align-items-center h-100">
- 
-      <div className="col-lg-6 px-2">
+        <div className="col-lg-6 px-2">
           <div className="card bd-0">
             <div className="card-body card-repadd">
               <h5 className="mb-3 font-weight-normal text-left mb-5">
                 Hi there, you are almost done 🙂
                 <span className="text-primary">#FreeToBe</span>
               </h5>
-
               <h3 className="text-left">Step {signupFormStore.step} of 3</h3>
               <p className="text-left lead mb-5 text-muted">
                 Tryber Personal Info
               </p>
 
               <div className="row">
-                {/* <ul id="progressbar">
-                  <li className="active">
-                    <span className="d-block text-primary">1</span>
-                    <span className="d-block text-primary">Personal info</span>
-                  </li>
-                  <li>
-                    <span className="d-block">2</span>
-                  </li>
-                  <li>
-                    <span className="d-block">3</span>
-                  </li>
-                </ul> */}
                 <div className="col-lg-12">
                   <FormikStepper
                     initialValues={initSignupFormData}
-                    onSubmit={(values, { setSubmitting }) => {
-                      setSubmitting(true);
-                      values.phoneNumber = values.mobile;
-
-                      authService
-                        .signup(values)
-                        .then(() => {
-                          setSubmitting(false);
-                          toast.success(
-                            "You've successfully registered. Please login.",
-                            {
-                              position: "top-center",
-                              delay: 0,
-                            }
-                          );
-                          history.push(routePath.login);
-                        })
-                        .catch(() => setSubmitting(false));
-                    }}
+                    onSubmit={handleSubmit}
                   >
                     {/* Step One */}
                     <FormikStep validationSchema={StepOneSchema}>
                       <div className="form-group">
-                      <div className="input-group">
-                        <Field
-                          as="select"
-                          name="title"
-                          className="form-control d-block w-100">
-                          <option value=""> -Select Title- </option>
-                          <option value="Mr">Mr</option>
-                          <option value="Mss">Mss</option>
-                        </Field>
-                        <label>Select Title</label>
-                        <ErrorMsg inputName="title" />
-                      </div>
-                      </div>
-                      <div className="form-group">
-                      <div className="input-group">
-                        <Field
-                          name="firstname"
-                          className="form-control d-block w-100"
-                          placeholder="First name"
-                        />
-                         <label>First name</label>
-                        <ErrorMsg inputName="firstname" />
-                      </div>
+                        <div className="input-group">
+                          <Field
+                            as="select"
+                            name="title"
+                            className="form-control d-block w-100"
+                          >
+                            <option value=""> -Select Title- </option>
+                            <option value="Mr">Mr</option>
+                            <option value="Ms">Ms</option>
+                          </Field>
+                          <label>Select Title</label>
+                          <ErrorMsg inputName="title" />
+                        </div>
                       </div>
                       <div className="form-group">
-                      <div className="input-group">
-                        <Field
-                          name="lastname"
-                          className="form-control d-block w-100"
-                          placeholder="Last name"
-                        />
-                       <label>Last name</label>          
-                        <ErrorMsg inputName="lastname" />
-                      </div>
+                        <div className="input-group">
+                          <Field
+                            name="firstname"
+                            className="form-control d-block w-100"
+                            placeholder="First name"
+                          />
+                          <label>First name</label>
+                          <ErrorMsg inputName="firstname" />
+                        </div>
                       </div>
                       <div className="form-group">
-                      <div className="input-group">
-                        <Field
-                          name="email"
-                          className="form-control d-block w-100"
-                          placeholder="Email"
-                        />
-                        <label>Email</label>
-                        <ErrorMsg inputName="email" />
+                        <div className="input-group">
+                          <Field
+                            name="lastname"
+                            className="form-control d-block w-100"
+                            placeholder="Last name"
+                          />
+                          <label>Last name</label>
+                          <ErrorMsg inputName="lastname" />
+                        </div>
                       </div>
+                      <div className="form-group">
+                        <div className="input-group">
+                          <Field
+                            name="email"
+                            className="form-control d-block w-100"
+                            placeholder="Email"
+                          />
+                          <label>Email</label>
+                          <ErrorMsg inputName="email" />
+                        </div>
                       </div>
+                      <div className="form-group">
+                        <div className="input-group">
+                          <Field
+                            as="select"
+                            name="country"
+                            className="form-control d-block w-100"
+                            onChange={({ target }: any) => {
+                              const countryId = target.value;
+                              api
+                                .get<API.InstitutionList>(
+                                  `/User/GetAllActiveInstitutionsByCountry?country=${countryId}`
+                                )
+                                .then(({ data }) => setSchools(data));
+                            }}
+                            required
+                          >
+                            <option value=""> -Select Country- </option>
+                            {countries.schoolCountries?.length &&
+                              countries.schoolCountries.map((country) => (
+                                <option key={country.id} value={country.name}>
+                                  {country.name}
+                                </option>
+                              ))}
+                          </Field>
+                          <label>Country</label>
+                          <ErrorMsg inputName="country" />
+                        </div>
+                      </div>
+                      {schools.institutions &&
+                        schools.institutions?.length > 0 && (
+                          <div className="form-group">
+                            <div className="input-group">
+                              <Field
+                                as="select"
+                                name="schoolName"
+                                className="form-control d-block w-100"
+                                placeholder="School name"
+                              >
+                                <option value=""> -Select School- </option>
+                                {schools.institutions.map((school) => (
+                                  <option key={school.id} value={school.id}>
+                                    {school.institutionName}
+                                  </option>
+                                ))}
+                              </Field>
+                              <label>School name</label>
+                              <ErrorMsg inputName="schoolName" />
+                            </div>
+                          </div>
+                        )}
 
                       <div className="form-group">
-                      <div className="input-group">
-                        <Field
-                          name="schoolName"
-                          className="form-control d-block w-100"
-                          placeholder="School name"
-                        />
-                        <label>School name</label>
-                        <ErrorMsg inputName="schoolName" />
-                      </div>
-                      </div>
-                      <div className="form-group">
-                      <div className="input-group">
-                        <Field
-                          name="courseDuration"
-                          className="form-control d-block w-100"
-                          type="number"
-                          min="1"
-                          placeholder="Course Duration. e.g 4 years"
-                        />
-                        <label>Course Duration</label>
-                        <ErrorMsg inputName="courseDuration" />
-                      </div>
+                        <div className="input-group">
+                          <Field
+                            name="courseDuration"
+                            className="form-control d-block w-100"
+                            type="number"
+                            min="1"
+                            placeholder="Course Duration. e.g 4 years"
+                          />
+                          <label>Course Duration</label>
+                          <ErrorMsg inputName="courseDuration" />
+                        </div>
                       </div>
                       <div className="form-group">
-                      <div className="input-group">
-                        <Field
-                          as="select"
-                          name="gender"
-                          className="form-control d-block w-100"
-                        >
-                          <option value=""> -Select Gender- </option>
-                          <option value="Mr">Male</option>
-                          <option value="Mss">Female</option>
-                        </Field>
-                        <label>Gender</label>
-                        <ErrorMsg inputName="gender" />
-                      </div>
+                        <div className="input-group">
+                          <Field
+                            as="select"
+                            name="gender"
+                            className="form-control d-block w-100"
+                          >
+                            <option value=""> -Select Gender- </option>
+                            <option value="Mr">Male</option>
+                            <option value="Ms">Female</option>
+                          </Field>
+                          <label>Gender</label>
+                          <ErrorMsg inputName="gender" />
+                        </div>
                       </div>
                       <div className="form-group">
-                      <div className="input-group">
-                        <Field
-                          as="textarea"
-                          name="address"
-                          className="form-control d-block w-100"
-                          placeholder="Home address"
-                        />
-                        <label>Home address</label>
-                        <ErrorMsg inputName="address" />
-                      </div>
+                        <div className="input-group">
+                          <Field
+                            as="textarea"
+                            name="address"
+                            className="form-control d-block w-100"
+                            placeholder="Home address"
+                          />
+                          <label>Home address</label>
+                          <ErrorMsg inputName="address" />
+                        </div>
                       </div>
                     </FormikStep>
 
                     {/* Step Two */}
                     <FormikStep validationSchema={StepTwoSchema}>
                       <div className="form-group">
-                      <div className="input-group">
-                        <Field
-                          name="mobile"
-                          className="form-control d-block w-100"
-                          placeholder="Phone number"
-                        />
-                        <label>Phone number</label>
-                        <ErrorMsg inputName="mobile" />
-                      </div>
-                      </div>
-                      <div className="form-group">
-                      <div className="input-group">
-                        <Field
-                          name="dob"
-                          className="form-control d-block w-100"
-                          placeholder="Birthday"
-                          type={dateInput}
-                          onFocus={() => setDateInput("date")}
-                          onBlur={() => setDateInput("text")}
-                        />
-                         <label>Birthday</label>
-                        <ErrorMsg inputName="dob" />
-                      </div>
+                        <div className="input-group">
+                          <Field
+                            name="mobile"
+                            className="form-control d-block w-100"
+                            placeholder="Phone number"
+                          />
+                          <label>Phone number</label>
+                          <ErrorMsg inputName="mobile" />
+                        </div>
                       </div>
                       <div className="form-group">
-                      <div className="input-group">
-                        <Field
-                          name="trybersCode"
-                          className="form-control d-block w-100"
-                          placeholder="Trybers Code"
-                        />
-                        <label>Trybers Code</label>
-                        <ErrorMsg inputName="trybersCode" />
-                      </div>
-                      </div>
-                      <div className="form-group">
-                      <div className="input-group">
-                        <Field
-                          name="trybersReferralCode"
-                          className="form-control d-block w-100"
-                          placeholder="Referral Code"
-                        />
-                        <label>Referral Code</label>
-                        <ErrorMsg inputName="trybersReferralCode" />
-                      </div>
+                        <div className="input-group">
+                          <Field
+                            name="dob"
+                            className="form-control d-block w-100"
+                            placeholder="Birthday"
+                            type={dateInput}
+                            onFocus={() => setDateInput("date")}
+                            onBlur={() => setDateInput("text")}
+                          />
+                          <label>Birthday</label>
+                          <ErrorMsg inputName="dob" />
+                        </div>
                       </div>
                       <div className="form-group">
-                      <div className="input-group">
-                        <Field
-                          name="sideHustle"
-                          className="form-control d-block w-100"
-                          placeholder="Side hustle"
-                        />
-                        <label>Side hustle</label>
-                        <ErrorMsg inputName="sideHustle" />
-                      </div>
-                      </div>
-                      <div className="form-group">
-                      <div className="input-group">
-                        <Field
-                          name="serviceProvider"
-                          className="form-control d-block w-100"
-                          placeholder="Service provider"
-                        />
-                        <label>Service provider</label>
-                        <ErrorMsg inputName="serviceProvider" />
-                      </div>
+                        <div className="input-group">
+                          <Field
+                            name="trybersCode"
+                            className="form-control d-block w-100"
+                            placeholder="Trybers Code"
+                          />
+                          <label>Trybers Code</label>
+                          <ErrorMsg inputName="trybersCode" />
+                        </div>
                       </div>
                       <div className="form-group">
-                      <div className="input-group">
-                        <Field
-                          name="preferredName"
-                          className="form-control d-block w-100"
-                          placeholder="Nickname"
-                        />
-                        <label>Nickname</label>
-                        <ErrorMsg inputName="preferredName" />
-                      </div>
+                        <div className="input-group">
+                          <Field
+                            name="trybersReferralCode"
+                            className="form-control d-block w-100"
+                            placeholder="Referral Code"
+                          />
+                          <label>Referral Code</label>
+                          <ErrorMsg inputName="trybersReferralCode" />
+                        </div>
                       </div>
                       <div className="form-group">
-                      <div className="input-group">
-                        <Field
-                          name="level"
-                          className="form-control d-block w-100"
-                          placeholder="Level"
-                        />
-                        <label>Level</label>
-                        <ErrorMsg inputName="level" />
+                        <div className="input-group">
+                          <Field
+                            name="sideHustle"
+                            className="form-control d-block w-100"
+                            placeholder="Side hustle"
+                          />
+                          <label>Side hustle</label>
+                          <ErrorMsg inputName="sideHustle" />
+                        </div>
                       </div>
+                      <div className="form-group">
+                        <div className="input-group">
+                          <Field
+                            name="serviceProvider"
+                            className="form-control d-block w-100"
+                            placeholder="Service provider"
+                          />
+                          <label>Service provider</label>
+                          <ErrorMsg inputName="serviceProvider" />
+                        </div>
+                      </div>
+                      <div className="form-group">
+                        <div className="input-group">
+                          <Field
+                            name="preferredName"
+                            className="form-control d-block w-100"
+                            placeholder="Nickname"
+                          />
+                          <label>Nickname</label>
+                          <ErrorMsg inputName="preferredName" />
+                        </div>
+                      </div>
+                      <div className="form-group">
+                        <div className="input-group">
+                          <Field
+                            name="level"
+                            className="form-control d-block w-100"
+                            placeholder="Level"
+                          />
+                          <label>Level</label>
+                          <ErrorMsg inputName="level" />
+                        </div>
                       </div>
                     </FormikStep>
 
                     {/* Step Three */}
                     <FormikStep validationSchema={StepThreeSchema}>
                       <div className="form-group">
-                      <div className="input-group">
-                        <Field
-                          name="videoUrl"
-                          className="form-control d-block w-100"
-                          placeholder="Video URL"
-                        />
-                        <label>Video URL</label>
-                        <ErrorMsg inputName="videoUrl" />
-                      </div>
+                        <div className="input-group">
+                          <Field
+                            name="videoUrl"
+                            className="form-control d-block w-100"
+                            placeholder="Video URL"
+                          />
+                          <label>Video URL</label>
+                          <ErrorMsg inputName="videoUrl" />
+                        </div>
                       </div>
 
                       <div className="form-group">
-                      <div className="input-group">
-                        <Field
-                          name="instagramHandle"
-                          className="form-control d-block w-100"
-                          placeholder="Instagram handle"
-                        />
-                         <label>Instagram handle</label>
-                        <ErrorMsg inputName="instagramHandle" />
-                      </div>
-                      </div>
-                      <div className="form-group">
-                      <div className="input-group">
-                        <Field
-                          name="twitterHandle"
-                          className="form-control d-block w-100"
-                          placeholder="Twitter handle"
-                        />
-                      <label>Twitter handle</label>
-                        <ErrorMsg inputName="twitterHandle" />
-                      </div>
+                        <div className="input-group">
+                          <Field
+                            name="instagramHandle"
+                            className="form-control d-block w-100"
+                            placeholder="Instagram handle"
+                          />
+                          <label>Instagram handle</label>
+                          <ErrorMsg inputName="instagramHandle" />
+                        </div>
                       </div>
                       <div className="form-group">
-                      <div className="input-group">
-                        <Field
-                          name="initialAccountSelected"
-                          className="form-control d-block w-100"
-                          placeholder="Account number"
-                        />
-                       <label>Account number</label>
-                        <ErrorMsg inputName="initialAccountSelected" />
-                      </div>
+                        <div className="input-group">
+                          <Field
+                            name="twitterHandle"
+                            className="form-control d-block w-100"
+                            placeholder="Twitter handle"
+                          />
+                          <label>Twitter handle</label>
+                          <ErrorMsg inputName="twitterHandle" />
+                        </div>
                       </div>
                       <div className="form-group">
-                      <div className="input-group">
-                        <Field
-                          name="password"
-                          type="password"
-                          className="form-control d-block w-100"
-                          placeholder="Password"
-                        />
-                      <label>Password</label>
-                        <ErrorMsg inputName="password" />
-                      </div>
+                        <div className="input-group">
+                          <Field
+                            name="password"
+                            type="password"
+                            className="form-control d-block w-100"
+                            placeholder="Password"
+                          />
+                          <label>Password</label>
+                          <ErrorMsg inputName="password" />
+                        </div>
                       </div>
                     </FormikStep>
                   </FormikStepper>
@@ -405,7 +432,7 @@ export const Signup = observer(() => {
           </div>
         </div>
 
-      <div className="col-lg-6 my-auto bg-signup h-100 bg-red fixed-right d-none d-lg-block d-md-block">
+        <div className="col-lg-6 my-auto bg-signup h-100 bg-red fixed-right d-none d-lg-block d-md-block">
           <div className="row justify-content-center">
             <div className="col-lg-8">
               <div className="card mt-5">
@@ -436,8 +463,7 @@ export const Signup = observer(() => {
             </div>
           </div>
         </div>
-      
-         </div>
+      </div>
     </div>
   );
 });

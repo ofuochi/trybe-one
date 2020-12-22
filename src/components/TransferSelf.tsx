@@ -1,8 +1,4 @@
-import moment from "moment";
-import { Field } from 'formik';
-import { useFormik } from 'formik';
-
-
+import { useFormik } from "formik";
 import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
@@ -11,27 +7,27 @@ import api from "../config/api.config";
 import { localStoreService } from "../services";
 import { Title } from "./common/Title";
 
-export const Transferself = () => {
-  const [
-    txData,
-    setTxData,
-  ] = useState<API.WalletUserTransactionDetailsResponse>({});
+export const TransferSelf = () => {
+  // const [
+  //   txData,
+  //   setTxData,
+  // ] = useState<API.WalletUserTransactionDetailsResponse>({});
   const [cards, setCards] = useState<API.GetCardResponseDto>({});
   useEffect(() => {
-    const endDate = moment(new Date());
-    const startDate = moment(endDate).subtract(2, "week");
+    // const endDate = moment(new Date());
+    // const startDate = moment(endDate).subtract(2, "week");
     const currentUser = localStoreService.getCurrentUser();
-    const req: API.UserTransactionRequestDto = {
-      number: currentUser?.nuban,
-      startDate: startDate.toISOString(),
-      endDate: endDate.toISOString(),
-    };
-    api
-      .post<API.WalletUserTransactionDetailsResponse>(
-        "/User/GetUserTransactions",
-        req
-      )
-      .then(({ data }) => setTxData(data));
+    // const req: API.UserTransactionRequestDto = {
+    //   number: currentUser?.nuban,
+    //   startDate: startDate.toISOString(),
+    //   endDate: endDate.toISOString(),
+    // };
+    // api
+    //   .post<API.WalletUserTransactionDetailsResponse>(
+    //     "/User/GetUserTransactions",
+    //     req
+    //   )
+    //   .then(({ data }) => setTxData(data));
 
     const getCardInput: API.GetCardRequestDto = {
       accountId: currentUser?.nuban,
@@ -42,9 +38,9 @@ export const Transferself = () => {
   }, []);
   const formik = useFormik({
     initialValues: {
-      email: '',
+      email: "",
     },
-    onSubmit: values => {
+    onSubmit: (values) => {
       alert(JSON.stringify(values, null, 2));
     },
   });
@@ -208,7 +204,6 @@ export const Transferself = () => {
                     <label>Amount</label>
                   </div>
                 </div>
-
               </form>
             </div>
           </div>
