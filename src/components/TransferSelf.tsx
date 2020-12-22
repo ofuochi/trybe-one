@@ -1,5 +1,3 @@
-import moment from "moment";
-import numeral from "numeral";
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import { Link } from "react-router-dom";
@@ -8,27 +6,27 @@ import api from "../config/api.config";
 import { localStoreService } from "../services";
 import { Title } from "./common/Title";
 
-export const Transferself = () => {
-  const [
-    txData,
-    setTxData,
-  ] = useState<API.WalletUserTransactionDetailsResponse>({});
+export const TransferSelf = () => {
+  // const [
+  //   txData,
+  //   setTxData,
+  // ] = useState<API.WalletUserTransactionDetailsResponse>({});
   const [cards, setCards] = useState<API.GetCardResponseDto>({});
   useEffect(() => {
-    const endDate = moment(new Date());
-    const startDate = moment(endDate).subtract(2, "week");
+    // const endDate = moment(new Date());
+    // const startDate = moment(endDate).subtract(2, "week");
     const currentUser = localStoreService.getCurrentUser();
-    const req: API.UserTransactionRequestDto = {
-      number: currentUser?.nuban,
-      startDate: startDate.toISOString(),
-      endDate: endDate.toISOString(),
-    };
-    api
-      .post<API.WalletUserTransactionDetailsResponse>(
-        "/User/GetUserTransactions",
-        req
-      )
-      .then(({ data }) => setTxData(data));
+    // const req: API.UserTransactionRequestDto = {
+    //   number: currentUser?.nuban,
+    //   startDate: startDate.toISOString(),
+    //   endDate: endDate.toISOString(),
+    // };
+    // api
+    //   .post<API.WalletUserTransactionDetailsResponse>(
+    //     "/User/GetUserTransactions",
+    //     req
+    //   )
+    //   .then(({ data }) => setTxData(data));
 
     const getCardInput: API.GetCardRequestDto = {
       accountId: currentUser?.nuban,
@@ -119,64 +117,63 @@ export const Transferself = () => {
 
           <div className="mt-6">
             <p className="mb-0 lead mb-4 p-0">
-            Where would you like to send money to?
+              Where would you like to send money to?
             </p>
             <div className="mdc-card info-card info-card--danger no-shadow overflow-x-auto">
-            <div className="card-inner row mb-0 d-flex">
-              <div className="text-center">
-                <Link to="#">
-                  <div className="img-w-42">
-                    <img alt="" src="assets/images/icn-self.svg" />
-                  </div>
-                  <p className="d-block text-smaller text-dark mb-0 mt-0">
-                    Self
-                  </p>
-                </Link>
+              <div className="card-inner row mb-0 d-flex">
+                <div className="text-center">
+                  <Link to="#">
+                    <div className="img-w-42">
+                      <img alt="" src="assets/images/icn-self.svg" />
+                    </div>
+                    <p className="d-block text-smaller text-dark mb-0 mt-0">
+                      Self
+                    </p>
+                  </Link>
+                </div>
+                <div className="text-center ml-5-re">
+                  <Link to="#">
+                    <div className="img-w-42">
+                      <img alt="" src="assets/images/icn-more.svg" />
+                    </div>
+                    <p className="d-block text-smaller text-dark mb-0 mt-0">
+                      TrybeOne Account
+                    </p>
+                  </Link>
+                </div>
+                <div className="text-center ml-5-re">
+                  <Link to="#">
+                    <div className="img-w-42">
+                      <img alt="" src="assets/images/icn-more.svg" />
+                    </div>
+                    <p className="d-block text-smaller text-dark mb-0 mt-0">
+                      Sterling Account
+                    </p>
+                  </Link>
+                </div>
+                <div className="text-center ml-5-re">
+                  <Link to="#">
+                    <div className="img-w-42">
+                      <img alt="" src="assets/images/icn-subscription.svg" />
+                    </div>
+                    <p className="d-block text-smaller text-dark mb-0 mt-0">
+                      Other Banks
+                    </p>
+                  </Link>
+                </div>
+                <div className="text-center ml-5-re">
+                  <Link to="#">
+                    <div className="img-w-42">
+                      <img alt="" src="assets/images/icn-subscription.svg" />
+                    </div>
+                    <p className="d-block text-smaller text-dark mb-0 mt-0">
+                      Foreign Accounts
+                    </p>
+                  </Link>
+                </div>
               </div>
-              <div className="text-center ml-5-re">
-                <Link to="#">
-                  <div className="img-w-42">
-                    <img alt="" src="assets/images/icn-more.svg" />
-                  </div>
-                  <p className="d-block text-smaller text-dark mb-0 mt-0">
-                    TrybeOne Account</p>
-                </Link>
-              </div>
-              <div className="text-center ml-5-re">
-                <Link to="#">
-                  <div className="img-w-42">
-                    <img alt="" src="assets/images/icn-more.svg" />
-                  </div>
-                  <p className="d-block text-smaller text-dark mb-0 mt-0">
-                  Sterling Account
-                  </p>
-                </Link>
-              </div>
-              <div className="text-center ml-5-re">
-                <Link to="#">
-                  <div className="img-w-42">
-                    <img alt="" src="assets/images/icn-subscription.svg" />
-                  </div>
-                  <p className="d-block text-smaller text-dark mb-0 mt-0">
-                  Other Banks
-                  </p>
-                </Link>
-              </div>
-              <div className="text-center ml-5-re">
-                <Link to="#">
-                  <div className="img-w-42">
-                    <img alt="" src="assets/images/icn-subscription.svg" />
-                  </div>
-                  <p className="d-block text-smaller text-dark mb-0 mt-0">
-                  Foreign  Accounts
-                  </p>
-                </Link>
-              </div>
-           
             </div>
           </div>
-
-      </div>
         </div>
       </div>
       <div className="col-lg-4 col-md-4">

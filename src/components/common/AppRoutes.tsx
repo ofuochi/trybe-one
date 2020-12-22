@@ -10,7 +10,7 @@ import { Dashboard } from "../Dashboard";
 import { Home } from "../Home";
 import { Investments } from "../Investments";
 import { Transactions } from "../Transactions";
-import { Transferself } from "../TransferSelf";
+import { TransferSelf } from "../TransferSelf";
 import { AuthRoute } from "./AuthRoute";
 
 export const AppRoutes = () => {
@@ -32,9 +32,9 @@ export const AppRoutes = () => {
         component={Investments}
         isPrivate
       />
-          <AuthRoute
+      <AuthRoute
         path={routePath.transferself}
-        component={Transferself}
+        component={TransferSelf}
         isPrivate
       />
       <AuthRoute path={routePath.login} component={Login} />
