@@ -6,7 +6,6 @@ import { toast } from "react-toastify";
 import * as Yup from "yup";
 
 import api from "../../config/api.config";
-import { envConfig } from "../../config/env.config";
 import { routePath } from "../../constants/route-paths";
 import { useStore } from "../../hooks/use-store.hooks";
 import { authService } from "../../services";
@@ -108,7 +107,7 @@ export const Signup = observer(() => {
       const input: API.OTPRequestDto = {
         email: values.email,
         mobile: values.phoneNumber,
-        clientID: envConfig.apiKey,
+        clientID: "1",
       };
       api.post<API.OtpResponse>("User/GenerateOTP", input);
     } catch (error) {
