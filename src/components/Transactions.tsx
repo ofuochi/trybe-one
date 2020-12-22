@@ -40,7 +40,7 @@ export const Transactions = () => {
   return (
     <>
       <Title title="Transactions" />
-      <div className="col-lg-8 col-md-8 bd-right px-5">
+      <div className="col-lg-8 col-md-8 bd-right px-5 mt-4">
         <div className="page-content">
           <div className="mdc-card info-card info-card--danger overflow-x-auto re-shadow">
             <div className="card-inner row mb-0 d-flex">

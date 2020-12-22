@@ -1666,7 +1666,7 @@ pre code {
 .table td {
   padding: 0.75rem;
   vertical-align: top;
-  border-top: 1px solid #dee2e6;
+/*  border-top: 1px solid #dee2e6;*/
 }
 
 .table thead th {
@@ -3687,6 +3687,10 @@ input[type="button"].btn-block {
 
 .input-group-prepend {
   margin-right: -1px;
+  position: absolute;
+  top: 0;
+  z-index: 99;
+  padding: 5px;
 }
 
 .input-group-append {
