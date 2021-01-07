@@ -6,6 +6,7 @@ import { useStore } from "../../hooks/use-store.hooks";
 import { localStoreService } from "../../services";
 import { Login } from "../Auth/Login";
 import { Signup } from "../Auth/Signup";
+import { Otp } from "../Auth/Otp";
 import { Dashboard } from "../Dashboard";
 import { Home } from "../Home";
 import { Investments } from "../Investments";
@@ -40,6 +41,7 @@ export const AppRoutes = () => {
       <AuthRoute path={routePath.login} component={Login} />
       <AuthRoute path={routePath.signup} component={Signup} />
       <AuthRoute path={routePath.home} exact component={Home} />
+      <AuthRoute path={routePath.otp} exact component={Otp} />
       <Redirect to={routePath.dashboard} />
     </Switch>
   );

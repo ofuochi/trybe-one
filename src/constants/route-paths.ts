@@ -5,6 +5,7 @@ export const routePath = {
   investments: "/investments",
   login: "/login",
   signup: "/signup",
+  otp: "/otp",
   forgotPassword: "/forgot-password",
   home: "/",
 };

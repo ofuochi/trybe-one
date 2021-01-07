@@ -23674,3 +23674,9 @@ input:not(:placeholder-shown) + label{
 .no-shadow{
   box-shadow:none
 }
+.inp-otp{
+  text-align: center;
+  font-size: 25px;
+  letter-spacing: 20px;
+
+}
