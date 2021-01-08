@@ -130,14 +130,21 @@ export const CurrentUserStore = types
           delay: 0,
         });
       }
-      self.firstName = data.firstName;
-      self.dateOfBirth = data.dateOfBirth;
-      localStoreService.saveAuthToken(data.sessionKey as string, {
-        email: data.email as string,
-        userId: data.id as string,
-        name: data.firstName as string,
-        nuban,
-      });
+      if (data.responseCode !== "00") {
+        toast.warn(data.responseDescription, {
+          position: "top-center",
+          delay: 0,
+        });
+      } else {
+        self.firstName = data.firstName;
+        self.dateOfBirth = data.dateOfBirth;
+        localStoreService.saveAuthToken(data.sessionKey as string, {
+          email: data.email as string,
+          userId: data.id as string,
+          name: data.firstName as string,
+          nuban,
+        });
+      }
     }),
     updatedCurrentUser: flow(function* (email: string) {
       const {

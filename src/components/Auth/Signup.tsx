@@ -2,6 +2,7 @@ import { Field } from "formik";
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
+import { toast } from "react-toastify";
 import * as Yup from "yup";
 
 import api from "../../config/api.config";
@@ -96,9 +97,12 @@ export const Signup = observer(() => {
     setSubmitting(true);
     values.phoneNumber = values.mobile;
     try {
-      await authService.signup(values);
-      setSubmitting(false);
+      const resp = await authService.signup(values);
 
+      if (resp.data.responseCode !== "00") {
+        toast.warning(resp.data.responseDescription);
+        return;
+      }
       const input: API.OTPRequestDto = {
         email: values.email,
         mobile: values.phoneNumber,
@@ -108,10 +112,16 @@ export const Signup = observer(() => {
         "User/GenerateOTP",
         input
       );
-      const mobile = data.phoneNumber?.slice(data.phoneNumber?.length - 3);
-      history.push(
-        `${routePath.otp}?mobile=${mobile}&email=${values.email}&phone=${values.phoneNumber}`
-      );
+      if (data.responseCode === "1") {
+        const mobile = data.phoneNumber?.slice(data.phoneNumber?.length - 3);
+        history.push(
+          `${routePath.otp}?mobile=${mobile}&email=${values.email}&phone=${values.phoneNumber}`
+        );
+        setSubmitting(false);
+      } else {
+        setSubmitting(false);
+        toast.error("An error has occurred");
+      }
     } catch (error) {
       setSubmitting(false);
     }
