@@ -1,5 +1,6 @@
 import { Form, Formik, FormikConfig, FormikValues } from "formik";
 import React, { useState } from "react";
+
 import { useStore } from "../../hooks/use-store.hooks";
 
 interface FormikStepProps
@@ -63,7 +64,7 @@ export const FormikStepper = ({
               className="btn btn-lg btn-primary btn-block"
               type="submit"
             >
-              {isSubmitting ? "Submitting" : isLastStep() ? "Submit" : "Next"}
+              {isSubmitting ? "Wait" : isLastStep() ? "Submit" : "Next"}
             </button>
           </div>
         </Form>

@@ -2,7 +2,6 @@ import { Field } from "formik";
 import { observer } from "mobx-react-lite";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import { toast } from "react-toastify";
 import * as Yup from "yup";
 
 import api from "../../config/api.config";
@@ -24,6 +23,7 @@ const StepOneSchema = Yup.object().shape({
   address: Yup.string().required("required"),
   schoolName: Yup.string().required("required"),
   courseDuration: Yup.number().min(1).required("required"),
+  level: Yup.string().required("required"),
 });
 const StepTwoSchema = Yup.object().shape({
   mobile: Yup.string()
@@ -36,7 +36,6 @@ const StepTwoSchema = Yup.object().shape({
   preferredName: Yup.string().required("required"),
   sideHustle: Yup.string().required("required"),
   serviceProvider: Yup.string().required("required"),
-  level: Yup.string().required("required"),
 });
 const StepThreeSchema = Yup.object().shape({
   videoUrl: Yup.string().url("invalid url"),
@@ -99,17 +98,20 @@ export const Signup = observer(() => {
     try {
       await authService.signup(values);
       setSubmitting(false);
-      toast.success("You've successfully registered. Please login.", {
-        position: "top-center",
-        delay: 0,
-      });
-      history.push(routePath.login);
+
       const input: API.OTPRequestDto = {
         email: values.email,
         mobile: values.phoneNumber,
         clientID: "1",
       };
-      api.post<API.OtpResponse>("User/GenerateOTP", input);
+      const { data } = await api.post<API.OtpResponse>(
+        "User/GenerateOTP",
+        input
+      );
+      const mobile = data.phoneNumber?.slice(data.phoneNumber?.length - 3);
+      history.push(
+        `${routePath.otp}?mobile=${mobile}&email=${values.email}&phone=${values.phoneNumber}`
+      );
     } catch (error) {
       setSubmitting(false);
     }
@@ -254,6 +256,17 @@ export const Signup = observer(() => {
                       <div className="form-group">
                         <div className="input-group">
                           <Field
+                            name="level"
+                            className="form-control d-block w-100"
+                            placeholder="Level"
+                          />
+                          <label>Level</label>
+                          <ErrorMsg inputName="level" />
+                        </div>
+                      </div>
+                      <div className="form-group">
+                        <div className="input-group">
+                          <Field
                             as="select"
                             name="gender"
                             className="form-control d-block w-100"
@@ -360,17 +373,6 @@ export const Signup = observer(() => {
                           />
                           <label>Nickname</label>
                           <ErrorMsg inputName="preferredName" />
-                        </div>
-                      </div>
-                      <div className="form-group">
-                        <div className="input-group">
-                          <Field
-                            name="level"
-                            className="form-control d-block w-100"
-                            placeholder="Level"
-                          />
-                          <label>Level</label>
-                          <ErrorMsg inputName="level" />
                         </div>
                       </div>
                     </FormikStep>
