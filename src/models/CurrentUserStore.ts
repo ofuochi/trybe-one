@@ -124,12 +124,7 @@ export const CurrentUserStore = types
         nuban,
         password
       );
-      if (!data.sessionKey) {
-        toast.warn("Invalid login details", {
-          position: "top-center",
-          delay: 0,
-        });
-      }
+
       if (data.responseCode !== "00") {
         toast.warn(data.responseDescription, {
           position: "top-center",
