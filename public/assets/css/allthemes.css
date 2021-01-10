@@ -2002,8 +2002,8 @@ pre code {
 .form-control {
   display: block;
   width: 100%;
-  padding: 0.75rem;
-  font-size: 1rem;
+  padding: .9rem 0.75rem;
+  font-size: .85rem;
   font-weight: 400;
   line-height: 1.5;
   color: rgba(132, 132, 132, 0.9);
@@ -2038,27 +2038,27 @@ pre code {
 }
 
 .form-control::-webkit-input-placeholder {
-  color: rgba(132, 132, 132, 0.9);
+  color: rgba(132, 132, 132, 0.6);
   opacity: 1;
 }
 
 .form-control::-moz-placeholder {
-  color: rgba(132, 132, 132, 0.9);
+  color: rgba(132, 132, 132, 0.6);
   opacity: 1;
 }
 
 .form-control:-ms-input-placeholder {
-  color: rgba(132, 132, 132, 0.9);
+  color: rgba(132, 132, 132, 0.6);
   opacity: 1;
 }
 
 .form-control::-ms-input-placeholder {
-  color: rgba(132, 132, 132, 0.9);
+  color: rgba(132, 132, 132, 0.6);
   opacity: 1;
 }
 
 .form-control::placeholder {
-  color: rgba(132, 132, 132, 0.9);
+  color: rgba(132, 132, 132, 0.6);
   opacity: 1;
 }
 

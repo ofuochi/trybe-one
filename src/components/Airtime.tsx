@@ -7,7 +7,8 @@ import api from "../config/api.config";
 import { localStoreService } from "../services";
 import { Title } from "./common/Title";
 
-export const TransferSelf = () => {
+
+export const Airtime = () => {
   // const [
   //   txData,
   //   setTxData,
@@ -43,6 +44,7 @@ export const TransferSelf = () => {
     onSubmit: (values) => {
       alert(JSON.stringify(values, null, 2));
     },
+    
   });
   return (
     <>
@@ -56,7 +58,7 @@ export const TransferSelf = () => {
                   <div className="img-w-42">
                     <img
                       alt="img show"
-                      src="assets/images/icn-transfer-active.svg"
+                      src="assets/images/icn-transfer.svg"
                     />
                   </div>
                   <p className="d-block text-smaller text-dark mb-0 mt-0">
@@ -77,7 +79,7 @@ export const TransferSelf = () => {
               <div className="text-center ml-5-re">
                 <Link to="/airtime">
                   <div className="img-w-42">
-                    <img alt="showimg" src="assets/images/icn-airtime.svg" />
+                    <img alt="showimg" src="assets/images/icn-airtime-active.svg" />
                   </div>
                   <p className="d-block text-smaller text-dark mb-0 mt-0">
                     Airtime & Data
@@ -130,8 +132,8 @@ export const TransferSelf = () => {
             </div>
           </div>
 
-          <div className="mt-6">
-            <p className="mb-0 lead mb-4 p-0">
+          <div className="mt-5">
+            <p className="mb-0 lead p-0">
               Where would you like to send money to?
             </p>
             <div className="mdc-card info-card info-card--danger no-shadow overflow-x-auto">
@@ -139,7 +141,10 @@ export const TransferSelf = () => {
                 <div className="text-center">
                   <Link to="/transferself">
                     <div className="img-w-42">
-                      <img alt="showimg" src="assets/images/icn-self.svg" />
+                      <img
+                        alt="showimg"
+                        src="assets/images/icn-self-inactive.svg"
+                      />
                     </div>
                     <p className="d-block text-smaller text-dark mb-0 mt-0">
                       Self
@@ -152,40 +157,54 @@ export const TransferSelf = () => {
                       <img alt="showimg" src="assets/images/icn-trybe.svg" />
                     </div>
                     <p className="d-block text-smaller text-dark mb-0 mt-0">
-                      TrybeOne <br /> Account
+                      Others
                     </p>
                   </Link>
                 </div>
-                <div className="text-center ml-6-re">
-                  <Link to="/transfersterling">
+  
+              </div>
+            </div>
+
+
+            <p className="mt-5 lead mb-0 p-0">
+              Select Network
+            </p>
+            <div className="mdc-card info-card info-card--danger no-shadow overflow-x-auto">
+              <div className="card-inner row mb-0 d-flex">
+                <div className="text-center">
+                  <Link to="/transferself">
                     <div className="img-w-42">
-                      <img alt="showimg" src="assets/images/icn-sterling.svg" />
+                      <img
+                        alt="showimg"
+                        src="assets/images/ic-airtel.svg"
+                      />
                     </div>
                     <p className="d-block text-smaller text-dark mb-0 mt-0">
-                      Sterling <br /> Account
-                    </p>
-                  </Link>
-                </div>
-                <div className="text-center ml-6-re">
-                  <Link to="/transferother">
-                    <div className="img-w-42">
-                      <img alt="showimg" src="assets/images/icn-bank.svg" />
-                    </div>
-                    <p className="d-block text-smaller text-dark mb-0 mt-0">
-                      Other <br /> Banks
+                      Airtel
                     </p>
                   </Link>
                 </div>
                 <div className="text-center ml-6-re">
                   <Link to="#">
                     <div className="img-w-42">
-                      <img alt="showimg" src="assets/images/icn-foreign.svg" />
+                      <img alt="showimg" src="assets/images/ic-mtn.svg" />
                     </div>
                     <p className="d-block text-smaller text-dark mb-0 mt-0">
-                      Foreign <br /> Accounts
+                      MTN
                     </p>
                   </Link>
                 </div>
+                <div className="text-center ml-6-re">
+                  <Link to="#">
+                    <div className="img-w-42">
+                      <img alt="showimg" src="assets/images/ic-9mobile.svg" />
+                    </div>
+                    <p className="d-block text-smaller text-dark mb-0 mt-0">
+                      9mobile
+                    </p>
+                  </Link>
+                </div>
+  
               </div>
             </div>
 
@@ -221,28 +240,49 @@ export const TransferSelf = () => {
                         />
                       </span>
                     </div>
-                    <select className="form-control d-block w-100 pl-5 bdbtm-0">
+                    <input
+                      id="email"
+                      name="email"
+                      type="email"
+                      placeholder="08075578874 Default Number"
+                      className="form-control d-block w-100 pl-5"
+                      onChange={formik.handleChange}
+                      value={formik.values.email}
+                    />
+                    <label>Enter Number</label>
+                  </div>
+                </div>
+                <div className="row mx-0 mt-2 mb-3">
+                  <div>  
+                    <span className="mr-2">
+                        <img
+                          alt="showimg"
+                          src="assets/images/ic-contact.svg"
+                        />
+                      </span><small className="text-grey">Selecet number from contact</small></div>
+                </div>
+
+
+
+                <div className="form-group mb-0">
+                  <div className="input-group">
+                    <div className="input-group-prepend">
+                      <span className="input-group-text no-bg bd-0">
+                        <img alt="showimg" src="assets/images/ic-bank.svg" />
+                      </span>
+                    </div>
+                    <select className="form-control d-block w-100 pl-5">
                       <option value="" selected disabled>
-                        Select Account
+                      Source Account
                       </option>
                       <option>Current Account</option>
                       <option>Savings Account</option>
                       <option>Target Account</option>
                     </select>
-                    <label>Select Acount</label>
+                    <label>Source Account</label>
                   </div>
                 </div>
 
-                <div className="form-group mb-0">
-                  <div className="input-group">
-                    <div className="input-group-prepend"></div>
-                    <textarea
-                      rows={3}
-                      className="form-control d-block w-100 pl-5"
-                      placeholder="Reason or comment for transfer (optional)"
-                    ></textarea>
-                  </div>
-                </div>
                 <div className="form-group row m-0 justify-content-end mt-4">
                   <Button size="lg" variant="danger" className="px-5">
                     {" "}
