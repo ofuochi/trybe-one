@@ -23230,6 +23230,19 @@ border-radius: 10px;
 .bg-doughnut1{
 background: rgba(255, 114, 53, 0.8);
 }
+.bg-doughnut-rent{
+  background: rgba(115,200,138,1);  
+}
+.bg-doughnut-cab{
+  background: rgba(255,114,53,1);  
+}
+.bg-doughnut-movies{
+  background: rgba(93,131,229,1);  
+}
+.bg-doughnut-feeding{
+  background: rgba(234,67,150,1);  
+}
+
 .bg-doughnut2{
   background: rgba(255, 190, 33, 0.8);
 }

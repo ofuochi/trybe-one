@@ -78,6 +78,19 @@ $(function () {
     }
 
   };
+
+  var budgetChartData = {
+    datasets: [{
+      data: [30, 20, 30, 20],
+      backgroundColor: [
+        'rgba(115,200,138, 1)',
+        'rgba(255,114,53,1)',
+        'rgba(93,131,229,1)',
+        'rgba(234,67,150,1)',
+      ],
+    }],
+  };
+
   var doughnutPieData = {
     datasets: [{
       data: [30, 70],
@@ -122,8 +135,15 @@ $(function () {
     animation: {
       animateScale: true,
       animateRotate: true,
+    }    
+  };
+  var optionbudgetchart ={
+    responsive: true,
+    cutoutPercentage: 60,
+    animation: {
+      animateScale: true,
+      animateRotate: true,
     }
-    
   };
   var areaData = {
     labels: ["2013", "2014", "2015", "2016", "2017"],
@@ -463,6 +483,16 @@ $(function () {
       type: 'line',
       data: multiAreaData,
       options: multiAreaOptions
+    });
+  }
+
+  
+  if ($("#budgetChart").length) {
+    var budgetChartCanvas = $("#budgetChart").get(0).getContext("2d");
+    var budgetChart = new Chart(budgetChartCanvas, {
+      type: 'doughnut',
+      data: budgetChartData,
+      options: optionbudgetchart
     });
   }
 

@@ -7,6 +7,7 @@ export const routePath = {
   airtime: "/airtime",
   airtimeothers: "/airtimeothers",
   investments: "/investments",
+  targetsavings: "/targetsavings",
   login: "/login",
   signup: "/signup",
   otp: "/otp",

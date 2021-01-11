@@ -15,6 +15,7 @@ import { TransferSelf } from "../TransferSelf";
 import { TransferOther } from "../TransferOther";
 import { TransferSterling } from "../TransferSterling";
 import { Airtime } from "../Airtime";
+import { TargetSavings } from "../TargetSavings";
 import { AuthRoute } from "./AuthRoute";
 import { AirtimeOthers } from "../AirtimeOthers";
 
@@ -55,6 +56,11 @@ export const AppRoutes = () => {
          <AuthRoute
         path={routePath.airtime}
         component={Airtime}
+        isPrivate
+      />
+        <AuthRoute
+        path={routePath.targetsavings}
+        component={TargetSavings}
         isPrivate
       />
                <AuthRoute
