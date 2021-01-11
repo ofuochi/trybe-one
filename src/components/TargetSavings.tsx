@@ -53,7 +53,7 @@ export const TargetSavings = () => {
               ></canvas>
             </div>
         </div>
-        <div className="col-lg-2">
+        <div className="col-lg-2 pt-4">
          <div className="mb-1">
          <span
                 style={{ width: "10px", height: "10px", float:"left" }}
@@ -97,6 +97,11 @@ export const TargetSavings = () => {
             </h5>
 
             <div className="col-lg-12">
+
+  <div className="form-group row m-0">
+    <p>Rent</p>
+    <input type="range" min="0" max="10" id="formControlRange" className="form-control-range"></input>
+  </div>
 
             </div>
             </div>
