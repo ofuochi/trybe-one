@@ -45,7 +45,7 @@ export const Transactions = () => {
           <div className="mdc-card info-card info-card--danger overflow-x-auto re-shadow">
             <div className="card-inner row mb-0 d-flex">
               <div className="text-center">
-                <Link to="transferself">
+                <Link to="/transferself">
                   <div className="img-w-42">
                     <img alt="" src="assets/images/icn-transfer.svg" />
                   </div>
@@ -65,7 +65,7 @@ export const Transactions = () => {
                 </Link>
               </div>
               <div className="text-center ml-5-re">
-                <Link to="#">
+                <Link to="/airtime">
                   <div className="img-w-42">
                     <img alt="" src="assets/images/icn-airtime.svg" />
                   </div>

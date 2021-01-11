@@ -23192,6 +23192,11 @@ background:none!important;
 .bd-0{
   border:none
 }
+.text-grey{
+    color: #9593A0;}
+.bdbtm-0{
+  border-bottom: none!important;
+}
 .collection .collection-item{
   border:none
 }

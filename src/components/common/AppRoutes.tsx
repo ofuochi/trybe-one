@@ -12,7 +12,11 @@ import { Home } from "../Home";
 import { Investments } from "../Investments";
 import { Transactions } from "../Transactions";
 import { TransferSelf } from "../TransferSelf";
+import { TransferOther } from "../TransferOther";
+import { TransferSterling } from "../TransferSterling";
+import { Airtime } from "../Airtime";
 import { AuthRoute } from "./AuthRoute";
+import { AirtimeOthers } from "../AirtimeOthers";
 
 export const AppRoutes = () => {
   const { currentUserStore } = useStore();
@@ -38,6 +42,28 @@ export const AppRoutes = () => {
         component={TransferSelf}
         isPrivate
       />
+      <AuthRoute
+        path={routePath.transferother}
+        component={TransferOther}
+        isPrivate
+      />
+         <AuthRoute
+        path={routePath.transfersterling}
+        component={TransferSterling}
+        isPrivate
+      />
+         <AuthRoute
+        path={routePath.airtime}
+        component={Airtime}
+        isPrivate
+      />
+               <AuthRoute
+        path={routePath.airtimeothers}
+        component={AirtimeOthers}
+        isPrivate
+      />
+
+
       <AuthRoute path={routePath.login} component={Login} />
       <AuthRoute path={routePath.signup} component={Signup} />
       <AuthRoute path={routePath.home} exact component={Home} />

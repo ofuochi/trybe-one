@@ -7,7 +7,7 @@ import api from "../config/api.config";
 import { localStoreService } from "../services";
 import { Title } from "./common/Title";
 
-export const TransferSelf = () => {
+export const TransferSterling = () => {
   // const [
   //   txData,
   //   setTxData,
@@ -139,7 +139,10 @@ export const TransferSelf = () => {
                 <div className="text-center">
                   <Link to="/transferself">
                     <div className="img-w-42">
-                      <img alt="showimg" src="assets/images/icn-self.svg" />
+                      <img
+                        alt="showimg"
+                        src="assets/images/icn-self-inactive.svg"
+                      />
                     </div>
                     <p className="d-block text-smaller text-dark mb-0 mt-0">
                       Self
@@ -159,7 +162,7 @@ export const TransferSelf = () => {
                 <div className="text-center ml-6-re">
                   <Link to="/transfersterling">
                     <div className="img-w-42">
-                      <img alt="showimg" src="assets/images/icn-sterling.svg" />
+                      <img alt="showimg" src="assets/images/icn-sterling-active.svg" />
                     </div>
                     <p className="d-block text-smaller text-dark mb-0 mt-0">
                       Sterling <br /> Account
@@ -169,7 +172,10 @@ export const TransferSelf = () => {
                 <div className="text-center ml-6-re">
                   <Link to="/transferother">
                     <div className="img-w-42">
-                      <img alt="showimg" src="assets/images/icn-bank.svg" />
+                      <img
+                        alt="showimg"
+                        src="assets/images/icn-bank.svg"
+                      />
                     </div>
                     <p className="d-block text-smaller text-dark mb-0 mt-0">
                       Other <br /> Banks
@@ -221,17 +227,42 @@ export const TransferSelf = () => {
                         />
                       </span>
                     </div>
-                    <select className="form-control d-block w-100 pl-5 bdbtm-0">
-                      <option value="" selected disabled>
-                        Select Account
-                      </option>
-                      <option>Current Account</option>
-                      <option>Savings Account</option>
-                      <option>Target Account</option>
-                    </select>
-                    <label>Select Acount</label>
+                    <input
+                      id="email"
+                      name="email"
+                      type="email"
+                      placeholder="Source Amount"
+                      className="form-control d-block w-100 pl-5 bdbtm-0"
+                      onChange={formik.handleChange}
+                      value={formik.values.email}
+                    />
+                    <label>Source Account</label>
                   </div>
                 </div>
+
+                <div className="form-group mb-0">
+                  <div className="input-group">
+                    <div className="input-group-prepend">
+                      <span className="input-group-text no-bg bd-0">
+                        <img
+                          alt="showimg"
+                          src="assets/images/ic-account-dark.svg"
+                        />
+                      </span>
+                    </div>
+                    <input
+                      id="email"
+                      name="email"
+                      type="email"
+                      placeholder="Destination Account"
+                      className="form-control d-block w-100 pl-5 bdbtm-0"
+                      onChange={formik.handleChange}
+                      value={formik.values.email}
+                    />
+                    <label>Destination Account</label>
+                  </div>
+                </div>
+
 
                 <div className="form-group mb-0">
                   <div className="input-group">
