@@ -5,6 +5,7 @@ export const routePath = {
   transferother: "/transferother",
   transfersterling: "/transfersterling",
   airtime: "/airtime",
+  airtimeothers: "/airtimeothers",
   investments: "/investments",
   login: "/login",
   signup: "/signup",

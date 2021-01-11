@@ -16,6 +16,7 @@ import { TransferOther } from "../TransferOther";
 import { TransferSterling } from "../TransferSterling";
 import { Airtime } from "../Airtime";
 import { AuthRoute } from "./AuthRoute";
+import { AirtimeOthers } from "../AirtimeOthers";
 
 export const AppRoutes = () => {
   const { currentUserStore } = useStore();
@@ -54,6 +55,11 @@ export const AppRoutes = () => {
          <AuthRoute
         path={routePath.airtime}
         component={Airtime}
+        isPrivate
+      />
+               <AuthRoute
+        path={routePath.airtimeothers}
+        component={AirtimeOthers}
         isPrivate
       />
 

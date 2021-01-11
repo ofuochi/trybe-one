@@ -6,7 +6,7 @@
 	.st0{fill:#F5F7FA;}
 	.st1{display:none;fill:#FF5364;}
 	.st2{display:none;fill:#F5F7FA;}
-	.st3{fill:#FFFFFF;}
+	.st3{fill:#C4C4C4;}
 </style>
 <circle class="st0" cx="20.5" cy="20.5" r="20.1"/>
 <circle class="st1" cx="20.5" cy="20.5" r="20.1"/>

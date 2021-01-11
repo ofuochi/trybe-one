@@ -8,7 +8,7 @@ import { localStoreService } from "../services";
 import { Title } from "./common/Title";
 
 
-export const Airtime = () => {
+export const AirtimeOthers = () => {
   // const [
   //   txData,
   //   setTxData,
@@ -143,7 +143,7 @@ export const Airtime = () => {
                     <div className="img-w-42">
                       <img
                         alt="showimg"
-                        src="assets/images/icn-self.svg"
+                        src="assets/images/icn-self-inactive.svg"
                       />
                     </div>
                     <p className="d-block text-smaller text-dark mb-0 mt-0">
@@ -154,7 +154,7 @@ export const Airtime = () => {
                 <div className="text-center ml-6-re">
                   <Link to="/airtimeothers">
                     <div className="img-w-42">
-                      <img alt="showimg" src="assets/images/ic-others.svg" />
+                      <img alt="showimg" src="assets/images/ic-others-active.svg" />
                     </div>
                     <p className="d-block text-smaller text-dark mb-0 mt-0">
                       Others
@@ -245,13 +245,24 @@ export const Airtime = () => {
                       name="email"
                       type="email"
                       placeholder="08075578874 Default Number"
-                      className="form-control d-block w-100 pl-5 bdbtm-0"
+                      className="form-control d-block w-100 pl-5"
                       onChange={formik.handleChange}
                       value={formik.values.email}
                     />
                     <label>Enter Number</label>
                   </div>
                 </div>
+                <div className="row mx-0 mt-2 mb-3">
+                  <div>  
+                    <span className="mr-2">
+                        <img
+                          alt="showimg"
+                          src="assets/images/ic-contact.svg"
+                        />
+                      </span><small className="text-grey">Selecet number from contact</small></div>
+                </div>
+
+
 
                 <div className="form-group mb-0">
                   <div className="input-group">
