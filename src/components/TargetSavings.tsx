@@ -37,6 +37,8 @@ export const TargetSavings = () => {
       .post<API.GetCardResponseDto>("/User/GetActiveCard", getCardInput)
       .then(({ data }) => setCards(data));
   }, []);
+
+  
   return (
     <>
       <Title title="Transactions" />
@@ -89,10 +91,14 @@ export const TargetSavings = () => {
         </div>
         </div>
 
-          <div className="mt-6">
+          <div className="mt-4">
             <h5 className="mdc-top-app-bar__title mb-0 mb-4 p-0">
               Target Savings
             </h5>
+
+            <div className="col-lg-12">
+
+            </div>
             </div>
         </div>
       </div>
