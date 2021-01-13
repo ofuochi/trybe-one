@@ -1,6 +1,6 @@
 import { Helmet } from "react-helmet";
 
-import { Title } from "./common/Title";
+import { Title } from "./Common/Title";
 
 export const TargetSavings = () => {
   return (

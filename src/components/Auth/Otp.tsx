@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 
 import api from "../../config/api.config";
 import { routePath } from "../../constants/route-paths";
-import { Title } from "../common/Title";
+import { Title } from "../Common/Title";
 
 export const Otp = () => {
   const [mobile, setMobile] = useState<string | undefined>(undefined);

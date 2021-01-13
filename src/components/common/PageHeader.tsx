@@ -30,7 +30,7 @@ export const PageHeader = observer(() => {
                   <img
                     alt=""
                     className="w-24"
-                    src="assets/images/ic-cloudy.svg"
+                    src="/assets/images/ic-cloudy.svg"
                   />
                 </i>
               </span>

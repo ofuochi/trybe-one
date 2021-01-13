@@ -5,7 +5,7 @@ import React from "react";
 import { BrowserRouter } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 
-import { AppRoutes } from "./components/common/AppRoutes";
+import { AppRoutes } from "./components/Common/AppRoutes";
 import { StoreProvider } from "./contexts";
 
 const App: React.FC = () => {

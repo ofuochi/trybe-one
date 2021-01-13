@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import "aos/dist/aos.css";
 import AOS from "aos";
 import { NavLink, useHistory } from "react-router-dom";
-import Pagefooter from "./common/Pagefooter";
+import Pagefooter from "./Common/Pagefooter";
 
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
@@ -13,7 +13,7 @@ import Card from "react-bootstrap/Card";
 import Container from "react-bootstrap/Container";
 
 import { routePath } from "../constants/route-paths";
-import { Title } from "./common/Title";
+import { Title } from "./Common/Title";
 import { Button } from "react-bootstrap";
 
 export const Home = () => {
@@ -30,7 +30,7 @@ export const Home = () => {
         <div className="container">
           <Navbar.Brand>
             <NavLink to={routePath.home} className="brand-logo">
-              <img alt="logo" src="assets/images/logo.png" />
+              <img alt="logo" src="/assets/images/logo.png" />
             </NavLink>
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
@@ -93,7 +93,7 @@ export const Home = () => {
               <Col>
                 <div className="motion-down">
                   <p className="arrow-down">
-                    <img alt="point-img" src="assets/images/ic-pointer.svg" />
+                    <img alt="point-img" src="/assets/images/ic-pointer.svg" />
                   </p>
                 </div>
               </Col>

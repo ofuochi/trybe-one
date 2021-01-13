@@ -5,8 +5,8 @@ import * as Yup from "yup";
 
 import { routePath } from "../../constants/route-paths";
 import { useStore } from "../../hooks/use-store.hooks";
-import { ErrorMsg } from "../common/ErrorMsg";
-import { Title } from "../common/Title";
+import { ErrorMsg } from "../Common/ErrorMsg";
+import { Title } from "../Common/Title";
 
 const LoginSchema = Yup.object().shape({
   nuban: Yup.string()
@@ -72,37 +72,39 @@ export const Login = () => {
                 {({ isSubmitting }) => (
                   <Form className="form-signin text-center">
                     <Link to={routePath.home}>
-                      <img alt="logo" src="assets/images/logo.png" />
+                      <img alt="logo" src="/assets/images/logo.png" />
                     </Link>
                     <h2 className="mb-3 text-primary login-titile text-center mt-5">
                       Welcome to trybeOne
                     </h2>
-                    <p className="desc-login mb-4 text-center">Please enter your details below to login</p>
+                    <p className="desc-login mb-4 text-center">
+                      Please enter your details below to login
+                    </p>
                     <div className="form-group">
-                    <div className="input-group">
-                      <Field
-                        id="inputEmail"
-                        name="nuban"
-                        className="form-control d-block w-100"
-                        placeholder="Account Number"
-                        autoFocus
-                      />
-                      <label>Account Number</label>
-                      <ErrorMsg inputName="nuban" />
+                      <div className="input-group">
+                        <Field
+                          id="inputEmail"
+                          name="nuban"
+                          className="form-control d-block w-100"
+                          placeholder="Account Number"
+                          autoFocus
+                        />
+                        <label>Account Number</label>
+                        <ErrorMsg inputName="nuban" />
                       </div>
                     </div>
                     <div className="form-group">
-                    <div className="input-group">       
-                      <Field
-                        type="password"
-                        id="inputPassword"
-                        name="password"
-                        className="form-control d-block w-100"
-                        placeholder="Password"
-                      />
-                      <ErrorMsg inputName="password" />
-                      <label>Password</label>
-                    </div>
+                      <div className="input-group">
+                        <Field
+                          type="password"
+                          id="inputPassword"
+                          name="password"
+                          className="form-control d-block w-100"
+                          placeholder="Password"
+                        />
+                        <ErrorMsg inputName="password" />
+                        <label>Password</label>
+                      </div>
                     </div>
 
                     <div className="form-group text-left">

@@ -9,9 +9,9 @@ import api from "../../config/api.config";
 import { routePath } from "../../constants/route-paths";
 import { useStore } from "../../hooks/use-store.hooks";
 import { authService } from "../../services";
-import { ErrorMsg } from "../common/ErrorMsg";
-import { FormikStep, FormikStepper } from "../common/FormikStepper";
-import { Title } from "../common/Title";
+import { ErrorMsg } from "../Common/ErrorMsg";
+import { FormikStep, FormikStepper } from "../Common/FormikStepper";
+import { Title } from "../Common/Title";
 
 const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
 

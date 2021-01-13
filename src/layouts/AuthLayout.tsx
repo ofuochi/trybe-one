@@ -1,6 +1,6 @@
 import React from "react";
-import { Menu } from "../components/common/Menu";
-import { PageHeader } from "../components/common/PageHeader";
+import { Menu } from "../components/Common/Menu";
+import { PageHeader } from "../components/Common/PageHeader";
 
 export const AuthLayout: React.FC = ({ children }) => {
   return (

@@ -5,7 +5,7 @@ import { Link, Route, Switch } from "react-router-dom";
 import api from "../../config/api.config";
 import { routePath } from "../../constants/route-paths";
 import { localStoreService } from "../../services";
-import { Title } from "../common/Title";
+import { Title } from "../Common/Title";
 import { Airtime } from "./Airtime";
 import RecentTransactions from "./Recent";
 import { Transfer } from "./Transfers";
