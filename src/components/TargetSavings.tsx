@@ -83,14 +83,14 @@ export const TargetSavings = () => {
           <div className="col s6">
             <div className="text-left">
               <button className="btn no-bg p-0">
-                <img alt="" src="assets/images/ic-search.svg" />
+                <img alt="" src="/assets/images/ic-search.svg" />
               </button>
             </div>
           </div>
           <div className="col s6">
             <div className="text-right">
               <button className="btn no-bg p-0">
-                <img alt="" src="assets/images/ic-notification.svg" />
+                <img alt="" src="/assets/images/ic-notification.svg" />
               </button>
             </div>
           </div>
@@ -142,11 +142,11 @@ export const TargetSavings = () => {
         </div>
       </div>
       <Helmet defer>
-        <script src="assets/vendors/chartjs/Chart.min.js"></script>
-        <script src="assets/vendors/jvectormap/jquery-jvectormap.min.js"></script>
-        <script src="assets/vendors/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
-        <script src="assets/js/chartjs.js"></script>
-        <script src="assets/js/dashboard.js"></script>
+        <script src="/assets/vendors/chartjs/Chart.min.js"></script>
+        <script src="/assets/vendors/jvectormap/jquery-jvectormap.min.js"></script>
+        <script src="/assets/vendors/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
+        <script src="/assets/js/chartjs.js"></script>
+        <script src="/assets/js/dashboard.js"></script>
       </Helmet>
     </>
   );

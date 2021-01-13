@@ -1,35 +1,19 @@
-import moment from "moment";
-import numeral from "numeral";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
-import { Link } from "react-router-dom";
+import { Link, Route, Switch } from "react-router-dom";
 
-import api from "../config/api.config";
-import { localStoreService } from "../services";
-import { Title } from "./common/Title";
+import api from "../../config/api.config";
+import { routePath } from "../../constants/route-paths";
+import { localStoreService } from "../../services";
+import { Title } from "../common/Title";
+import { Airtime } from "./Airtime";
+import RecentTransactions from "./Recent";
+import { Transfer } from "./Transfers";
 
 export const Transactions = () => {
-  const [
-    txData,
-    setTxData,
-  ] = useState<API.WalletUserTransactionDetailsResponse>({});
   const [cards, setCards] = useState<API.GetCardResponseDto>({});
   useEffect(() => {
-    const endDate = moment(new Date());
-    const startDate = moment(endDate).subtract(2, "week");
     const currentUser = localStoreService.getCurrentUser();
-    const req: API.UserTransactionRequestDto = {
-      number: currentUser?.nuban,
-      startDate: startDate.toISOString(),
-      endDate: endDate.toISOString(),
-    };
-    api
-      .post<API.WalletUserTransactionDetailsResponse>(
-        "/User/GetUserTransactions",
-        req
-      )
-      .then(({ data }) => setTxData(data));
-
     const getCardInput: API.GetCardRequestDto = {
       accountId: currentUser?.nuban,
     };
@@ -37,6 +21,7 @@ export const Transactions = () => {
       .post<API.GetCardResponseDto>("/User/GetActiveCard", getCardInput)
       .then(({ data }) => setCards(data));
   }, []);
+
   return (
     <>
       <Title title="Transactions" />
@@ -45,9 +30,9 @@ export const Transactions = () => {
           <div className="mdc-card info-card info-card--danger overflow-x-auto re-shadow">
             <div className="card-inner row mb-0 d-flex">
               <div className="text-center">
-                <Link to="/transferself">
+                <Link to={routePath.transactions.transfer.index}>
                   <div className="img-w-42">
-                    <img alt="" src="assets/images/icn-transfer.svg" />
+                    <img alt="" src="/assets/images/icn-transfer.svg" />
                   </div>
                   <p className="d-block text-smaller text-dark mb-0 mt-0">
                     Transfer
@@ -57,7 +42,7 @@ export const Transactions = () => {
               <div className="text-center ml-5-re">
                 <Link to="#">
                   <div className="img-w-42">
-                    <img alt="" src="assets/images/icn-paybills.svg" />
+                    <img alt="" src="/assets/images/icn-paybills.svg" />
                   </div>
                   <p className="d-block text-smaller text-dark mb-0 mt-0">
                     Pay Bills
@@ -65,19 +50,19 @@ export const Transactions = () => {
                 </Link>
               </div>
               <div className="text-center ml-5-re">
-                <Link to="/airtime">
+                <Link to={routePath.transactions.airtime.index}>
                   <div className="img-w-42">
-                    <img alt="" src="assets/images/icn-airtime.svg" />
+                    <img alt="" src="/assets/images/icn-airtime.svg" />
                   </div>
                   <p className="d-block text-smaller text-dark mb-0 mt-0">
-                    Airtime & Data
+                    Airtime &amp; Data
                   </p>
                 </Link>
               </div>
               <div className="text-center ml-5-re">
                 <Link to="#">
                   <div className="img-w-42">
-                    <img alt="" src="assets/images/icn-subscription.svg" />
+                    <img alt="" src="/assets/images/icn-subscription.svg" />
                   </div>
                   <p className="d-block text-smaller text-dark mb-0 mt-0">
                     Subscription
@@ -87,7 +72,7 @@ export const Transactions = () => {
               <div className="text-center ml-5-re">
                 <Link to="#">
                   <div className="img-w-42">
-                    <img alt="" src="assets/images/icn-bamboo.svg" />
+                    <img alt="" src="/assets/images/icn-bamboo.svg" />
                   </div>
                   <p className="d-block text-smaller text-dark mb-0 mt-0">
                     Bamboo
@@ -97,7 +82,7 @@ export const Transactions = () => {
               <div className="text-center ml-5-re">
                 <Link to="#">
                   <div className="img-w-42">
-                    <img alt="" src="assets/images/icn-statement.svg" />
+                    <img alt="" src="/assets/images/icn-statement.svg" />
                   </div>
                   <p className="d-block text-smaller text-dark mb-0 mt-0">
                     Statement
@@ -107,7 +92,7 @@ export const Transactions = () => {
               <div className="text-center ml-5-re">
                 <Link to="#">
                   <div className="img-w-42">
-                    <img alt="" src="assets/images/icn-more.svg" />
+                    <img alt="" src="/assets/images/icn-more.svg" />
                   </div>
                   <p className="d-block text-smaller text-dark mb-0 mt-0">
                     More
@@ -117,38 +102,21 @@ export const Transactions = () => {
             </div>
           </div>
 
-          <div className="mt-6">
-            <h5 className="mdc-top-app-bar__title mb-0 mb-4 p-0">
-              Recent Transactions
-            </h5>
-            <table className="highlight table">
-              <tbody>
-                {txData.data?.map((tx, i) => (
-                  <tr key={i}>
-                    <td>
-                      <img
-                        alt=""
-                        className="w-40"
-                        src="assets/images/icn-transfer.svg"
-                      />
-                    </td>
-                    <td>{tx.remarks}</td>
-                    <td>{moment(tx.trA_DATE).format("D MMM YYYY")}</td>
-                    <td>
-                      <span
-                        className={`new badge blue-outline bg-white ${
-                          tx.deb_cre_ind === 1 ? "text-danger" : "text-success"
-                        }`}
-                      >
-                        {tx.deb_cre_ind === 1 ? "Debit" : "Credit"}
-                      </span>
-                    </td>
-                    <td>{`₦${numeral(tx.amt).format("0,0")}`}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <Switch>
+            <Route
+              path={routePath.transactions.index}
+              component={RecentTransactions}
+              exact
+            />
+            <Route
+              path={routePath.transactions.transfer.index}
+              component={Transfer}
+            />
+            <Route
+              path={routePath.transactions.airtime.index}
+              component={Airtime}
+            />
+          </Switch>
         </div>
       </div>
       <div className="col-lg-4 col-md-4">
@@ -156,14 +124,14 @@ export const Transactions = () => {
           <div className="col s6">
             <div className="text-left">
               <button className="btn no-bg p-0">
-                <img alt="" src="assets/images/ic-search.svg" />
+                <img alt="" src="/assets/images/ic-search.svg" />
               </button>
             </div>
           </div>
           <div className="col s6">
             <div className="text-right">
               <button className="btn no-bg p-0">
-                <img alt="" src="assets/images/ic-notification.svg" />
+                <img alt="" src="/assets/images/ic-notification.svg" />
               </button>
             </div>
           </div>
@@ -178,7 +146,7 @@ export const Transactions = () => {
             <div className="cardslides">
               {cards.data?.map((card, i) => (
                 <div key={i} style={{ display: "block" }}>
-                  <img alt="" src="assets/images/cardbg.png" />
+                  <img alt="" src="/assets/images/cardbg.png" />
                 </div>
               ))}
             </div>
@@ -231,11 +199,11 @@ export const Transactions = () => {
         </div>
       </div>
       <Helmet defer>
-        <script src="assets/vendors/chartjs/Chart.min.js"></script>
-        <script src="assets/vendors/jvectormap/jquery-jvectormap.min.js"></script>
-        <script src="assets/vendors/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
-        <script src="assets/js/chartjs.js"></script>
-        <script src="assets/js/dashboard.js"></script>
+        <script src="/assets/vendors/chartjs/Chart.min.js"></script>
+        <script src="/assets/vendors/jvectormap/jquery-jvectormap.min.js"></script>
+        <script src="/assets/vendors/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
+        <script src="/assets/js/chartjs.js"></script>
+        <script src="/assets/js/dashboard.js"></script>
       </Helmet>
     </>
   );

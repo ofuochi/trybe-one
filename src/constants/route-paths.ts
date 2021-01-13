@@ -1,11 +1,21 @@
 export const routePath = {
   dashboard: "/dashboard",
-  transactions: "/transactions",
-  transferself: "/transferself",
-  transferother: "/transferother",
-  transfersterling: "/transfersterling",
-  airtime: "/airtime",
-  airtimeothers: "/airtimeothers",
+  transactions: {
+    index: "/transactions",
+    history: "/transactions/history",
+    transfer: {
+      index: "/transactions/transfer",
+      self: "/transactions/transfer/self",
+      others: "/transactions/transfer/others",
+      sterling: "/transactions/transfer/sterling",
+    },
+    airtime: {
+      index: "/transactions/airtime",
+      self: "/transactions/airtime/self",
+      others: "/transactions/airtime/others",
+    },
+  },
+
   investments: "/investments",
   targetsavings: "/targetsavings",
   login: "/login",

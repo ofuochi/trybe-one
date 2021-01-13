@@ -11,7 +11,7 @@ export const DrawerHeader = observer(() => {
           <div>
             <img
               className="rounded-15 responsive-img"
-              src="assets/images/image 20.png"
+              src="/assets/images/image 20.png"
               alt="logo"
             />
           </div>
