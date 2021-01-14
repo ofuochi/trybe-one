@@ -11,30 +11,17 @@ import { ErrorMsg } from "../../Common/ErrorMsg";
 const Schema = Yup.object().shape({
   frmacct: Yup.string().required("required"),
   toacct: Yup.string()
-    .matches(/^\d+$/, "must be digits only")
+    .matches(/^\d{10}$/, "must be 10 digits only")
     .notOneOf([Yup.ref("frmacct")], "'from' and 'to' acct cannot be the same")
     .required("required"),
   amt: Yup.number().min(1).required("required"),
   pin: Yup.string().required("required"),
   nipData: Yup.object({
     destinationBankCode: Yup.string().required("required"),
-    accountName: Yup.string().required("required"),
+    // accountName: Yup.string().required("required"),
   }),
 });
-const initialValues: API.WalletInterBankFTReq = {
-  amt: "",
-  remarks: "",
-  frmacct: "",
-  toacct: "",
-  channelID: 1,
-  currencycode: "NGN",
-  transferType: 0,
-  pin: "",
-  nipData: {
-    destinationBankCode: "",
-    accountName: "",
-  },
-};
+
 export const TransferOther = () => {
   const [userAccts, setUserAccts] = useState<API.UserNubanDto[] | undefined>();
   const [toBanks, setToBanks] = useState<API.ParticipatingBank[] | undefined>();
@@ -62,11 +49,26 @@ export const TransferOther = () => {
     destinationBankCode: "",
     accountNumber: toAccount,
   };
+  const initialValues: API.WalletInterBankFTReq = {
+    amt: "",
+    remarks: "",
+    frmacct: "",
+    toacct: "",
+    channelID: 1,
+    currencycode: "NGN",
+    transferType: 0,
+    pin: "",
+    nipData: {
+      destinationBankCode: "",
+      accountName: toWho,
+    },
+  };
   const handleSubmit = (
     values: API.WalletInterBankFTReq,
     { setSubmitting, resetForm }: any
   ) => {
     values.paymentRef = Date.now().toString();
+    if (values.nipData) values.nipData.accountName = toWho;
     api
       .post<API.UserResponseModel>("/User/WalletInterBankFT", values)
       .then(({ data }) => {
@@ -75,7 +77,8 @@ export const TransferOther = () => {
         if (data.responseCode === "00") {
           resetForm();
           toast.success(data.responseDescription, { position: "top-center" });
-        } else toast.error(data.responseDescription);
+        } else
+          toast.error(data.responseDescription, { position: "top-center" });
       })
       .catch(() => {
         setSubmitting(false);
@@ -142,13 +145,30 @@ export const TransferOther = () => {
                     <img alt="" src="/assets/images/ic-account-dark.svg" />
                   </span>
                 </div>
-
                 <Field
                   name="toacct"
                   placeholder="To Account"
+                  max={10}
                   onChange={(e: any) => {
                     setToAccount(e.target.value);
                     setFieldValue(e.target.name, e.target.value);
+                    if (!nameInquiryInput.accountNumber) setToWho("");
+                    if (
+                      initialValues.toacct &&
+                      initialValues.toacct?.length < 10
+                    )
+                      setToWho("");
+                    else {
+                      if (initialValues.nipData?.destinationBankCode)
+                        api
+                          .post<API.NameEnquiryResponse>(
+                            "/User/InterBankNameEnquiry",
+                            nameInquiryInput
+                          )
+                          .then(({ data }) => {
+                            setToWho(data.accountName || "");
+                          });
+                    }
                   }}
                   className="form-control d-block w-100 pl-5 bdbtm-0"
                 />
@@ -168,6 +188,7 @@ export const TransferOther = () => {
                   name="nipData.destinationBankCode"
                   onChange={(e: ChangeEvent<HTMLSelectElement>) => {
                     if (!nameInquiryInput.accountNumber) return;
+                    if (nameInquiryInput.accountNumber.length < 10) return;
                     nameInquiryInput.destinationBankCode = e.target.value;
                     setFieldValue(e.target.name, e.target.value);
                     api
