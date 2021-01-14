@@ -63,6 +63,7 @@ export const Otp = () => {
                         type="text"
                         className="form-control inp-otp"
                         placeholder="****"
+                        required
                         onChange={(input) => setOtp(input.target.value)}
                       />
                     </div>

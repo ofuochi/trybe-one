@@ -126,6 +126,14 @@ export const Signup = observer(() => {
       setSubmitting(false);
     }
   };
+  const getSchools = ({ target }: any) => {
+    const countryId = target.value;
+    api
+      .get<API.InstitutionList>(
+        `/User/GetAllActiveInstitutionsByCountry?country=${countryId}`
+      )
+      .then(({ data }) => setSchools(data));
+  };
   return (
     <div className="container-fluid vh-100">
       <Title title="Signup" />
@@ -205,17 +213,12 @@ export const Signup = observer(() => {
                             as="select"
                             name="country"
                             className="form-control d-block w-100"
-                            onChange={({ target }: any) => {
-                              const countryId = target.value;
-                              api
-                                .get<API.InstitutionList>(
-                                  `/User/GetAllActiveInstitutionsByCountry?country=${countryId}`
-                                )
-                                .then(({ data }) => setSchools(data));
-                            }}
+                            onChange={getSchools}
                             required
                           >
-                            <option value=""> -Select Country- </option>
+                            <option value="" disabled>
+                              -Select Country-
+                            </option>
                             {countries.schoolCountries?.length &&
                               countries.schoolCountries.map((country) => (
                                 <option key={country.id} value={country.name}>
@@ -227,28 +230,26 @@ export const Signup = observer(() => {
                           <ErrorMsg inputName="country" />
                         </div>
                       </div>
-                      {schools.institutions &&
-                        schools.institutions?.length > 0 && (
-                          <div className="form-group">
-                            <div className="input-group">
-                              <Field
-                                as="select"
-                                name="schoolName"
-                                className="form-control d-block w-100"
-                                placeholder="School name"
-                              >
-                                <option value=""> -Select School- </option>
-                                {schools.institutions.map((school) => (
-                                  <option key={school.id} value={school.id}>
-                                    {school.institutionName}
-                                  </option>
-                                ))}
-                              </Field>
-                              <label>School name</label>
-                              <ErrorMsg inputName="schoolName" />
-                            </div>
-                          </div>
-                        )}
+
+                      <div className="form-group">
+                        <div className="input-group">
+                          <Field
+                            as="select"
+                            name="schoolName"
+                            className="form-control d-block w-100"
+                            placeholder="School name"
+                          >
+                            <option value=""> -Select School- </option>
+                            {schools.institutions?.map((school) => (
+                              <option key={school.id} value={school.id}>
+                                {school.institutionName}
+                              </option>
+                            ))}
+                          </Field>
+                          <label>School name</label>
+                          <ErrorMsg inputName="schoolName" />
+                        </div>
+                      </div>
 
                       <div className="form-group">
                         <div className="input-group">

@@ -1,4 +1,3 @@
-import React from "react";
 import { Menu } from "../components/Common/Menu";
 import { PageHeader } from "../components/Common/PageHeader";
 

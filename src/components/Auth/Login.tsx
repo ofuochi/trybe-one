@@ -10,7 +10,7 @@ import { Title } from "../Common/Title";
 
 const LoginSchema = Yup.object().shape({
   nuban: Yup.string()
-    .matches(/^\d/, "NUBAN must be digits")
+    .matches(/^\d+$/, "NUBAN must be digits only")
     .required("required"),
   password: Yup.string().required(),
 });

@@ -8,8 +8,8 @@ class LocalStoreService {
   clear() {
     localStorage.clear();
   }
-  authToken = "AuthToken";
-  user = "CurrentUser";
+  private authToken = "AuthToken";
+  private user = "CurrentUser";
   saveAuthToken = (token: string, currentUser: CurrentUser) => {
     localStorage.setItem(this.authToken, token);
     localStorage.setItem(this.user, JSON.stringify(currentUser));

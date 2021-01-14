@@ -1,5 +1,5 @@
 import { Field, Form, Formik } from "formik";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 import { toast } from "react-toastify";
 import * as Yup from "yup";
@@ -12,22 +12,22 @@ const Schema = Yup.object().shape({
   frmacct: Yup.string().required("required"),
   toacct: Yup.string()
     .required("required")
-    .notOneOf([Yup.ref("frmacct")], "from and to acct cannot be the same"),
+    .notOneOf([Yup.ref("frmacct")], "'from' and 'to' acct cannot be the same"),
   amt: Yup.number().min(1).required("required"),
-  pin: Yup.string(),
+  pin: Yup.string().required("required"),
 });
 
+const initialValues: API.WalletToWalletFTReq = {
+  amt: "",
+  remarks: "",
+  frmacct: "",
+  toacct: "",
+  channelID: 1,
+  currencycode: "NGN",
+  transferType: 0,
+  pin: "",
+};
 export const TransferSelf = () => {
-  const initialValues: API.WalletToWalletFTReq = {
-    amt: "",
-    remarks: "",
-    frmacct: "",
-    toacct: "",
-    channelID: 1,
-    currencycode: "NGN",
-    transferType: 0,
-    pin: "",
-  };
   const [userAccts, setUserAccts] = useState<API.UserNubanDto[] | undefined>();
   useEffect(() => {
     const currentUser = localStoreService.getCurrentUser();
@@ -38,28 +38,33 @@ export const TransferSelf = () => {
       )
       .then(({ data }) => setUserAccts(data.accountDetails));
   }, []);
+
+  const handleSubmit = (
+    values: API.WalletToWalletFTReq,
+    { setSubmitting, resetForm }: any
+  ) => {
+    values.paymentRef = Date.now().toString();
+    api
+      .post<API.WalletToWalletFTRes>("/User/WalletToWalletFT", values)
+      .then(({ data }) => {
+        setSubmitting(false);
+
+        if (data.responseCode === "00") {
+          resetForm();
+          toast.success(data.responseDescription, { position: "top-center" });
+        } else toast.error(data.responseDescription);
+      })
+      .catch(() => {
+        setSubmitting(false);
+      });
+  };
+
   return (
     <div className="mt-3">
       <Formik
-        enableReinitialize
         validationSchema={Schema}
         initialValues={initialValues}
-        onSubmit={(values, { setSubmitting, resetForm }) => {
-          values.paymentRef = Date.now().toString();
-          api
-            .post<API.WalletToWalletFTRes>("/User/WalletToWalletFT", values)
-            .then(({ data }) => {
-              setSubmitting(false);
-              resetForm();
-              if (data.responseCode === "00")
-                toast.success(data.responseDescription);
-              else toast.error(data.responseDescription);
-            })
-            .catch(() => {
-              setSubmitting(false);
-              toast.error("Transfer failed");
-            });
-        }}
+        onSubmit={handleSubmit}
       >
         {({ isSubmitting }) => (
           <Form>
@@ -91,9 +96,10 @@ export const TransferSelf = () => {
                 <Field
                   as="select"
                   name="frmacct"
+                  placeholder="From Account"
                   className="form-control d-block w-100 pl-5 bdbtm-0"
                 >
-                  <option value="" selected disabled>
+                  <option value="" disabled>
                     -From Acct-
                   </option>
                   {userAccts?.map((acct) => (
@@ -117,9 +123,10 @@ export const TransferSelf = () => {
                 <Field
                   as="select"
                   name="toacct"
+                  placeholder="To Account"
                   className="form-control d-block w-100 pl-5 bdbtm-0"
                 >
-                  <option value="" selected disabled>
+                  <option value="" disabled>
                     -To Acct-
                   </option>
                   {userAccts?.map((acct) => (
@@ -142,6 +149,7 @@ export const TransferSelf = () => {
                 <Field
                   name="pin"
                   placeholder="PIN"
+                  type="password"
                   className="form-control d-block w-100 pl-5 bdbtm-0"
                 />
                 <ErrorMsg inputName="pin" />
