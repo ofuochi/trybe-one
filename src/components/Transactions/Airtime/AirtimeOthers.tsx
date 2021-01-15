@@ -14,6 +14,32 @@ export const AirtimeOthers = () => {
   return (
     <div className="mt-3">
       <form onSubmit={formik.handleSubmit}>
+      <input 
+  type="radio" name="emotion" 
+  id="airtel" className="input-hidden" />
+<label htmlFor="airtel">
+  <img 
+    src="/assets/images/ic-airtel.svg" 
+    alt="airtel" />
+</label>
+
+<input 
+  type="radio" name="emotion"
+  id="mtn" className="input-hidden" />
+<label htmlFor="mtn">
+  <img 
+    src="/assets/images/ic-mtn.svg" 
+    alt="mtn" />
+</label>
+
+<input 
+  type="radio" name="emotion"
+  id="9mobile" className="input-hidden" />
+<label htmlFor="9mobile">
+  <img 
+    src="/assets/images/ic-9mobile.svg" 
+    alt="9mobile" />
+</label>
         <div className="form-group mb-0">
           <div className="input-group">
             <div className="input-group-prepend">
