@@ -1,124 +1,225 @@
-import { useFormik } from "formik";
-import React from "react";
-import Button from "react-bootstrap/Button";
+import { Field, Form, Formik } from "formik";
+import { useEffect, useState } from "react";
+import { Button } from "react-bootstrap";
+import { toast } from "react-toastify";
+import * as Yup from "yup";
+
+import api from "../../../config/api.config";
+import { localStoreService } from "../../../services";
+import { ErrorMsg } from "../../Common/ErrorMsg";
+
+const validationSchema = Yup.object().shape({
+  walletNumber: Yup.string().required("required"),
+  mobileNo: Yup.string().required("required"),
+  airtimeAmount: Yup.number().integer().min(1).required("required"),
+  pin: Yup.string().required("required"),
+  serviceId: Yup.string().required("required"),
+  remarks: Yup.string().max(20),
+});
 
 export const AirtimeOthers = () => {
-  const formik = useFormik({
-    initialValues: {
-      email: "",
-    },
-    onSubmit: (values) => {
-      alert(JSON.stringify(values, null, 2));
-    },
-  });
+  const [userAccts, setUserAccts] = useState<API.UserNubanDto[] | undefined>();
+  useEffect(() => {
+    const currentUser = localStoreService.getCurrentUser();
+    api
+      .get<API.UserResponseModel>(
+        `/User/GetUserByEmail?email=${currentUser?.email}`,
+        { cache: { clearOnStale: true } }
+      )
+      .then(({ data }) => setUserAccts(data.accountDetails));
+  }, []);
+  const sessionID = localStoreService.getAuthToken() || undefined;
+  const initialValues: API.CreditSwitchVendAirtimeRequestDto = {
+    sessionID,
+    appId: 1,
+    walletNumber: "",
+    mobileNo: "",
+    airtimeAmount: "",
+    pin: "",
+    serviceId: "",
+  };
+
   return (
     <div className="mt-3">
-      <form onSubmit={formik.handleSubmit}>
-      <input 
-  type="radio" name="emotion" 
-  id="airtel" className="input-hidden" />
-<label htmlFor="airtel">
-  <img 
-    src="/assets/images/ic-airtel.svg" 
-    alt="airtel" />
-</label>
-
-<input 
-  type="radio" name="emotion"
-  id="mtn" className="input-hidden" />
-<label htmlFor="mtn">
-  <img 
-    src="/assets/images/ic-mtn.svg" 
-    alt="mtn" />
-</label>
-
-<input 
-  type="radio" name="emotion"
-  id="9mobile" className="input-hidden" />
-<label htmlFor="9mobile">
-  <img 
-    src="/assets/images/ic-9mobile.svg" 
-    alt="9mobile" />
-</label>
-        <div className="form-group mb-0">
-          <div className="input-group">
-            <div className="input-group-prepend">
-              <span className="input-group-text no-bg bd-0">
-                <img alt="showimg" src="/assets/images/ic-amount.svg" />
-              </span>
-            </div>
-            <input
-              id="email"
-              name="email"
-              type="email"
-              placeholder="Amount"
-              className="form-control d-block w-100 pl-5 bdbtm-0"
-              onChange={formik.handleChange}
-              value={formik.values.email}
+      <Formik
+        validationSchema={validationSchema}
+        initialValues={initialValues}
+        onSubmit={(values, { setSubmitting, resetForm }) => {
+          api
+            .post<API.CreditSwitchVendAirtimeResponseDto>(
+              "/User/CreditSwitchVendAirtime",
+              values
+            )
+            .then(({ data }) => {
+              setSubmitting(false);
+              if (data.responseCode === "00") {
+                resetForm();
+                toast.success(data.responseDescription, {
+                  position: "top-center",
+                });
+              } else
+                toast.error(data.responseDescription, {
+                  position: "top-center",
+                });
+            })
+            .catch(() => {
+              setSubmitting(false);
+            });
+        }}
+      >
+        {({ isSubmitting }) => (
+          <Form>
+            <p className="mt-5 lead mb-0 p-0">Select Network</p>
+            <Field
+              type="radio"
+              id="airtel"
+              className="input-hidden"
+              name="serviceId"
+              value="airtel"
             />
-            <label>Amount</label>
-          </div>
-        </div>
+            <label htmlFor="airtel">
+              <img src="/assets/images/ic-airtel.svg" alt="airtel" />
+            </label>
 
-        <div className="form-group mb-0">
-          <div className="input-group">
-            <div className="input-group-prepend">
-              <span className="input-group-text no-bg bd-0">
-                <img alt="showimg" src="/assets/images/ic-account-dark.svg" />
-              </span>
-            </div>
-            <input
-              id="email"
-              name="email"
-              type="email"
-              placeholder="08075578874 Default Number"
-              className="form-control d-block w-100 pl-5"
-              onChange={formik.handleChange}
-              value={formik.values.email}
+            <Field
+              type="radio"
+              name="serviceId"
+              id="mtn"
+              className="input-hidden"
+              value="mtn"
             />
-            <label>Enter Number</label>
-          </div>
-        </div>
-        <div className="row mx-0 mt-2 mb-3">
-          <div>
-            <span className="mr-2">
-              <img alt="showimg" src="/assets/images/ic-contact.svg" />
-            </span>
-            <small className="text-grey">Selecet number from contact</small>
-          </div>
-        </div>
-
-        <div className="form-group mb-0">
-          <div className="input-group">
-            <div className="input-group-prepend">
-              <span className="input-group-text no-bg bd-0">
-                <img alt="showimg" src="/assets/images/ic-bank.svg" />
-              </span>
-            </div>
-            <select className="form-control d-block w-100 pl-5">
-              <option value="" selected disabled>
-                Source Account
-              </option>
-              <option>Current Account</option>
-              <option>Savings Account</option>
-              <option>Target Account</option>
-            </select>
-            <label>Source Account</label>
-          </div>
-        </div>
-
-        <div className="form-group row m-0 justify-content-end mt-4">
-          <Button size="lg" variant="danger" className="px-5">
-            {" "}
-            <img
-              alt="showimg"
-              className="mr-3"
-              src="/assets/images/ic-send.svg"
+            <label htmlFor="mtn">
+              <img src="/assets/images/ic-mtn.svg" alt="mtn" />
+            </label>
+            <Field
+              type="radio"
+              name="serviceId"
+              id="9mobile"
+              className="input-hidden"
+              value="9mobile"
             />
-            Send
-          </Button>
-        </div>
-      </form>
+            <label htmlFor="9mobile">
+              <img src="/assets/images/ic-9mobile.svg" alt="9mobile" />
+            </label>
+            <ErrorMsg inputName="serviceId" />
+            <div className="form-group mb-0">
+              <div className="input-group">
+                <div className="input-group-prepend">
+                  <span className="input-group-text no-bg bd-0">
+                    <img alt="showimg" src="/assets/images/ic-amount.svg" />
+                  </span>
+                </div>
+
+                <Field
+                  id="airtimeAmount"
+                  type="number"
+                  placeholder="Amount"
+                  className="form-control d-block w-100 pl-5 bdbtm-0"
+                  name="airtimeAmount"
+                />
+                <label htmlFor="airtimeAmount">Amount</label>
+                <ErrorMsg inputName="airtimeAmount" />
+              </div>
+            </div>
+
+            <div className="form-group mb-0">
+              <div className="input-group">
+                <div className="input-group-prepend">
+                  <span className="input-group-text no-bg bd-0">
+                    <img
+                      alt="showimg"
+                      src="/assets/images/ic-account-dark.svg"
+                    />
+                  </span>
+                </div>
+                <Field
+                  id="mobileNo"
+                  placeholder="08075578874 Default Number"
+                  className="form-control d-block w-100 pl-5 bdbtm-0"
+                  name="mobileNo"
+                />
+                <label htmlFor="mobileNo">Enter Number</label>
+                <ErrorMsg inputName="mobileNo" />
+              </div>
+            </div>
+
+            <div className="form-group mb-0">
+              <div className="input-group">
+                <div className="input-group-prepend">
+                  <span className="input-group-text no-bg bd-0">
+                    <img alt="showimg" src="/assets/images/ic-bank.svg" />
+                  </span>
+                </div>
+                <Field
+                  as="select"
+                  id="walletNumber"
+                  className="form-control d-block w-100 pl-5"
+                  name="walletNumber"
+                >
+                  <option value="" disabled>
+                    Source Account
+                  </option>
+                  {userAccts?.map((acct) => (
+                    <option key={acct.accountNumber} value={acct.accountNumber}>
+                      {acct.accountNumber}
+                    </option>
+                  ))}
+                </Field>
+                <label htmlFor="walletNumber">Source Account</label>
+                <ErrorMsg inputName="walletNumber" />
+              </div>
+            </div>
+            <div className="form-group mb-0">
+              <div className="input-group">
+                <div className="input-group-prepend">
+                  <span className="input-group-text no-bg bd-0">
+                    <img alt="showimg" src="/assets/images/ic-bank.svg" />
+                  </span>
+                </div>
+                <Field
+                  name="pin"
+                  id="pin"
+                  placeholder="PIN"
+                  type="password"
+                  className="form-control d-block w-100 pl-5 bdbtm-0"
+                />
+                <ErrorMsg inputName="pin" />
+                <label htmlFor="pin">PIN</label>
+              </div>
+            </div>
+            <div className="form-group mb-0">
+              <div className="input-group">
+                <div className="input-group-prepend"></div>
+                <Field
+                  as="textarea"
+                  id="remarks"
+                  name="remarks"
+                  rows={3}
+                  className="form-control d-block w-100 pl-5"
+                  placeholder="Remarks"
+                />
+                <label htmlFor="remarks">Remarks</label>
+              </div>
+            </div>
+            <div className="form-group row m-0 justify-content-end mt-4">
+              <Button
+                size="lg"
+                variant="danger"
+                className="px-5"
+                type="submit"
+                disabled={isSubmitting}
+              >
+                <img
+                  alt="showimg"
+                  className="mr-3"
+                  src="/assets/images/ic-send.svg"
+                />
+                Send
+              </Button>
+            </div>
+          </Form>
+        )}
+      </Formik>
     </div>
   );
 };

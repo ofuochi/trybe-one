@@ -50,8 +50,6 @@ export const Airtime = () => {
         </div>
       </div>
 
-      <p className="mt-5 lead mb-0 p-0">Select Network</p>
-      
       <Switch>
         <Route
           path={routePath.transactions.airtime.self}
