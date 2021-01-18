@@ -75,7 +75,7 @@ const AirtimeSelf = () => {
               id="airtel"
               className="input-hidden"
               name="serviceId"
-              value="airtel"
+              value="D01D"
             />
             <label htmlFor="airtel">
               <img src="/assets/images/ic-airtel.svg" alt="airtel" />
@@ -86,7 +86,7 @@ const AirtimeSelf = () => {
               name="serviceId"
               id="mtn"
               className="input-hidden"
-              value="mtn"
+              value="D04D"
             />
             <label htmlFor="mtn">
               <img src="/assets/images/ic-mtn.svg" alt="mtn" />
@@ -96,7 +96,7 @@ const AirtimeSelf = () => {
               name="serviceId"
               id="9mobile"
               className="input-hidden"
-              value="9mobile"
+              value="D02D"
             />
             <label htmlFor="9mobile">
               <img src="/assets/images/ic-9mobile.svg" alt="9mobile" />
@@ -134,7 +134,7 @@ const AirtimeSelf = () => {
                 </div>
                 <Field
                   id="mobileNo"
-                  placeholder="08075578874 Default Number"
+                  placeholder="Your phone number"
                   className="form-control d-block w-100 pl-5 bdbtm-0"
                   name="mobileNo"
                 />

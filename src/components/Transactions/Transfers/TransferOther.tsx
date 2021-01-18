@@ -11,7 +11,7 @@ import { ErrorMsg } from "../../Common/ErrorMsg";
 const Schema = Yup.object().shape({
   frmacct: Yup.string().required("required"),
   toacct: Yup.string()
-    .matches(/^\d{10}$/, "must be 10 digits only")
+    .matches(/^\d{10}$/, "must be 10 digits")
     .notOneOf([Yup.ref("frmacct")], "'from' and 'to' acct cannot be the same")
     .required("required"),
   amt: Yup.number().min(1).required("required"),
@@ -27,7 +27,6 @@ export const TransferOther = () => {
   const [toBanks, setToBanks] = useState<API.ParticipatingBank[] | undefined>();
   const [toWho, setToWho] = useState("");
   const [toAccount, setToAccount] = useState("");
-  const sessionId = localStoreService.getAuthToken();
 
   useEffect(() => {
     const currentUser = localStoreService.getCurrentUser();
@@ -41,8 +40,23 @@ export const TransferOther = () => {
       .get<API.ParticipatingBanks>("/User/GetParticipatingBanks", {
         cache: { clearOnStale: true },
       })
-      .then(({ data }) => setToBanks(data.participatingBankList));
+      .then(({ data }) =>
+        setToBanks(
+          data.participatingBankList
+            ?.sort((a, b) =>
+              (a.bankname?.toLowerCase() || "") >
+              (b.bankname?.toLowerCase() || "")
+                ? 1
+                : -1
+            )
+            .filter(
+              (value, index, self) =>
+                index === self.findIndex((v) => v.bankcode === value.bankcode)
+            )
+        )
+      );
   }, []);
+  const sessionId = localStoreService.getAuthToken();
   const nameInquiryInput: API.NameEnquiryRequest = {
     sessionId: sessionId || "",
     channelCode: "1",
@@ -152,12 +166,7 @@ export const TransferOther = () => {
                   onChange={(e: any) => {
                     setToAccount(e.target.value);
                     setFieldValue(e.target.name, e.target.value);
-                    if (!nameInquiryInput.accountNumber) setToWho("");
-                    if (
-                      initialValues.toacct &&
-                      initialValues.toacct?.length < 10
-                    )
-                      setToWho("");
+                    if (toAccount.length < 10) setToWho("");
                     else {
                       if (initialValues.nipData?.destinationBankCode)
                         api
@@ -169,6 +178,7 @@ export const TransferOther = () => {
                             setToWho(data.accountName || "");
                           });
                     }
+                    console.log(initialValues.nipData?.destinationBankCode);
                   }}
                   className="form-control d-block w-100 pl-5 bdbtm-0"
                 />
@@ -187,10 +197,9 @@ export const TransferOther = () => {
                   as="select"
                   name="nipData.destinationBankCode"
                   onChange={(e: ChangeEvent<HTMLSelectElement>) => {
-                    if (!nameInquiryInput.accountNumber) return;
-                    if (nameInquiryInput.accountNumber.length < 10) return;
-                    nameInquiryInput.destinationBankCode = e.target.value;
                     setFieldValue(e.target.name, e.target.value);
+                    nameInquiryInput.destinationBankCode = e.target.value;
+                    if (toAccount.length < 10) return;
                     api
                       .post<API.NameEnquiryResponse>(
                         "/User/InterBankNameEnquiry",
@@ -205,8 +214,8 @@ export const TransferOther = () => {
                   <option value="" disabled>
                     -To Bank-
                   </option>
-                  {toBanks?.map((bank, index) => (
-                    <option key={index} value={bank.bankcode}>
+                  {toBanks?.map((bank) => (
+                    <option key={bank.bankcode} value={bank.bankcode}>
                       {bank.bankname}
                     </option>
                   ))}

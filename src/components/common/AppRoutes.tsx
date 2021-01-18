@@ -20,6 +20,7 @@ export const AppRoutes = () => {
   if (currentUser) {
     currentUserStore.updatedCurrentUser(currentUser.email);
   }
+
   return (
     <Switch>
       <AuthRoute path={routePath.dashboard} component={Dashboard} isPrivate />
