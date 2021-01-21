@@ -35,7 +35,6 @@ const StepTwoSchema = Yup.object().shape({
   trybersReferralCode: Yup.string(),
 
   preferredName: Yup.string().required("required"),
-  sideHustle: Yup.string().required("required"),
   serviceProvider: Yup.string().required("required"),
 });
 const StepThreeSchema = Yup.object().shape({
@@ -43,7 +42,11 @@ const StepThreeSchema = Yup.object().shape({
 
   instagramHandle: Yup.string().required("required"),
   twitterHandle: Yup.string().required("required"),
-  transactionPIN: Yup.string().required("required"),
+  transactionPIN: Yup.string()
+    .max(4)
+    .min(4)
+    .matches(/^\d+$/, "must be digits only")
+    .required("required"),
   password: Yup.string().required("required"),
 });
 const initSignupFormData: API.CreateWalletRequestDto = {
@@ -430,9 +433,10 @@ export const Signup = observer(() => {
                         <div className="input-group">
                           <Field
                             name="transactionPIN"
-                            type="transactionPIN"
+                            type="password"
+                            max={4}
                             className="form-control d-block w-100"
-                            placeholder="PIN"
+                            placeholder="Transaction PIN"
                           />
                           <label>PIN</label>
                           <ErrorMsg inputName="transactionPIN" />
