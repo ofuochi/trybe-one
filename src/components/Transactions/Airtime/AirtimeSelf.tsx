@@ -18,7 +18,9 @@ const validationSchema = Yup.object().shape({
 });
 
 const AirtimeSelf = () => {
-  const [userAccts, setUserAccts] = useState<API.UserNubanDto[] | undefined>();
+  const [userDetails, setUserDetails] = useState<
+    API.UserResponseModel | undefined
+  >();
   useEffect(() => {
     const currentUser = localStoreService.getCurrentUser();
     api
@@ -26,7 +28,7 @@ const AirtimeSelf = () => {
         `/User/GetUserByEmail?email=${currentUser?.email}`,
         { cache: { clearOnStale: true } }
       )
-      .then(({ data }) => setUserAccts(data.accountDetails));
+      .then(({ data }) => setUserDetails(data));
   }, []);
   const sessionID = localStoreService.getAuthToken() || undefined;
   const initialValues: API.CreditSwitchVendAirtimeRequestDto = {
@@ -137,6 +139,7 @@ const AirtimeSelf = () => {
                   placeholder="Your phone number"
                   className="form-control d-block w-100 pl-5 bdbtm-0"
                   name="mobileNo"
+                  value={userDetails?.phoneNumber}
                 />
                 <label htmlFor="mobileNo">Enter Number</label>
                 <ErrorMsg inputName="mobileNo" />
@@ -159,7 +162,7 @@ const AirtimeSelf = () => {
                   <option value="" disabled>
                     Source Account
                   </option>
-                  {userAccts?.map((acct) => (
+                  {userDetails?.accountDetails?.map((acct) => (
                     <option key={acct.accountNumber} value={acct.accountNumber}>
                       {acct.accountNumber}
                     </option>

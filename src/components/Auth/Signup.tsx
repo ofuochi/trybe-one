@@ -43,6 +43,7 @@ const StepThreeSchema = Yup.object().shape({
 
   instagramHandle: Yup.string().required("required"),
   twitterHandle: Yup.string().required("required"),
+  transactionPIN: Yup.string().required("required"),
   password: Yup.string().required("required"),
 });
 const initSignupFormData: API.CreateWalletRequestDto = {
@@ -75,6 +76,7 @@ const initSignupFormData: API.CreateWalletRequestDto = {
   instagramHandle: "",
   twitterHandle: "",
   videoUrl: "",
+  transactionPIN: "",
   password: "",
 };
 
@@ -422,6 +424,18 @@ export const Signup = observer(() => {
                           />
                           <label>Twitter handle</label>
                           <ErrorMsg inputName="twitterHandle" />
+                        </div>
+                      </div>
+                      <div className="form-group">
+                        <div className="input-group">
+                          <Field
+                            name="transactionPIN"
+                            type="transactionPIN"
+                            className="form-control d-block w-100"
+                            placeholder="PIN"
+                          />
+                          <label>PIN</label>
+                          <ErrorMsg inputName="transactionPIN" />
                         </div>
                       </div>
                       <div className="form-group">
