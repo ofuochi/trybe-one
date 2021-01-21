@@ -35,7 +35,7 @@ const AirtimeSelf = () => {
     sessionID,
     appId: 1,
     walletNumber: "",
-    mobileNo: "",
+    mobileNo: userDetails?.phoneNumber || "",
     airtimeAmount: "",
     pin: "",
     serviceId: "",
@@ -45,6 +45,7 @@ const AirtimeSelf = () => {
     <div className="mt-3">
       <Formik
         validationSchema={validationSchema}
+        enableReinitialize
         initialValues={initialValues}
         onSubmit={(values, { setSubmitting, resetForm }) => {
           api
@@ -139,7 +140,6 @@ const AirtimeSelf = () => {
                   placeholder="Your phone number"
                   className="form-control d-block w-100 pl-5 bdbtm-0"
                   name="mobileNo"
-                  value={userDetails?.phoneNumber}
                 />
                 <label htmlFor="mobileNo">Enter Number</label>
                 <ErrorMsg inputName="mobileNo" />
