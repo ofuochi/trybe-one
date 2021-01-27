@@ -51,7 +51,11 @@ export const TransferOther = () => {
             )
             .filter(
               (value, index, self) =>
-                index === self.findIndex((v) => v.bankcode === value.bankcode)
+                index ===
+                self.findIndex(
+                  (v) =>
+                    v.bankcode === value.bankcode && v.bankcode !== "000001"
+                )
             )
         )
       );
