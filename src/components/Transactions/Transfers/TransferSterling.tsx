@@ -15,6 +15,7 @@ const Schema = Yup.object().shape({
     .notOneOf([Yup.ref("frmacct")], "'from' and 'to' acct cannot be the same")
     .required("required"),
   amt: Yup.number().min(1).required("required"),
+  remarks: Yup.string().required("required"),
   pin: Yup.string().required("required"),
 });
 const initialValues: API.WalletToWalletFTReq = {

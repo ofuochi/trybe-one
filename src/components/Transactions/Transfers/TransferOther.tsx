@@ -16,6 +16,7 @@ const Schema = Yup.object().shape({
     .required("required"),
   amt: Yup.number().min(1).required("required"),
   pin: Yup.string().required("required"),
+  remarks: Yup.string().required("required"),
   nipData: Yup.object({
     destinationBankCode: Yup.string().required("required"),
     // accountName: Yup.string().required("required"),

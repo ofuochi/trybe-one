@@ -14,6 +14,7 @@ const Schema = Yup.object().shape({
     .required("required")
     .notOneOf([Yup.ref("frmacct")], "'from' and 'to' acct cannot be the same"),
   amt: Yup.number().min(1).required("required"),
+  remarks: Yup.string().required("required"),
   pin: Yup.string().required("required"),
 });
 

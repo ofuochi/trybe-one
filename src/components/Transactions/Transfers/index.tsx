@@ -21,7 +21,7 @@ export const Transfer = () => {
       </p>
       <div className="mdc-card info-card info-card--danger no-shadow overflow-x-auto">
         <div className="card-inner row mb-0 d-flex">
-          <div className="text-center">
+          {/* <div className="text-center">
             <NavLink to={routePath.transactions.transfer.self}>
               <div className="img-w-42">
                 <img
@@ -35,7 +35,7 @@ export const Transfer = () => {
               </div>
               <p className="d-block text-smaller text-dark mb-0 mt-0">Self</p>
             </NavLink>
-          </div>
+          </div> */}
           <div className="text-center ml-6-re">
             <Link to="#">
               <div className="img-w-42">
@@ -94,10 +94,10 @@ export const Transfer = () => {
       </div>
 
       <Switch>
-        <Route
+        {/* <Route
           path={routePath.transactions.transfer.self}
           component={TransferSelf}
-        />
+        /> */}
 
         <Route
           path={routePath.transactions.transfer.sterling}
