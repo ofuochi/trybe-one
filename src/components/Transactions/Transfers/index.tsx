@@ -1,10 +1,9 @@
 import React from "react";
-import { Link, NavLink, Route, Switch, useLocation } from "react-router-dom";
+import { Link, Route, Switch, useLocation } from "react-router-dom";
 
 import { routePath } from "../../../constants/route-paths";
 import { TransferOther } from "./TransferOther";
 import { TransferSterling } from "./TransferSterling";
-import { TransferSelf } from "./TransferSelf";
 
 export const Transfer = () => {
   const { pathname } = useLocation();
@@ -21,21 +20,6 @@ export const Transfer = () => {
       </p>
       <div className="mdc-card info-card info-card--danger no-shadow overflow-x-auto">
         <div className="card-inner row mb-0 d-flex">
-          {/* <div className="text-center">
-            <NavLink to={routePath.transactions.transfer.self}>
-              <div className="img-w-42">
-                <img
-                  alt="showimg"
-                  src={imgSrc(
-                    routePath.transactions.transfer.self,
-                    "icn-self.svg",
-                    "icn-self-inactive.svg"
-                  )}
-                />
-              </div>
-              <p className="d-block text-smaller text-dark mb-0 mt-0">Self</p>
-            </NavLink>
-          </div> */}
           <div className="text-center ml-6-re">
             <Link to="#">
               <div className="img-w-42">
@@ -94,11 +78,6 @@ export const Transfer = () => {
       </div>
 
       <Switch>
-        {/* <Route
-          path={routePath.transactions.transfer.self}
-          component={TransferSelf}
-        /> */}
-
         <Route
           path={routePath.transactions.transfer.sterling}
           component={TransferSterling}
