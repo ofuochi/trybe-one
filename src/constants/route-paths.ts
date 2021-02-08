@@ -14,8 +14,8 @@ export const routePath = {
       self: "/transactions/airtime/self",
       others: "/transactions/airtime/others",
     },
-    statment: {
-      index: "/transactions/statment",
+    statement: {
+      index: "/transactions/statement",
     },
   },
 

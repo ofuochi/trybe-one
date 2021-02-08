@@ -80,7 +80,7 @@ export const Transactions = () => {
                 </Link>
               </div>
               <div className="text-center ml-5-re">
-                <Link to={routePath.transactions.statment.index}>
+                <Link to={routePath.transactions.statement.index}>
                   <div className="img-w-42">
                     <img alt="" src="/assets/images/icn-statement.svg" />
                   </div>
@@ -116,8 +116,8 @@ export const Transactions = () => {
               path={routePath.transactions.airtime.index}
               component={Airtime}
             />
-             <Route
-              path={routePath.transactions.statment.index}
+            <Route
+              path={routePath.transactions.statement.index}
               component={Statment}
             />
           </Switch>

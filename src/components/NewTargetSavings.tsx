@@ -1,9 +1,8 @@
-import { Field, Form, Formik } from "formik";
 import React, { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
+
 import api from "../config/api.config";
 import { localStoreService } from "../services";
-
 import { Title } from "./Common/Title";
 
 export const NewTargetSavings = () => {
@@ -33,7 +32,6 @@ export const NewTargetSavings = () => {
       { name: "Rent", value: 150 },
     ];
 
-  const initialValues: API.AddTargetSavingsRequestDto = {};
   return (
     <>
       <Title title="Target Savings" />
@@ -44,25 +42,39 @@ export const NewTargetSavings = () => {
               <h4>New Target Savings </h4>
             </div>
             <div className="col-lg-6">
-            <Button
+              <Button
                 size="lg"
                 variant="danger"
                 className="px-3 py-3 btn-block"
-                type="submit">
-                  <i className="i-ic"><img className="ml-2 w-30 mr-3" alt="" src="/assets/images/ic-target.svg" /></i>
+                type="submit"
+              >
+                <i className="i-ic">
+                  <img
+                    className="ml-2 w-30 mr-3"
+                    alt=""
+                    src="/assets/images/ic-target.svg"
+                  />
+                </i>
                 Target Box
-              </Button>  
+              </Button>
             </div>
 
             <div className="col-lg-6">
-            <Button
+              <Button
                 size="lg"
                 variant="light"
                 className="px-3 py-3 btn-block"
-                type="submit">
-                  <i className="i-ic"><img className="ml-2 w-30 mr-3" alt="" src="/assets/images/ic-targetb.svg" /></i>
+                type="submit"
+              >
+                <i className="i-ic">
+                  <img
+                    className="ml-2 w-30 mr-3"
+                    alt=""
+                    src="/assets/images/ic-targetb.svg"
+                  />
+                </i>
                 Eye on the Goal
-              </Button> 
+              </Button>
             </div>
           </div>
 
@@ -71,74 +83,60 @@ export const NewTargetSavings = () => {
               Target box savings
             </h5>
 
-
             <div className="form-group mb-0">
-             
-                <form> 
-           <div className="input-group">
-           <input
-             type="email"
-             name="email"
-             placeholder="Name of Target you want to save for"
-             className="form-control d-block w-100 bdbtm-0 bd-radius-0"
-           />
-             <label>Name of Target you want to save for</label>
-             </div>
-             <div className="input-group">
-           <input
-             type="email"
-             name="email"
-             placeholder="How long do you want to save for? (days)"
-             className="form-control d-block w-100 bdbtm-0 bd-radius-0"
-           />
-             <label>How long do you want to save for? (days)</label>
-             </div>
-             <div className="input-group">
-           <input
-             type="email"
-             name="email"
-             placeholder="How often should you be debited"
-             className="form-control d-block w-100 bdbtm-0 bd-radius-0"
-           />
-             <label>How often should you be debited</label>
-             </div>
-             <div className="input-group">
-           <input
-             type="email"
-             name="email"
-             placeholder="What time of the day should we debit you"
-             className="form-control d-block w-100 bd-radius-0"
-           />
-             <label>What time of the day should we debit you</label>
-             </div>
-           </form>
-
-        
-              
-             
+              <form>
+                <div className="input-group">
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="Name of Target you want to save for"
+                    className="form-control d-block w-100 bdbtm-0 bd-radius-0"
+                  />
+                  <label>Name of Target you want to save for</label>
+                </div>
+                <div className="input-group">
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="How long do you want to save for? (days)"
+                    className="form-control d-block w-100 bdbtm-0 bd-radius-0"
+                  />
+                  <label>How long do you want to save for? (days)</label>
+                </div>
+                <div className="input-group">
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="How often should you be debited"
+                    className="form-control d-block w-100 bdbtm-0 bd-radius-0"
+                  />
+                  <label>How often should you be debited</label>
+                </div>
+                <div className="input-group">
+                  <input
+                    type="email"
+                    name="email"
+                    placeholder="What time of the day should we debit you"
+                    className="form-control d-block w-100 bd-radius-0"
+                  />
+                  <label>What time of the day should we debit you</label>
+                </div>
+              </form>
             </div>
-
-           </div>
+          </div>
 
           <div className="mt-4 row">
-            <div className="col-lg-7">
-           
-            </div>
+            <div className="col-lg-7"></div>
             <div className="col-lg-5 text-right">
-            <Button
-                variant="danger"
-                className="px-4"
-                type="submit">
-                  <img
+              <Button variant="danger" className="px-4" type="submit">
+                <img
                   alt="showimg"
                   className="mr-3"
                   src="/assets/images/ic-send.svg"
                 />
                 Create Target
-              </Button>    
+              </Button>
             </div>
-
-            
           </div>
         </div>
       </div>
