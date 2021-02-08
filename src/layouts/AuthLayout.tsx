@@ -10,7 +10,7 @@ export const AuthLayout: React.FC = ({ children }) => {
           <main className="content-wrapper">
             <PageHeader />
 
-            <div className="row">{children}</div>
+            <div className="row m-0">{children}</div>
             <div className="mdc-layout-grid"></div>
           </main>
         </div>

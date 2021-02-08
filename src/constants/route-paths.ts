@@ -14,10 +14,14 @@ export const routePath = {
       self: "/transactions/airtime/self",
       others: "/transactions/airtime/others",
     },
+    statment: {
+      index: "/transactions/statment",
+    },
   },
 
   investments: "/investments",
   targetsavings: "/targetsavings",
+  newtargetsavings: "/newtargetsavings",
   login: "/login",
   signup: "/signup",
   otp: "/otp",

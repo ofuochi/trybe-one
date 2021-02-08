@@ -21782,14 +21782,18 @@ address p {
   padding: 14px 10px;
   color: #757575;
   font-size: 14px;
-  text-align: right;
   border-bottom: 1px solid #e9eaef;
   font-weight: 500;
 }
-
-.table thead tr th:first-child {
-  padding-left: 30px;
+.no-bd thead tr th{
+  border-bottom: 0px solid #e9eaef!important;
 }
+.no-bd tbody tr td{
+  border-bottom: 0px solid #e9eaef!important;
+}
+/* .table thead tr th:first-child {
+  padding-left: 30px;
+} */
 
 .table thead tr th:last-child {
   padding-right: 30px;
@@ -21806,7 +21810,6 @@ address p {
   padding: 14px 10px;
   font-size: 14px;
   color: #212121;
-  text-align: right;
   border-bottom: 1px solid #e9eaef;
   font-weight: 400;
   white-space: nowrap;
@@ -22900,7 +22903,7 @@ address p {
   display: block;
   height: auto;
   padding: 0;
-  margin: 7px 27px 7px 27px;
+  margin: 7px 27px 7px 10px;
   -webkit-border-radius: 12px;
   -moz-border-radius: 12px;
   -ms-border-radius: 12px;
@@ -23157,7 +23160,7 @@ footer .vertical-divider {
   padding: 35px 5px 5px 5px;
 }
 .ml-5-re {
-  margin-left: 2rem !important;
+  margin-left: 1.8rem !important;
 }
 .ml-6-re {
   margin-left: 4rem !important;
@@ -23718,4 +23721,510 @@ input[type=radio] + label>img {
 input[type=radio] + label>img:hover {
 cursor: pointer;
 }
+.w-40{
+ width:40px;
+}
+.w-30{
+  width:30px;
+ }
+.w-20{
+  width:20px;
+ }
+.w-10{
+  width:10px;
+ } 
+.abs-labels{
+  position: absolute;
+  right: 0;
+  top:0;
+}
+.recharts-legend-item-text{
+font-size: 11px;
+}
+.recharts-legend-item .recharts-surface{
+  width: 10px!important;
+  height: 10px!important;
+}
+.recharts-surface{
+  width:250px!important;
+}
+.recharts-legend-wrapper{
+  right: 20px!important;
+  left: unset!important;
+}
+.recharts-responsive-container > .recharts-wrapper > svg{
+  position: absolute!important;
+    left: -70px!important;
+  width: 300px!important;
+}
 
+
+input[type=range].ps0 {
+  height: 26px;
+  -webkit-appearance: none;
+  width: 100%;
+}
+input[type=range].ps0:focus {
+  outline: none;
+}
+input[type=range].ps0::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 10px;
+  cursor: pointer;
+  animate: 0.2s;
+  box-shadow: 0px 0px 0px #000000;
+  background: #73C88A;
+  border-radius: 5px;
+  border: 0px solid #000000;
+}
+input[type=range].ps0::-webkit-slider-thumb {
+  box-shadow: 0px 0px 1px #000000;
+  border: 0px solid #000000;
+  height: 20px;
+  width: 20px;
+  border-radius: 15px;
+  background: #73C88A;
+  cursor: pointer;
+  -webkit-appearance: none;
+  margin-top: -5px;
+}
+input[type=range].ps0:focus::-webkit-slider-runnable-track {
+  background: #73C88A;
+}
+input[type=range].ps0::-moz-range-track {
+  width: 100%;
+  height: 10px;
+  cursor: pointer;
+  animate: 0.2s;
+  box-shadow: 0px 0px 0px #000000;
+  background: #73C88A;
+  border-radius: 5px;
+  border: 0px solid #000000;
+}
+input[type=range].ps0::-moz-range-thumb {
+  box-shadow: 0px 0px 1px #000000;
+  border: 0px solid #000000;
+  height: 20px;
+  width: 20px;
+  border-radius: 15px;
+  background: #73C88A;
+  cursor: pointer;
+}
+input[type=range].ps0::-ms-track {
+  width: 100%;
+  height: 10px;
+  cursor: pointer;
+  animate: 0.2s;
+  background: transparent;
+  border-color: transparent;
+  color: transparent;
+}
+input[type=range].ps0::-ms-fill-lower {
+  background: #73C88A;
+  border: 0px solid #000000;
+  border-radius: 10px;
+  box-shadow: 0px 0px 0px #000000;
+}
+input[type=range].ps0::-ms-fill-upper {
+  background: #73C88A;
+  border: 0px solid #000000;
+  border-radius: 10px;
+  box-shadow: 0px 0px 0px #000000;
+}
+input[type=range].ps0::-ms-thumb {
+  margin-top: 1px;
+  box-shadow: 0px 0px 1px #000000;
+  border: 0px solid #000000;
+  height: 20px;
+  width: 20px;
+  border-radius: 15px;
+  background: #73C88A;
+  cursor: pointer;
+}
+input[type=range].ps0:focus::-ms-fill-lower {
+  background: #73C88A;
+}
+input[type=range].ps0:focus::-ms-fill-upper {
+  background: #73C88A;
+}
+
+
+input[type=range].ps1 {
+  height: 26px;
+  -webkit-appearance: none;
+  /* margin: 10px 0; */
+  width: 100%;
+}
+input[type=range].ps1:focus {
+  outline: none;
+}
+input[type=range].ps1::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 10px;
+  cursor: pointer;
+  animate: 0.2s;
+  box-shadow: 0px 0px 0px #000000;
+  background: #FF7235;
+  border-radius: 5px;
+  border: 0px solid #000000;
+}
+input[type=range].ps1::-webkit-slider-thumb {
+  box-shadow: 0px 0px 1px #000000;
+  border: 0px solid #000000;
+  height: 20px;
+  width: 20px;
+  border-radius: 15px;
+  background: #FF7235;
+  cursor: pointer;
+  -webkit-appearance: none;
+  margin-top: -5px;
+}
+input[type=range].ps1:focus::-webkit-slider-runnable-track {
+  background: #FF7235;
+}
+input[type=range].ps1::-moz-range-track {
+  width: 100%;
+  height: 10px;
+  cursor: pointer;
+  animate: 0.2s;
+  box-shadow: 0px 0px 0px #000000;
+  background: #FF7235;
+  border-radius: 5px;
+  border: 0px solid #000000;
+}
+input[type=range].ps1::-moz-range-thumb {
+  box-shadow: 0px 0px 1px #000000;
+  border: 0px solid #000000;
+  height: 20px;
+  width: 20px;
+  border-radius: 15px;
+  background: #FF7235;
+  cursor: pointer;
+}
+input[type=range].ps1::-ms-track {
+  width: 100%;
+  height: 10px;
+  cursor: pointer;
+  animate: 0.2s;
+  background: transparent;
+  border-color: transparent;
+  color: transparent;
+}
+input[type=range].ps1::-ms-fill-lower {
+  background: #FF7235;
+  border: 0px solid #000000;
+  border-radius: 10px;
+  box-shadow: 0px 0px 0px #000000;
+}
+input[type=range].ps1::-ms-fill-upper {
+  background: #FF7235;
+  border: 0px solid #000000;
+  border-radius: 10px;
+  box-shadow: 0px 0px 0px #000000;
+}
+input[type=range].ps1::-ms-thumb {
+  margin-top: 1px;
+  box-shadow: 0px 0px 1px #000000;
+  border: 0px solid #000000;
+  height: 20px;
+  width: 20px;
+  border-radius: 15px;
+  background: #FF7235;
+  cursor: pointer;
+}
+input[type=range].ps1:focus::-ms-fill-lower {
+  background: #FF7235;
+}
+input[type=range].ps1:focus::-ms-fill-upper {
+  background: #FF7235;
+}
+
+
+
+input[type=range].ps2 {
+  height: 26px;
+  -webkit-appearance: none;
+  /* margin: 10px 0; */
+  width: 100%;
+}
+input[type=range].ps2:focus {
+  outline: none;
+}
+input[type=range].ps2::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 10px;
+  cursor: pointer;
+  animate: 0.2s;
+  box-shadow: 0px 0px 0px #000000;
+  background: #5D83E5;
+  border-radius: 5px;
+  border: 0px solid #000000;
+}
+input[type=range].ps2::-webkit-slider-thumb {
+  box-shadow: 0px 0px 1px #000000;
+  border: 0px solid #000000;
+  height: 20px;
+  width: 20px;
+  border-radius: 15px;
+  background: #5D83E5;
+  cursor: pointer;
+  -webkit-appearance: none;
+  margin-top: -5px;
+}
+input[type=range].ps2:focus::-webkit-slider-runnable-track {
+  background: #5D83E5;
+}
+input[type=range].ps2::-moz-range-track {
+  width: 100%;
+  height: 10px;
+  cursor: pointer;
+  animate: 0.2s;
+  box-shadow: 0px 0px 0px #000000;
+  background: #5D83E5;
+  border-radius: 5px;
+  border: 0px solid #000000;
+}
+input[type=range].ps2::-moz-range-thumb {
+  box-shadow: 0px 0px 1px #000000;
+  border: 0px solid #000000;
+  height: 20px;
+  width: 20px;
+  border-radius: 15px;
+  background: #5D83E5;
+  cursor: pointer;
+}
+input[type=range].ps2::-ms-track {
+  width: 100%;
+  height: 10px;
+  cursor: pointer;
+  animate: 0.2s;
+  background: transparent;
+  border-color: transparent;
+  color: transparent;
+}
+input[type=range].ps2::-ms-fill-lower {
+  background: #5D83E5;
+  border: 0px solid #000000;
+  border-radius: 10px;
+  box-shadow: 0px 0px 0px #000000;
+}
+input[type=range].ps2::-ms-fill-upper {
+  background: #5D83E5;
+  border: 0px solid #000000;
+  border-radius: 10px;
+  box-shadow: 0px 0px 0px #000000;
+}
+input[type=range].ps2::-ms-thumb {
+  margin-top: 1px;
+  box-shadow: 0px 0px 1px #000000;
+  border: 0px solid #000000;
+  height: 20px;
+  width: 20px;
+  border-radius: 15px;
+  background: #5D83E5;
+  cursor: pointer;
+}
+input[type=range].ps2:focus::-ms-fill-lower {
+  background: #5D83E5;
+}
+input[type=range].ps2:focus::-ms-fill-upper {
+  background: #5D83E5;
+}
+
+
+
+input[type=range].ps3 {
+  height: 26px;
+  -webkit-appearance: none;
+  /* margin: 10px 0; */
+  width: 100%;
+}
+input[type=range].ps3:focus {
+  outline: none;
+}
+input[type=range].ps3::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 10px;
+  cursor: pointer;
+  animate: 0.2s;
+  box-shadow: 0px 0px 0px #000000;
+  background: #EA4396;
+  border-radius: 5px;
+  border: 0px solid #000000;
+}
+input[type=range].ps3::-webkit-slider-thumb {
+  box-shadow: 0px 0px 1px #000000;
+  border: 0px solid #000000;
+  height: 20px;
+  width: 20px;
+  border-radius: 15px;
+  background: #EA4396;
+  cursor: pointer;
+  -webkit-appearance: none;
+  margin-top: -5px;
+}
+input[type=range].ps3:focus::-webkit-slider-runnable-track {
+  background: #EA4396;
+}
+input[type=range].ps3::-moz-range-track {
+  width: 100%;
+  height: 10px;
+  cursor: pointer;
+  animate: 0.2s;
+  box-shadow: 0px 0px 0px #000000;
+  background: #EA4396;
+  border-radius: 5px;
+  border: 0px solid #000000;
+}
+input[type=range].ps3::-moz-range-thumb {
+  box-shadow: 0px 0px 1px #000000;
+  border: 0px solid #000000;
+  height: 20px;
+  width: 20px;
+  border-radius: 15px;
+  background: #EA4396;
+  cursor: pointer;
+}
+input[type=range].ps3::-ms-track {
+  width: 100%;
+  height: 10px;
+  cursor: pointer;
+  animate: 0.2s;
+  background: transparent;
+  border-color: transparent;
+  color: transparent;
+}
+input[type=range].ps3::-ms-fill-lower {
+  background: #EA4396;
+  border: 0px solid #000000;
+  border-radius: 10px;
+  box-shadow: 0px 0px 0px #000000;
+}
+input[type=range].ps3::-ms-fill-upper {
+  background: #EA4396;
+  border: 0px solid #000000;
+  border-radius: 10px;
+  box-shadow: 0px 0px 0px #000000;
+}
+input[type=range].ps3::-ms-thumb {
+  margin-top: 1px;
+  box-shadow: 0px 0px 1px #000000;
+  border: 0px solid #000000;
+  height: 20px;
+  width: 20px;
+  border-radius: 15px;
+  background: #EA4396;
+  cursor: pointer;
+}
+input[type=range].ps3:focus::-ms-fill-lower {
+  background: #EA4396;
+}
+input[type=range].ps3:focus::-ms-fill-upper {
+  background: #EA4396;
+}
+
+
+
+
+
+input[type=range].ps4 {
+  height: 26px;
+  -webkit-appearance: none;
+  /* margin: 10px 0; */
+  width: 100%;
+}
+input[type=range].ps4:focus {
+  outline: none;
+}
+input[type=range].ps4::-webkit-slider-runnable-track {
+  width: 100%;
+  height: 10px;
+  cursor: pointer;
+  animate: 0.2s;
+  box-shadow: 0px 0px 0px #000000;
+  background: #73C88A;
+  border-radius: 5px;
+  border: 0px solid #000000;
+}
+input[type=range].ps4::-webkit-slider-thumb {
+  box-shadow: 0px 0px 1px #000000;
+  border: 0px solid #000000;
+  height: 20px;
+  width: 20px;
+  border-radius: 15px;
+  background: #73C88A;
+  cursor: pointer;
+  -webkit-appearance: none;
+  margin-top: -5px;
+}
+input[type=range].ps4:focus::-webkit-slider-runnable-track {
+  background: #73C88A;
+}
+input[type=range].ps4::-moz-range-track {
+  width: 100%;
+  height: 10px;
+  cursor: pointer;
+  animate: 0.2s;
+  box-shadow: 0px 0px 0px #000000;
+  background: #73C88A;
+  border-radius: 5px;
+  border: 0px solid #000000;
+}
+input[type=range].ps4::-moz-range-thumb {
+  box-shadow: 0px 0px 1px #000000;
+  border: 0px solid #000000;
+  height: 20px;
+  width: 20px;
+  border-radius: 15px;
+  background: #73C88A;
+  cursor: pointer;
+}
+input[type=range].ps4::-ms-track {
+  width: 100%;
+  height: 10px;
+  cursor: pointer;
+  animate: 0.2s;
+  background: transparent;
+  border-color: transparent;
+  color: transparent;
+}
+input[type=range].ps4::-ms-fill-lower {
+  background: #73C88A;
+  border: 0px solid #000000;
+  border-radius: 10px;
+  box-shadow: 0px 0px 0px #000000;
+}
+input[type=range].ps4::-ms-fill-upper {
+  background: #73C88A;
+  border: 0px solid #000000;
+  border-radius: 10px;
+  box-shadow: 0px 0px 0px #000000;
+}
+input[type=range].ps4::-ms-thumb {
+  margin-top: 1px;
+  box-shadow: 0px 0px 1px #000000;
+  border: 0px solid #000000;
+  height: 20px;
+  width: 20px;
+  border-radius: 15px;
+  background: #73C88A;
+  cursor: pointer;
+}
+input[type=range].ps4:focus::-ms-fill-lower {
+  background: #73C88A;
+}
+input[type=range].ps4:focus::-ms-fill-upper {
+  background: #73C88A;
+}
+
+.i-ic{
+  float: left;
+  width: auto;
+}
+.range-d{
+  width: 100%;
+  margin: 0 10px;
+}
+.bd-radius-0{
+  border-radius:0!important;
+}

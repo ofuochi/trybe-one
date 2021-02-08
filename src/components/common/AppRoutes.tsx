@@ -11,7 +11,9 @@ import { Dashboard } from "../Dashboard";
 import { Home } from "../Home";
 import { Investments } from "../Investments";
 import { TargetSavings } from "../TargetSavings";
+import { NewTargetSavings } from "../NewTargetSavings";
 import { Transactions } from "../Transactions";
+import { Statment } from "../Transactions/Statment";
 import { AuthRoute } from "./AuthRoute";
 
 export const AppRoutes = () => {
@@ -39,6 +41,18 @@ export const AppRoutes = () => {
       <AuthRoute
         path={routePath.targetsavings}
         component={TargetSavings}
+        isPrivate
+      />
+
+      <AuthRoute
+        path={routePath.newtargetsavings}
+        component={NewTargetSavings}
+        isPrivate
+      />
+
+<AuthRoute
+        path={routePath.transactions.statment}
+        component={Statment}
         isPrivate
       />
 

@@ -14,13 +14,13 @@ export const Transfer = () => {
       : `/assets/images/${inactive}`;
 
   return (
-    <div className="mt-6">
-      <p className="mb-0 lead mb-4 p-0">
+    <div className="mt-5">
+      <p className="lead mb-3 p-0">
         Where would you like to send money to?
       </p>
       <div className="mdc-card info-card info-card--danger no-shadow overflow-x-auto">
         <div className="card-inner row mb-0 d-flex">
-          <div className="text-center ml-6-re">
+          <div className="text-center">
             <Link to="#">
               <div className="img-w-42">
                 <img alt="showimg" src="/assets/images/icn-trybe.svg" />

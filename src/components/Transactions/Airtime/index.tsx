@@ -14,7 +14,7 @@ export const Airtime = () => {
       : `/assets/images/${inactive}`;
   return (
     <div className="mt-5">
-      <p className="mb-0 lead p-0">Where would you like to send airtime to?</p>
+      <p className="mb-3 lead p-0">Where would you like to send airtime to?</p>
       <div className="mdc-card info-card info-card--danger no-shadow overflow-x-auto">
         <div className="card-inner row mb-0 d-flex">
           <div className="text-center">

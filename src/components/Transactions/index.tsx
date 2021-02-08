@@ -8,6 +8,7 @@ import { Title } from "../Common/Title";
 import { Airtime } from "./Airtime";
 import RecentTransactions from "./Recent";
 import { Transfer } from "./Transfers";
+import { Statment } from "./Statment";
 
 export const Transactions = () => {
   const [cards, setCards] = useState<API.GetCardResponseDto>({});
@@ -79,7 +80,7 @@ export const Transactions = () => {
                 </Link>
               </div>
               <div className="text-center ml-5-re">
-                <Link to="#">
+                <Link to={routePath.transactions.statment.index}>
                   <div className="img-w-42">
                     <img alt="" src="/assets/images/icn-statement.svg" />
                   </div>
@@ -115,11 +116,15 @@ export const Transactions = () => {
               path={routePath.transactions.airtime.index}
               component={Airtime}
             />
+             <Route
+              path={routePath.transactions.statment.index}
+              component={Statment}
+            />
           </Switch>
         </div>
       </div>
       <div className="col-lg-4 col-md-4">
-        <div className="row mb-0 d-flex mt-3 justify-content-between">
+        <div className="row m-0 mb-0 d-flex mt-3 justify-content-between">
           <div className="col s6">
             <div className="text-left">
               <button className="btn no-bg p-0">
