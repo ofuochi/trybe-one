@@ -1,4 +1,4 @@
-import { Field, Form, Formik } from "formik";
+//import { Field, Form, Formik } from "formik";
 import React, { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import api from "../config/api.config";
@@ -33,7 +33,7 @@ export const NewTargetSavings = () => {
       { name: "Rent", value: 150 },
     ];
 
-  const initialValues: API.AddTargetSavingsRequestDto = {};
+//  const initialValues: API.AddTargetSavingsRequestDto = {};
   return (
     <>
       <Title title="Target Savings" />
