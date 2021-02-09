@@ -23755,7 +23755,6 @@ font-size: 11px;
 .recharts-responsive-container > .recharts-wrapper > svg{
   position: absolute!important;
     left: -70px!important;
-  width: 300px!important;
 }
 
 
@@ -24227,4 +24226,10 @@ input[type=range].ps4:focus::-ms-fill-upper {
 }
 .bd-radius-0{
   border-radius:0!important;
+}
+.recharts-wrapper{
+  height:unset!important;
+}
+.recharts-responsive-container{
+  height:unset!important;
 }

@@ -36,13 +36,13 @@ export const Home = () => {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ml-auto">
-              <Nav.Link href="#home">
+              <Nav.Link>
                 <span className="padd-btn">Ambassador</span>
               </Nav.Link>
-              <Nav.Link href="#link">
+              <Nav.Link>
                 <span className="padd-btn">FAQ</span>
               </Nav.Link>
-              <Nav.Link href="#link">
+              <Nav.Link>
                 <span
                   className="padd-btn text-primary mr-4"
                   onClick={() => history.push(routePath.login)}
@@ -50,7 +50,7 @@ export const Home = () => {
                   Login
                 </span>
               </Nav.Link>
-              <Nav.Link href="#link">
+              <Nav.Link>
                 <span
                   className="btn btn-sm padd-btnr btn-primary"
                   onClick={() => history.push(routePath.signup)}

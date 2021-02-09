@@ -50,12 +50,6 @@ export const AppRoutes = () => {
         isPrivate
       />
 
-<AuthRoute
-        path={routePath.transactions.statment}
-        component={Statment}
-        isPrivate
-      />
-
       <AuthRoute path={routePath.login} component={Login} />
       <AuthRoute path={routePath.signup} component={Signup} />
       <AuthRoute path={routePath.home} exact component={Home} />
