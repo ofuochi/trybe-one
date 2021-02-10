@@ -59,7 +59,10 @@ export const SideNavbar = () => {
           </div>
 
           <div className="mdc-list-item mdc-drawer-item">
-            <NavLink className="mdc-drawer-link" to={routePath.targetsavings}>
+            <NavLink
+              className="mdc-drawer-link"
+              to={routePath.targetSavings.index}
+            >
               Target Savings
               <i
                 className="material-icons mdc-list-item__start-detail mdc-drawer-item-icon ml-auto"

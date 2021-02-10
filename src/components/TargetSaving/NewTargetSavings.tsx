@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 
-import api from "../config/api.config";
-import { localStoreService } from "../services";
-import { Title } from "./Common/Title";
+import api from "../../config/api.config";
+import { localStoreService } from "../../services";
+import { Title } from "../Common/Title";
 
 export const NewTargetSavings = () => {
   const [targetSaving, setTargetSaving] = useState<
