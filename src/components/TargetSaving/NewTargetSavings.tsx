@@ -1,40 +1,60 @@
-import React, { useEffect, useState } from "react";
+import { Field, Form, Formik } from "formik";
+import React from "react";
 import { Button } from "react-bootstrap";
-
+import { useHistory } from "react-router-dom";
+import { toast } from "react-toastify";
+import * as Yup from "yup";
 import api from "../../config/api.config";
+import { routePath } from "../../constants/route-paths";
 import { localStoreService } from "../../services";
+import { ErrorMsg } from "../Common/ErrorMsg";
+
 import { Title } from "../Common/Title";
 
+const validationSchema = Yup.object().shape({
+  period: Yup.number().min(1).required("required"),
+  item: Yup.string().required("required"),
+  amt: Yup.number().min(1).required("required"),
+  savingsFrequencyID: Yup.number().min(1).required("required"),
+  nextRenewalDate: Yup.string().required("required"),
+});
+
 export const NewTargetSavings = () => {
-  const [targetSaving, setTargetSaving] = useState<
-    API.GetTargetSavingsResponseDto[]
-  >();
-
   const currentUser = localStoreService.getCurrentUser();
-  useEffect(() => {
+  const history = useHistory();
+  const initialValues: API.AddTargetSavingsRequestDto = {
+    profileID: currentUser?.userId,
+    id: currentUser?.userId,
+    txndate: new Date().toISOString(),
+    nextRenewalDate: "",
+    savingsFrequencyID: 0,
+    item: "",
+    period: 0,
+    amt: 0,
+  };
+  const handleSubmit = (
+    values: API.AddTargetSavingsRequestDto,
+    { setSubmitting, resetForm }: any
+  ) => {
     api
-      .get<API.GetTargetSavingsResponseListDto>(
-        `/User/GetTargetSavingsByProfileId?profileID=${currentUser?.userId}`
-      )
-      .then(({ data }) => setTargetSaving(data.targetSavings));
-  }, [currentUser?.userId]);
+      .post<API.BaseResponse>("/User/SubmitTargetSavings", values)
+      .then(({ data }) => {
+        setSubmitting(false);
 
-  let data = targetSaving?.map((t) => ({
-    name: t.item || "",
-    value: t.amt || 0,
-  }));
-  if (data?.length === 0)
-    data = [
-      { name: "Car", value: 50 },
-      { name: "Food", value: 39 },
-      { name: "Groceries", value: 78 },
-      { name: "Movies", value: 100 },
-      { name: "Rent", value: 150 },
-    ];
-
+        if (data.responseCode === "00") {
+          resetForm();
+          toast.success(data.responseDescription, { position: "top-center" });
+          history.push(routePath.targetSavings.index);
+        } else
+          toast.error(data.responseDescription, { position: "top-center" });
+      })
+      .catch(() => {
+        setSubmitting(false);
+      });
+  };
   return (
     <>
-      <Title title="Target Savings" />
+      <Title title="New Target Savings" />
       <div className="col-lg-8 col-md-8 bd-right pl-5 pr-3 mt-4">
         <div className="page-content">
           <div className="row">
@@ -83,60 +103,94 @@ export const NewTargetSavings = () => {
               Target box savings
             </h5>
 
-            <div className="form-group mb-0">
-              <form>
-                <div className="input-group">
-                  <input
-                    type="email"
-                    name="email"
-                    placeholder="Name of Target you want to save for"
-                    className="form-control d-block w-100 bdbtm-0 bd-radius-0"
-                  />
-                  <label>Name of Target you want to save for</label>
-                </div>
-                <div className="input-group">
-                  <input
-                    type="email"
-                    name="email"
-                    placeholder="How long do you want to save for? (days)"
-                    className="form-control d-block w-100 bdbtm-0 bd-radius-0"
-                  />
-                  <label>How long do you want to save for? (days)</label>
-                </div>
-                <div className="input-group">
-                  <input
-                    type="email"
-                    name="email"
-                    placeholder="How often should you be debited"
-                    className="form-control d-block w-100 bdbtm-0 bd-radius-0"
-                  />
-                  <label>How often should you be debited</label>
-                </div>
-                <div className="input-group">
-                  <input
-                    type="email"
-                    name="email"
-                    placeholder="What time of the day should we debit you"
-                    className="form-control d-block w-100 bd-radius-0"
-                  />
-                  <label>What time of the day should we debit you</label>
-                </div>
-              </form>
-            </div>
-          </div>
-
-          <div className="mt-4 row">
-            <div className="col-lg-7"></div>
-            <div className="col-lg-5 text-right">
-              <Button variant="danger" className="px-4" type="submit">
-                <img
-                  alt="showimg"
-                  className="mr-3"
-                  src="/assets/images/ic-send.svg"
-                />
-                Create Target
-              </Button>
-            </div>
+            <Formik
+              initialValues={initialValues}
+              validationSchema={validationSchema}
+              onSubmit={handleSubmit}
+            >
+              {({ isSubmitting }) => (
+                <Form>
+                  <div className="input-group">
+                    <Field
+                      name="amt"
+                      type="number"
+                      min={1}
+                      placeholder="How much do you want to save"
+                      className="form-control d-block w-100 bdbtm-0 bd-radius-0"
+                    />
+                    <label htmlFor="amt">How much do you want to save</label>
+                    <ErrorMsg inputName="amt" />
+                  </div>
+                  <div className="input-group">
+                    <Field
+                      name="item"
+                      placeholder="Name of Target you want to save for"
+                      className="form-control d-block w-100 bdbtm-0 bd-radius-0"
+                    />
+                    <label htmlFor="item">
+                      Name of Target you want to save for
+                    </label>
+                    <ErrorMsg inputName="item" />
+                  </div>
+                  <div className="input-group">
+                    <Field
+                      type="number"
+                      min="1"
+                      name="period"
+                      placeholder="Period"
+                      className="form-control d-block w-100 bdbtm-0 bd-radius-0"
+                    />
+                    <label htmlFor="period">
+                      How long do you want to save for? (days)
+                    </label>
+                    <ErrorMsg inputName="period" />
+                  </div>
+                  <div className="input-group">
+                    <Field
+                      type="number"
+                      min={1}
+                      name="savingsFrequencyID"
+                      placeholder="How often should you be debited"
+                      className="form-control d-block w-100 bdbtm-0 bd-radius-0"
+                    />
+                    <label htmlFor="savingsFrequencyID">
+                      How often should you be debited
+                    </label>
+                    <ErrorMsg inputName="savingsFrequencyID" />
+                  </div>
+                  <div className="input-group">
+                    <Field
+                      type="time"
+                      name="nextRenewalDate"
+                      placeholder="What time of the day should we debit you"
+                      className="form-control d-block w-100 bd-radius-0"
+                    />
+                    <label htmlFor="nextRenewalDate">
+                      What time of the day should we debit you
+                    </label>
+                    <ErrorMsg inputName="nextRenewalDate" />
+                  </div>
+                  <div className="mt-4 row">
+                    <div className="col-lg-7"></div>
+                    <div className="col-lg-5 text-right">
+                      <Button
+                        variant="danger"
+                        className="px-4"
+                        type="submit"
+                        disabled={isSubmitting}
+                      >
+                        <img
+                          alt="showing"
+                          className="mr-3"
+                          src="/assets/images/ic-send.svg"
+                        />
+                        Create Target
+                      </Button>
+                    </div>
+                  </div>
+                </Form>
+              )}
+            </Formik>
           </div>
         </div>
       </div>

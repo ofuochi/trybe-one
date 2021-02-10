@@ -38,14 +38,8 @@ export const AppRoutes = () => {
       />
 
       <AuthRoute
-        path={routePath.targetSavings}
-        component={TargetSavings}
-        isPrivate
-      />
-
-      <AuthRoute
         path={routePath.targetSavings.index}
-        component={NewTargetSavings}
+        component={TargetSavings}
         isPrivate
       />
 

@@ -363,24 +363,6 @@ export const TargetSavings = () => {
           exact
         />
       </Switch>
-      <div className="col-lg-4 col-md-4">
-        <div className="row mb-0 d-flex mt-3 justify-content-between">
-          <div className="col s6">
-            <div className="text-left">
-              <button className="btn no-bg p-0">
-                <img alt="" src="/assets/images/ic-search.svg" />
-              </button>
-            </div>
-          </div>
-          <div className="col s6">
-            <div className="text-right">
-              <button className="btn no-bg p-0">
-                <img alt="" src="/assets/images/ic-notification.svg" />
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
     </>
   );
 };
