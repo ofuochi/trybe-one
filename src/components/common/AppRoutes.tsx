@@ -13,7 +13,6 @@ import { Investments } from "../Investments";
 import { TargetSavings } from "../TargetSavings";
 import { NewTargetSavings } from "../NewTargetSavings";
 import { Transactions } from "../Transactions";
-import { Statment } from "../Transactions/Statment";
 import { AuthRoute } from "./AuthRoute";
 
 export const AppRoutes = () => {

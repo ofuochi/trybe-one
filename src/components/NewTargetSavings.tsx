@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
-
 import api from "../config/api.config";
 import { localStoreService } from "../services";
 import { Title } from "./Common/Title";
@@ -41,44 +40,34 @@ export const NewTargetSavings = () => {
             <div className="col-lg-12 mb-4">
               <h4>New Target Savings </h4>
             </div>
-            <div className="col-lg-6">
-              <Button
-                size="lg"
-                variant="danger"
-                className="px-3 py-3 btn-block"
-                type="submit"
-              >
-                <i className="i-ic">
+            <div className="col-lg-12">
+
+            <div className="custom-radio row justify-content-between m-0">
+<input type="radio" id="cat" name="animal" value="" checked />
+<label className="px-3 py-3 btn btn-light shadow-sm col-lg-5" htmlFor="cat">    
+ <i className="i-ic">
                   <img
                     className="ml-2 w-30 mr-3"
                     alt=""
                     src="/assets/images/ic-target.svg"
                   />
                 </i>
-                Target Box
-              </Button>
-            </div>
+                Target Box</label>
 
-            <div className="col-lg-6">
-              <Button
-                size="lg"
-                variant="light"
-                className="px-3 py-3 btn-block"
-                type="submit"
-              >
-                <i className="i-ic">
+<input type="radio" id="dog" name="animal" value="" />
+<label className="px-3 py-3 btn btn-light shadow-sm col-lg-5" htmlFor="dog" >     <i className="i-ic">
                   <img
                     className="ml-2 w-30 mr-3"
                     alt=""
                     src="/assets/images/ic-targetb.svg"
                   />
                 </i>
-                Eye on the Goal
-              </Button>
+                Eye on the Goal</label>
+</div>
             </div>
           </div>
 
-          <div className="mt-6">
+          <div className="mt-4">
             <h5 className="mdc-top-app-bar__title mb-0 mb-4 p-0">
               Target box savings
             </h5>

@@ -24233,3 +24233,20 @@ input[type=range].ps4:focus::-ms-fill-upper {
 .recharts-responsive-container{
   height:unset!important;
 }
+
+.custom-radio input[type="radio"] {
+  display:none;
+}
+.custom-radio label {
+  padding: 2em;
+  display: inline-block;
+  cursor: pointer;
+}
+.custom-radio .blank-label {
+  display: none;
+}
+.custom-radio input[type="radio"]:checked + label {
+  background-color: #dc3545;
+  border-color: #dc3545;
+  color: #fff;
+}

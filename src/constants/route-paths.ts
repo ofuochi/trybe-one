@@ -14,6 +14,11 @@ export const routePath = {
       self: "/transactions/airtime/self",
       others: "/transactions/airtime/others",
     },
+    bills: {
+      index: "/transactions/bills",
+      waste: "/transactions/bills/waste",
+      electricity: "/transactions/bills/electricity",
+    },
     statement: {
       index: "/transactions/statement",
     },

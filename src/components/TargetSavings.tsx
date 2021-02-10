@@ -154,9 +154,12 @@ export const TargetSavings = () => {
               </p>
             </div>
             <div className="col-lg-4 text-right">
-              <Button variant="danger" className="px-4" type="submit">
+            <Link
+                className="px-4 btn btn-danger"
+                to={routePath.newtargetsavings}
+              >
                 New Target
-              </Button>
+              </Link>
             </div>
           </div>
           <div className="mt-4">
