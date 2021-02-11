@@ -25,8 +25,10 @@ export const routePath = {
   },
 
   investments: "/investments",
-  targetsavings: "/targetsavings",
-  newtargetsavings: "/newtargetsavings",
+  targetSavings: {
+    index: "/targetsavings",
+    new: "/targetsavings/new",
+  },
   login: "/login",
   signup: "/signup",
   otp: "/otp",

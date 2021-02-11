@@ -23652,6 +23652,7 @@ padding: 100px 0px
     -webkit-transition: color .3s ease;
     transition: color .3s ease;
     left: 10px;
+    z-index: 99;
 }
 
 .form-control:focus {
@@ -24249,4 +24250,10 @@ input[type=range].ps4:focus::-ms-fill-upper {
   background-color: #dc3545;
   border-color: #dc3545;
   color: #fff;
+}
+.form-group small {
+  position: absolute;
+  right: 10px;
+  bottom:0;
+  font-size: 65%;
 }

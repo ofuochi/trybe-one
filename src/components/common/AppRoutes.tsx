@@ -10,8 +10,8 @@ import { Signup } from "../Auth/Signup";
 import { Dashboard } from "../Dashboard";
 import { Home } from "../Home";
 import { Investments } from "../Investments";
-import { TargetSavings } from "../TargetSavings";
-import { NewTargetSavings } from "../NewTargetSavings";
+//import { NewTargetSavings } from "../TargetSaving/NewTargetSavings";
+import { TargetSavings } from "../TargetSaving";
 import { Transactions } from "../Transactions";
 import { AuthRoute } from "./AuthRoute";
 
@@ -38,14 +38,8 @@ export const AppRoutes = () => {
       />
 
       <AuthRoute
-        path={routePath.targetsavings}
+        path={routePath.targetSavings.index}
         component={TargetSavings}
-        isPrivate
-      />
-
-      <AuthRoute
-        path={routePath.newtargetsavings}
-        component={NewTargetSavings}
         isPrivate
       />
 
