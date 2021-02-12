@@ -26,8 +26,8 @@ export const routePath = {
 
   investments: "/investments",
   targetSavings: {
-    index: "/targetsavings",
-    new: "/targetsavings/new",
+    index: "/target-savings",
+    new: "/target-savings/new",
   },
   login: "/login",
   signup: "/signup",
