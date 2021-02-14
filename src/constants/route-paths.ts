@@ -27,7 +27,11 @@ export const routePath = {
   investments: "/investments",
   targetSavings: {
     index: "/target-savings",
-    new: "/target-savings/new",
+    tokenizeCard: "/target-savings/tokenize-card",
+    createTargetSaving: "/target-savings/create-target-saving",
+  },
+  cardRequest: {
+    new: "/request-card",
   },
   login: "/login",
   signup: "/signup",

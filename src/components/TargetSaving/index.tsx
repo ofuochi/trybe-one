@@ -1,21 +1,16 @@
+import { Pie } from "@ant-design/charts";
+import numeral from "numeral";
 import { Field, Form, Formik } from "formik";
 import React, { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import Modal from "react-bootstrap/Modal";
 import { Link, Route, Switch, useHistory } from "react-router-dom";
-import {
-  Cell,
-  Legend,
-  Pie,
-  PieChart,
-  ResponsiveContainer,
-  Tooltip,
-} from "recharts";
 
 import api from "../../config/api.config";
 import { routePath } from "../../constants/route-paths";
 import { localStoreService } from "../../services";
 import { Title } from "../Common/Title";
+import TokenizeCard from "../Common/TokenizeCard";
 import { NewTargetSavings } from "./NewTargetSavings";
 import TargetOptions from "./TargetOption";
 
@@ -37,22 +32,56 @@ export const TargetSavings = () => {
         `/User/GetTargetSavingsByProfileId?profileID=${currentUser?.userId}`
       )
       .then(({ data }) => setTargetSaving(data.targetSavings));
-  }, [currentUser?.userId]);
+  }, [currentUser?.userId, targetSaving?.length]);
 
   let data = targetSaving?.map((t) => ({
     name: t.item || "",
-    value: t.amt || 0,
+    value: t.targetAmountInView || 0,
   }));
-  // if (data?.length === 0)
-  //   data = [
-  //     { name: "Car", value: 50 },
-  //     { name: "Food", value: 39 },
-  //     { name: "Groceries", value: 78 },
-  //     { name: "Movies", value: 100 },
-  //     { name: "Rent", value: 150 },
-  //   ];
-  const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#FF007F"];
 
+  const COLORS: string[] = [];
+
+  const stringToColour = (str: string) => {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+      hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    let colour = "#";
+    for (let i = 0; i < 3; i++) {
+      const value = (hash >> (i * 8)) & 0xff;
+      colour += ("00" + value.toString(16)).substr(-2);
+    }
+    return colour;
+  };
+  targetSaving?.forEach((e) => {
+    COLORS.push(stringToColour(e.item || ""));
+  });
+  const pieConfig = {
+    data: data || [],
+    innerRadius: 0.64,
+    radius: 1,
+    interactions: [{ type: "element-selected" }, { type: "element-active" }],
+    appendPadding: 10,
+    statistic: {
+      content: {
+        formatter: (data1: any, data2: any) => {
+          const list: any[] = data2.map((item: any) => item.value);
+
+          const sum =
+            list.length > 0
+              ? list.reduce((prev: number, next: number) => prev + next)
+              : 0;
+
+          return `₦${numeral(sum).format("0,0")}`;
+        },
+      },
+      title: {
+        formatter: () => "Total",
+      },
+    },
+    angleField: "value",
+    colorField: "name",
+  };
   const initialValues: API.AddTargetSavingsRequestDto = {};
   return (
     <>
@@ -67,47 +96,9 @@ export const TargetSavings = () => {
             ) : null}
             <div className="col-lg-6">
               <div className="d-flex row m-0 justify-content-between">
-                <ResponsiveContainer height={400} minWidth={300}>
-                  <PieChart>
-                    <text
-                      className="smaller"
-                      dy={1}
-                      y="12%"
-                      x="63%"
-                      textAnchor="middle"
-                    >
-                      NGR 2000.00
-                    </text>
-                    <Pie
-                      data={data}
-                      cx={"50%"}
-                      cy={"10%"}
-                      innerRadius="40%"
-                      outerRadius="70%"
-                      fill="#8884d8"
-                      paddingAngle={3}
-                      dataKey="value"
-                    >
-                      {data?.map((entry, index) => (
-                        <Cell
-                          key={`cell-${index}`}
-                          fill={COLORS[index % COLORS.length]}
-                        />
-                      ))}
-                    </Pie>
-                    <span className="abs-val">2000win</span>
-                    <Tooltip />
-                    <Legend
-                      verticalAlign="top"
-                      layout="vertical"
-                      iconType="circle"
-                      align="left"
-                    />
-                  </PieChart>
-                </ResponsiveContainer>
+                <Pie {...pieConfig} />
               </div>
             </div>
-
             <div className="col-lg-6">
               <div className="alert alert-danger p-4">
                 <h5>Target Savings</h5>
@@ -118,22 +109,7 @@ export const TargetSavings = () => {
               </div>
             </div>
           </div>
-          <div className="mt-2 row">
-            <div className="col-lg-8">
-              <p>
-                You currently have no target Savings, click on new target to
-                create one
-              </p>
-            </div>
-            <div className="col-lg-4 text-right">
-              <Link
-                className="px-4 btn btn-danger"
-                to={routePath.targetSavings.new}
-              >
-                New Target
-              </Link>
-            </div>
-          </div>
+
           {data && data.length > 0 ? (
             <>
               <div className="mt-4">
@@ -312,14 +288,31 @@ export const TargetSavings = () => {
                 <div className="col-lg-4 text-right">
                   <Link
                     className="px-4 btn btn-danger"
-                    to={routePath.targetSavings.new}
+                    to={routePath.targetSavings.createTargetSaving}
                   >
                     New Target
                   </Link>
                 </div>
               </div>
             </>
-          ) : null}
+          ) : (
+            <div className="mt-2 row">
+              <div className="col-lg-8">
+                <p>
+                  You currently have no target Savings, click on new target to
+                  create one
+                </p>
+              </div>
+              <div className="col-lg-4 text-right">
+                <Link
+                  className="px-4 btn btn-danger"
+                  to={routePath.targetSavings.tokenizeCard}
+                >
+                  New Target
+                </Link>
+              </div>
+            </div>
+          )}
         </div>
       ) : null}
 
@@ -354,7 +347,12 @@ export const TargetSavings = () => {
       </Modal>
       <Switch>
         <Route
-          path={routePath.targetSavings.new}
+          path={routePath.targetSavings.tokenizeCard}
+          component={TokenizeCard}
+          exact
+        />
+        <Route
+          path={routePath.targetSavings.createTargetSaving}
           component={NewTargetSavings}
           exact
         />

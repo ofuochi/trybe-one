@@ -1,15 +1,41 @@
-import { useEffect, useState } from "react";
-import Modal from 'react-bootstrap/Modal'
-import Button from 'react-bootstrap/Button'
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect, useState } from "react";
+import Modal from "react-bootstrap/Modal";
+import Button from "react-bootstrap/Button";
 
 import api from "../../config/api.config";
 import { localStoreService } from "../../services";
+import { Field, Formik } from "formik";
+import { Form } from "react-bootstrap";
+import { ErrorMsg } from "./ErrorMsg";
+import * as Yup from "yup";
+import { Link } from "react-router-dom";
+import { routePath } from "../../constants/route-paths";
+
+const validationSchema = Yup.object().shape({
+  pin: Yup.string().required("required"),
+  card: Yup.object({
+    cvv: Yup.string().required("required"),
+    expiry_month: Yup.number()
+      .min(1, "Expiry month must be greater than 0")
+      .required("required"),
+    expiry_year: Yup.number()
+      .min(
+        new Date().getFullYear(),
+        `Expiry year must be at least ${new Date().getFullYear()}`
+      )
+      .required("required"),
+    number: Yup.number().positive("PAN must be positive").required("required"),
+  }),
+});
 
 const CardSection = () => {
   const [cards, setCards] = useState<API.GetCardResponseDto>({});
+  // const [show, setShow] = useState(false);
+  // const handleClose = () => setShow(false);
+  // const handleShow = () => setShow(true);
+  const currentUser = localStoreService.getCurrentUser();
   useEffect(() => {
-    const currentUser = localStoreService.getCurrentUser();
-
     const getCardInput: API.GetCardRequestDto = {
       accountId: currentUser?.nuban,
     };
@@ -18,9 +44,18 @@ const CardSection = () => {
       .then(({ data }) => setCards(data));
   }, []);
 
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const initialValues: API.ChargeCustomerRequestDto = {
+    amount: "1",
+    email: currentUser?.email,
+    profileId: currentUser?.userId,
+    pin: "",
+    card: {
+      cvv: "",
+      expiry_month: 0,
+      expiry_year: 0,
+      number: "",
+    },
+  };
   return (
     <>
       <div className="row m-0 mb-0 d-flex mt-3 justify-content-between">
@@ -28,7 +63,7 @@ const CardSection = () => {
           <div className="text-left">
             <button className="btn no-bg p-0">
               <img alt="" src="/assets/images/ic-search.svg" />
-            </button>   
+            </button>
           </div>
         </div>
         <div className="col s6">
@@ -57,20 +92,20 @@ const CardSection = () => {
       )}
 
       <div className="mt-4 row">
-      <h5 className="mdc-top-app-bar__title font-weight-light ml-4 mb-1 p-0">
+        <h5 className="mdc-top-app-bar__title font-weight-light ml-4 mb-1 p-0">
           Request for Card
         </h5>
-    <div className="col-lg-12 text-center mt-4">
-    <Button className="no-bg bd-0" onClick={handleShow}>
-      <img
-                          className="m-auto"
-                          alt=""
-                          src="/assets/images/ic-card-request.svg"
-                        />
-      </Button>
-    </div>
+        <div className="col-lg-12 text-center mt-4">
+          <Link className="no-bg bd-0" to={routePath.cardRequest.new}>
+            <img
+              className="m-auto"
+              alt=""
+              src="/assets/images/ic-card-request.svg"
+            />
+          </Link>
+        </div>
       </div>
-      
+
       <div className="mt-4 row">
         <h5 className="mdc-top-app-bar__title font-weight-light ml-4 mb-1 p-0">
           Target Saving
@@ -116,82 +151,112 @@ const CardSection = () => {
         </ul>
       </div>
 
-
-
       <Modal
-        show={show}
+        // show={show}
         size="lg"
         aria-labelledby="contained-modal-title-vcenter"
         centered
-        onHide={handleClose}
+        // onHide={handleClose}
         backdrop="static"
-        keyboard={false}>
-        <Modal.Header className="bd-0" closeButton>Request for card</Modal.Header>
+        keyboard={false}
+      >
+        <Modal.Header className="bd-0" closeButton>
+          Request for card
+        </Modal.Header>
         <Modal.Body className="p-4">
- 
-             <div className="form-group mb-0">
-              <div className="input-group">
-                <select className="form-control d-block w-100 bdbtm-0 bd-radius-0">
-                  <option>Mr</option>
-                  <option>Mrs</option>
-                  <option>Miss</option>
-                </select>
-                <label >Title</label>
-              </div>
-            </div>
+          <Formik
+            initialValues={initialValues}
+            validationSchema={validationSchema}
+            onSubmit={(values, { setSubmitting }) => {
+              console.log(values);
+            }}
+          >
+            {({ isSubmitting }) => (
+              <Form>
+                <div className="form-group mb-0">
+                  <div className="input-group">
+                    <Field
+                      placeholder="Pan"
+                      type="number"
+                      name="card.number"
+                      className="form-control d-block w-100 bdbtm-0 bd-radius-0"
+                    />
+                    <label htmlFor="card.number">Pan</label>
+                    <ErrorMsg inputName="card.number" />
+                  </div>
+                </div>
+                <div className="form-group mb-0">
+                  <div className="input-group">
+                    <Field
+                      placeholder="Expiry Month"
+                      type="number"
+                      name="card.expiry_month"
+                      className="form-control d-block w-100 bdbtm-0 bd-radius-0"
+                    />
+                    <label htmlFor="card.expiry_month">Expiry Month</label>
+                    <ErrorMsg inputName="card.expiry_month" />
+                  </div>
+                </div>
 
-            <div className="form-group mb-0">
-              <div className="input-group">
-                <input placeholder="Name" className="form-control d-block w-100 bdbtm-0 bd-radius-0" type="text" />
-                <label >Name</label>
-              </div>
-            </div>
+                <div className="form-group mb-0">
+                  <div className="input-group">
+                    <Field
+                      placeholder="Expiry Year"
+                      type="number"
+                      name="card.expiry_year"
+                      className="form-control d-block w-100 bdbtm-0 bd-radius-0"
+                    />
+                    <label htmlFor="card.expiry_year">Expiry Year</label>
+                    <ErrorMsg inputName="card.expiry_year" />
+                  </div>
+                </div>
 
-            <div className="form-group mb-0">
-              <div className="input-group">
-                <select className="form-control d-block w-100 bdbtm-0 bd-radius-0">
-                  <option>Lagos</option>
-                  <option>Abuja</option>
-                </select>
-                <label >State</label>
-              </div>
-            </div>
+                <div className="form-group mb-0">
+                  <div className="input-group">
+                    <Field
+                      placeholder="CVV"
+                      type="number"
+                      name="card.cvv"
+                      className="form-control d-block w-100 bdbtm-0 bd-radius-0"
+                    />
+                    <label htmlFor="card.cvv">CVV</label>
+                    <ErrorMsg inputName="card.cvv" />
+                  </div>
+                </div>
 
-            <div className="form-group mb-0">
-              <div className="input-group">
-                <select className="form-control d-block w-100 bdbtm-0 bd-radius-0">
-                  <option>Lagos</option>
-                  <option>Abuja</option>
-                </select>
-                <label >City</label>
-              </div>
-            </div>
-
-            <div className="form-group mb-0">
-              <div className="input-group">
-                <input placeholder="Phone Number" className="form-control d-block w-100 bdbtm-0 bd-radius-0" type="text" />
-                <label>Phone Number</label>
-              </div>
-            </div>
-
-            <div className="form-group mb-0">
-              <div className="input-group">
-                <textarea placeholder="Address" className="form-control d-block w-100 bd-radius-0"></textarea>
-                <label>Address</label>
-              </div>
-            </div>
-
-
-            <div className="form-group row m-0 justify-content-end mt-4">
-              <Button
-                variant="danger"
-                className="px-5">
-                Request for Card
-              </Button>
-            </div>
+                <div className="form-group mb-0">
+                  <div className="input-group">
+                    <Field
+                      placeholder="PIN"
+                      name="pin"
+                      type="number"
+                      className="form-control d-block w-100 bdbtm-0 bd-radius-0"
+                    />
+                    <label htmlFor="pin">PIN</label>
+                    <ErrorMsg inputName="pin" />
+                  </div>
+                </div>
+                <div className="form-group row m-0 justify-content-end mt-4">
+                  <Button
+                    size="lg"
+                    variant="danger"
+                    className="px-5"
+                    type="submit"
+                    disabled={isSubmitting}
+                  >
+                    <img
+                      alt="button"
+                      className="mr-3"
+                      src="/assets/images/ic-send.svg"
+                    />
+                    Send
+                  </Button>
+                </div>
+              </Form>
+            )}
+          </Formik>
         </Modal.Body>
       </Modal>
-
     </>
   );
 };
