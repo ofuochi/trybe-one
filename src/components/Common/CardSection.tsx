@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import Modal from 'react-bootstrap/Modal'
+import Button from 'react-bootstrap/Button'
 
 import api from "../../config/api.config";
 import { localStoreService } from "../../services";
@@ -7,6 +9,7 @@ const CardSection = () => {
   const [cards, setCards] = useState<API.GetCardResponseDto>({});
   useEffect(() => {
     const currentUser = localStoreService.getCurrentUser();
+
     const getCardInput: API.GetCardRequestDto = {
       accountId: currentUser?.nuban,
     };
@@ -14,6 +17,10 @@ const CardSection = () => {
       .post<API.GetCardResponseDto>("/User/GetActiveCard", getCardInput)
       .then(({ data }) => setCards(data));
   }, []);
+
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
   return (
     <>
       <div className="row m-0 mb-0 d-flex mt-3 justify-content-between">
@@ -21,7 +28,7 @@ const CardSection = () => {
           <div className="text-left">
             <button className="btn no-bg p-0">
               <img alt="" src="/assets/images/ic-search.svg" />
-            </button>
+            </button>   
           </div>
         </div>
         <div className="col s6">
@@ -49,6 +56,21 @@ const CardSection = () => {
         </div>
       )}
 
+      <div className="mt-4 row">
+      <h5 className="mdc-top-app-bar__title font-weight-light ml-4 mb-1 p-0">
+          Request for Card
+        </h5>
+    <div className="col-lg-12 text-center mt-4">
+    <Button className="no-bg bd-0" onClick={handleShow}>
+      <img
+                          className="m-auto"
+                          alt=""
+                          src="/assets/images/ic-card-request.svg"
+                        />
+      </Button>
+    </div>
+      </div>
+      
       <div className="mt-4 row">
         <h5 className="mdc-top-app-bar__title font-weight-light ml-4 mb-1 p-0">
           Target Saving
@@ -93,6 +115,83 @@ const CardSection = () => {
           </li>
         </ul>
       </div>
+
+
+
+      <Modal
+        show={show}
+        size="lg"
+        aria-labelledby="contained-modal-title-vcenter"
+        centered
+        onHide={handleClose}
+        backdrop="static"
+        keyboard={false}>
+        <Modal.Header className="bd-0" closeButton>Request for card</Modal.Header>
+        <Modal.Body className="p-4">
+ 
+             <div className="form-group mb-0">
+              <div className="input-group">
+                <select className="form-control d-block w-100 bdbtm-0 bd-radius-0">
+                  <option>Mr</option>
+                  <option>Mrs</option>
+                  <option>Miss</option>
+                </select>
+                <label >Title</label>
+              </div>
+            </div>
+
+            <div className="form-group mb-0">
+              <div className="input-group">
+                <input placeholder="Name" className="form-control d-block w-100 bdbtm-0 bd-radius-0" type="text" />
+                <label >Name</label>
+              </div>
+            </div>
+
+            <div className="form-group mb-0">
+              <div className="input-group">
+                <select className="form-control d-block w-100 bdbtm-0 bd-radius-0">
+                  <option>Lagos</option>
+                  <option>Abuja</option>
+                </select>
+                <label >State</label>
+              </div>
+            </div>
+
+            <div className="form-group mb-0">
+              <div className="input-group">
+                <select className="form-control d-block w-100 bdbtm-0 bd-radius-0">
+                  <option>Lagos</option>
+                  <option>Abuja</option>
+                </select>
+                <label >City</label>
+              </div>
+            </div>
+
+            <div className="form-group mb-0">
+              <div className="input-group">
+                <input placeholder="Phone Number" className="form-control d-block w-100 bdbtm-0 bd-radius-0" type="text" />
+                <label>Phone Number</label>
+              </div>
+            </div>
+
+            <div className="form-group mb-0">
+              <div className="input-group">
+                <textarea placeholder="Address" className="form-control d-block w-100 bd-radius-0"></textarea>
+                <label>Address</label>
+              </div>
+            </div>
+
+
+            <div className="form-group row m-0 justify-content-end mt-4">
+              <Button
+                variant="danger"
+                className="px-5">
+                Request for Card
+              </Button>
+            </div>
+        </Modal.Body>
+      </Modal>
+
     </>
   );
 };

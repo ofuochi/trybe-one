@@ -24251,6 +24251,14 @@ input[type=range].ps4:focus::-ms-fill-upper {
   border-color: #dc3545;
   color: #fff;
 }
+input[type="radio"] label:checked { 
+  font-weight: bold;
+  background-color: #dc3545;
+  border-color: #dc3545;
+  color: #fff;
+}
+
+
 .form-group small {
   position: absolute;
   right: 10px;

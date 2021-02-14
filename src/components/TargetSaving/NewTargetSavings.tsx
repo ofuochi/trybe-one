@@ -55,7 +55,7 @@ export const NewTargetSavings = () => {
       });
   };
   return (
-    <div className="col-lg-8 col-md-8 bd-right pl-5 pr-3 mt-4">
+    <div>
       <Title title="New Target Savings" />
       <div className="page-content">
         <Formik
@@ -70,6 +70,11 @@ export const NewTargetSavings = () => {
                   <h4>New Target Savings </h4>
                 </div>
                 <div className="col-lg-12">
+
+
+
+
+
                   <div className="custom-radio row justify-content-between m-0">
                     <Field
                       type="radio"
