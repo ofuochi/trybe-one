@@ -12,16 +12,19 @@ import { localStoreService } from "../../services";
 import { Title } from "../Common/Title";
 import TokenizeCard from "../Common/TokenizeCard";
 import { NewTargetSavings } from "./NewTargetSavings";
-import TargetOptions from "./TargetOption";
+import { toast } from "react-toastify";
 
 export const TargetSavings = () => {
-  const [visible, setVisible] = useState(false);
-  const [show, setShow] = useState(false);
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const [
+    targetSaving,
+    setTargetSaving,
+  ] = useState<API.GetTargetSavingsResponseDto>();
+  const [showTargetDetails, setShowTargetDetails] = useState(false);
+  const [showUpdateTargetDetails, setShowUpdateTargetDetails] = useState(false);
+  const [showBreakTargetDetails, setShowBreakTargetDetails] = useState(false);
   const { location } = useHistory();
 
-  const [targetSaving, setTargetSaving] = useState<
+  const [targetSavings, setTargetSavings] = useState<
     API.GetTargetSavingsResponseDto[]
   >();
 
@@ -31,29 +34,22 @@ export const TargetSavings = () => {
       .get<API.GetTargetSavingsResponseListDto>(
         `/User/GetTargetSavingsByProfileId?profileID=${currentUser?.userId}`
       )
-      .then(({ data }) => setTargetSaving(data.targetSavings));
-  }, [currentUser?.userId, targetSaving?.length]);
-
-  let data = targetSaving?.map((t) => ({
-    name: t.item || "",
-    value: t.targetAmountInView || 0,
-  }));
+      .then(({ data }) => setTargetSavings(data.targetSavings));
+  }, [currentUser?.userId, targetSavings?.length]);
 
   const pieConfig = {
-    data: data || [],
+    data: targetSavings || [],
     innerRadius: 0.64,
     radius: 1,
+
     interactions: [{ type: "element-selected" }, { type: "element-active" }],
     appendPadding: 10,
     statistic: {
       content: {
-        formatter: (data1: any, data2: any) => {
-          const list: any[] = data2.map((item: any) => item.value);
-
-          const sum =
-            list.length > 0
-              ? list.reduce((prev: number, next: number) => prev + next)
-              : 0;
+        formatter: (_data1: any, data2: any) => {
+          const sum = data2
+            .map((item: API.GetTargetSavingsResponseDto) => item.amt)
+            .reduce((prev: number, next: number) => prev + next);
 
           return `₦${numeral(sum).format("0,0")}`;
         },
@@ -62,208 +58,157 @@ export const TargetSavings = () => {
         formatter: () => "Total",
       },
     },
-    angleField: "value",
-    colorField: "name",
+    angleField: "amt",
+    colorField: "item",
   };
-  const initialValues: API.AddTargetSavingsRequestDto = {};
+  const handleSubmit = (
+    values: API.UpdateTargetSavingsRequest,
+    { setSubmitting }: any
+  ) => {
+    api
+      .post<API.BaseResponse>(
+        "/User/UpdateTargetSavingsAmountByTargetId",
+        values
+      )
+      .then(({ data }) => {
+        setSubmitting(false);
+        if (data.responseCode === "00") {
+          toast.success(data.responseDescription, { position: "top-center" });
+        } else
+          toast.error(data.responseDescription, { position: "top-center" });
+      })
+      .catch(() => {
+        setSubmitting(false);
+      });
+  };
   return (
     <>
       <Title title="Target Savings" />
       {location.pathname === routePath.targetSavings.index ? (
         <div className="page-content">
           <div className="row">
-            {data && data.length > 0 ? (
-              <div className="col-lg-12">
-                <h4>Total Budget</h4>
-              </div>
+            {targetSavings && targetSavings.length > 0 ? (
+              <>
+                <div className="col-lg-12">
+                  <h4>Total Budget</h4>
+                </div>
+                <div className="col-lg-6">
+                  <div className="d-flex row m-0 justify-content-between">
+                    <Pie {...pieConfig} />
+                  </div>
+                </div>
+              </>
             ) : null}
-            <div className="col-lg-6">
-              <div className="d-flex row m-0 justify-content-between">
-                <Pie {...pieConfig} />
-              </div>
-            </div>
+
             <div className="col-lg-6">
               <div className="alert alert-danger p-4">
                 <h5>Target Savings</h5>
                 <p className="small">
                   Target Savings helps you achieve your savings goals while you
-                  sit back and relax{" "}
+                  sit back and relax
                 </p>
               </div>
             </div>
           </div>
 
-          {data && data.length > 0 ? (
+          {targetSavings && targetSavings.length > 0 ? (
             <>
               <div className="mt-4">
                 <h5 className="mdc-top-app-bar__title mb-0 mb-4 p-0">
                   Target Savings
                 </h5>
-
-                <Formik
-                  initialValues={initialValues}
-                  enableReinitialize
-                  onSubmit={(initialValues) => {}}
-                >
-                  {({ isSubmitting }) => (
-                    <Form>
-                      <div className="col-lg-12">
+                {targetSavings?.map((item) => (
+                  <Formik
+                    key={item.id}
+                    initialValues={{
+                      newAmount: item.targetAmountInView,
+                      profileId: currentUser?.userId,
+                      targetId: item.id,
+                    }}
+                    enableReinitialize
+                    onSubmit={handleSubmit}
+                  >
+                    {({ isSubmitting, handleChange }) => (
+                      <Form>
                         <div
-                          onClick={() => setVisible(!visible)}
-                          className="form-group row justify-content-between m-0"
+                          className="col-lg-12"
+                          onClick={() => setTargetSaving(item)}
                         >
-                          <div className="col-lg-2 text-left p-0">
-                            <p className="mb-0">Movies</p>
-                          </div>
-                          <div className="col-lg-8 pl-0">
-                            <div className="form-group range-d m-0">
-                              <Field
-                                type="range"
-                                min="0"
-                                max="10"
-                                step="0.01"
-                                className="form-control-range ps0"
-                              />
+                          <div className="form-group row justify-content-between m-0">
+                            <div className="col-lg-2 text-left p-0">
+                              <p className="mb-0">{item.item}</p>
+                            </div>
+                            <div className="col-lg-8 pl-0">
+                              <div className="form-group range-d m-0">
+                                <Field
+                                  type="range"
+                                  min="100"
+                                  max={item.targetAmountInView}
+                                  onChange={(e: React.ChangeEvent<any>) => {
+                                    item.amt = e.target.value;
+                                    setTargetSaving(item);
+                                    handleChange(e);
+                                  }}
+                                  step="100"
+                                  name="newAmount"
+                                  className="form-control-range ps0"
+                                />
+                              </div>
+                            </div>
+                            <div className="col-lg-2 p-0">
+                              <p className="smaller mb-0 pt-1">
+                                {`₦${numeral(item.amt).format("0,0")}`}
+                                <span>
+                                  <img
+                                    className="ml-2"
+                                    alt=""
+                                    src="/assets/images/ic-right-angle.svg"
+                                  />
+                                </span>
+                              </p>
                             </div>
                           </div>
-                          <div className="col-lg-2 p-0">
-                            <p className="smaller mb-0 pt-1">
-                              NGR 4000.00{" "}
-                              <span>
-                                <img
-                                  className="ml-2"
-                                  alt=""
-                                  src="/assets/images/ic-right-angle.svg"
-                                />
-                              </span>
-                            </p>
-                          </div>
-                        </div>
-                        {visible && <TargetOptions handleClick={handleShow} />}
-                      </div>
-                      <div className="col-lg-12">
-                        <div className="form-group row justify-content-between m-0 mt-4">
-                          <div className="col-lg-2 text-left p-0">
-                            <p className="mb-0">Rent</p>
-                          </div>
-                          <div className="col-lg-8 pl-0">
-                            <div className="form-group range-d m-0">
-                              <Field
-                                type="range"
-                                min="0"
-                                max="10"
-                                step="0.01"
-                                className="form-control-range ps1"
-                              />
+                          {targetSaving?.id === item.id ? (
+                            <div>
+                              <div className="row m-0 justify-content-between mt-3">
+                                <Button
+                                  variant="light"
+                                  className="px-4 border"
+                                  onClick={() => setShowTargetDetails(true)}
+                                  type="submit"
+                                >
+                                  See Details
+                                </Button>
+
+                                <Button
+                                  variant="danger"
+                                  className="px-4"
+                                  disabled={isSubmitting}
+                                  // onClick={() =>
+                                  //   setShowUpdateTargetDetails(true)
+                                  // }
+                                  type="submit"
+                                >
+                                  Update
+                                </Button>
+
+                                <Button
+                                  variant="light"
+                                  className="px-4 border-primary"
+                                  onClick={() =>
+                                    setShowBreakTargetDetails(true)
+                                  }
+                                >
+                                  Break Box
+                                </Button>
+                              </div>
                             </div>
-                          </div>
-                          <div className="col-lg-2 p-0">
-                            <p className="smaller mb-0 pt-1">
-                              NGR 4000.00{" "}
-                              <span>
-                                <img
-                                  className="ml-2"
-                                  alt=""
-                                  src="/assets/images/ic-right-angle.svg"
-                                />
-                              </span>
-                            </p>
-                          </div>
+                          ) : null}
                         </div>
-                      </div>
-                      <div className="col-lg-12">
-                        <div className="form-group row justify-content-between m-0 mt-4">
-                          <div className="col-lg-2 text-left p-0">
-                            <p className="mb-0">Groceries</p>
-                          </div>
-                          <div className="col-lg-8 pl-0">
-                            <div className="form-group range-d m-0">
-                              <Field
-                                type="range"
-                                min="0"
-                                max="10"
-                                step="0.01"
-                                className="form-control-range ps2"
-                              />
-                            </div>
-                          </div>
-                          <div className="col-lg-2 p-0">
-                            <p className="smaller mb-0 pt-1">
-                              NGR 4000.00{" "}
-                              <span>
-                                <img
-                                  className="ml-2"
-                                  alt=""
-                                  src="/assets/images/ic-right-angle.svg"
-                                />
-                              </span>
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="col-lg-12">
-                        <div className="form-group row justify-content-between m-0 mt-4">
-                          <div className="col-lg-2 text-left p-0">
-                            <p className="mb-0">Car</p>
-                          </div>
-                          <div className="col-lg-8 pl-0">
-                            <div className="form-group range-d m-0">
-                              <Field
-                                type="range"
-                                min="0"
-                                max="10"
-                                step="0.01"
-                                className="form-control-range ps3"
-                              />
-                            </div>
-                          </div>
-                          <div className="col-lg-2 p-0">
-                            <p className="smaller mb-0 pt-1">
-                              NGR 4000.00{" "}
-                              <span>
-                                <img
-                                  className="ml-2"
-                                  alt=""
-                                  src="/assets/images/ic-right-angle.svg"
-                                />
-                              </span>
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                      <div className="col-lg-12">
-                        <div className="form-group row justify-content-between m-0 mt-4">
-                          <div className="col-lg-2 text-left p-0">
-                            <p className="mb-0">Food</p>
-                          </div>
-                          <div className="col-lg-8 pl-0">
-                            <div className="form-group range-d m-0">
-                              <Field
-                                type="range"
-                                min="0"
-                                max="10"
-                                step="0.01"
-                                className="form-control-range ps4"
-                              />
-                            </div>
-                          </div>
-                          <div className="col-lg-2 p-0">
-                            <p className="smaller mb-0 pt-1">
-                              NGR 4000.00{" "}
-                              <span>
-                                <img
-                                  className="ml-2"
-                                  alt=""
-                                  src="/assets/images/ic-right-angle.svg"
-                                />
-                              </span>
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    </Form>
-                  )}
-                </Formik>
+                      </Form>
+                    )}
+                  </Formik>
+                ))}
               </div>
 
               <div className="mt-5 row">
@@ -300,33 +245,98 @@ export const TargetSavings = () => {
       ) : null}
 
       <Modal
-        show={show}
-        aria-labelledby="contained-modal-title-vcenter"
         centered
-        onHide={handleClose}
+        show={showTargetDetails}
+        aria-labelledby="contained-modal-title-vcenter"
+        onHide={() => setShowTargetDetails(false)}
       >
         <Modal.Header className="bd-0" closeButton></Modal.Header>
         <Modal.Body className="text-center">
-          <h4 className="mb-3"> Rent Target Saving</h4>
-          <p className="mb-3">Amount: NGR 20,000.00</p>
-          <p className="mb-3">Intrest accrued (10%): NGR 5,000.00 </p>
-          <p className="mb-4 text-success">Total Amount: NGR 25,000.00 </p>
+          <h4 className="mb-3">{targetSaving?.item} Target Saving</h4>
+          <p className="mb-3">
+            Amount: {`₦${numeral(targetSaving?.amt).format("0,0")}`}
+          </p>
+          <p className="mb-3">
+            Interest accrued:{" "}
+            {`₦${numeral(targetSaving?.int_accrued).format("0,0.00")}`}
+          </p>
+          <p className="mb-4 text-success">
+            Total Amount:{" "}
+            {`₦${numeral(targetSaving?.targetAmountInView).format("0,0.00")}`}
+          </p>
           <div className="row justify-content-center mb-4">
-            <div className="col text-right">
-              <Button className="px-4" variant="primary" onClick={handleClose}>
-                Break Box
-              </Button>
-            </div>
-            <div className="col text-left">
+            <div className="col text-center">
               <Button
-                className="btn-light border-primary px-4"
-                onClick={handleClose}
+                className="px-4"
+                variant="primary"
+                onClick={() => setShowTargetDetails(false)}
               >
-                Cancel
+                Okay
               </Button>
             </div>
           </div>
         </Modal.Body>
+      </Modal>
+      <Modal
+        centered
+        show={showUpdateTargetDetails}
+        aria-labelledby="contained-modal-title-vcenter"
+        onHide={() => setShowUpdateTargetDetails(false)}
+      >
+        <Modal.Header className="bd-0" closeButton></Modal.Header>
+        <Modal.Body className="text-center">
+          <h4 className="mb-3">Update {targetSaving?.item} Target Saving</h4>
+          <p className="mb-3">
+            New Amount: {`₦${numeral(targetSaving?.amt).format("0,0")}`}
+          </p>
+          <p className="mb-4 text-success">
+            Total Amount:{" "}
+            {`₦${numeral(targetSaving?.targetAmountInView).format("0,0.00")}`}
+          </p>
+        </Modal.Body>
+        <div className="row justify-content-center mb-4">
+          <div className="col text-right">
+            <Button className="px-4" variant="primary" type="submit">
+              Update
+            </Button>
+          </div>
+          <div className="col text-left">
+            <Button
+              className="btn-light border-primary px-4"
+              onClick={() => setShowUpdateTargetDetails(false)}
+            >
+              Cancel
+            </Button>
+          </div>
+        </div>
+      </Modal>
+      <Modal
+        centered
+        show={showBreakTargetDetails}
+        aria-labelledby="contained-modal-title-vcenter"
+        onHide={() => setShowBreakTargetDetails(false)}
+      >
+        <Modal.Header className="bd-0" closeButton></Modal.Header>
+        <Modal.Body className="text-center">
+          <h4 className="mb-3">
+            Are you sure you want to Break {targetSaving?.item} Target Savings?
+          </h4>
+        </Modal.Body>
+        <div className="row justify-content-center mb-4">
+          <div className="col text-right">
+            <Button className="px-4" variant="primary">
+              Yes
+            </Button>
+          </div>
+          <div className="col text-left">
+            <Button
+              className="btn-light border-primary px-4"
+              onClick={() => setShowBreakTargetDetails(false)}
+            >
+              No
+            </Button>
+          </div>
+        </div>
       </Modal>
       <Switch>
         <Route
