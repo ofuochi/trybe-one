@@ -1,10 +1,11 @@
 import { Pie } from "@ant-design/charts";
-import numeral from "numeral";
 import { Field, Form, Formik } from "formik";
+import numeral from "numeral";
 import React, { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import Modal from "react-bootstrap/Modal";
 import { Link, Route, Switch, useHistory } from "react-router-dom";
+import { toast } from "react-toastify";
 
 import api from "../../config/api.config";
 import { routePath } from "../../constants/route-paths";
@@ -12,7 +13,6 @@ import { localStoreService } from "../../services";
 import { Title } from "../Common/Title";
 import TokenizeCard from "../Common/TokenizeCard";
 import { NewTargetSavings } from "./NewTargetSavings";
-import { toast } from "react-toastify";
 
 export const TargetSavings = () => {
   const [
@@ -20,13 +20,13 @@ export const TargetSavings = () => {
     setTargetSaving,
   ] = useState<API.GetTargetSavingsResponseDto>();
   const [showTargetDetails, setShowTargetDetails] = useState(false);
-  const [showUpdateTargetDetails, setShowUpdateTargetDetails] = useState(false);
   const [showBreakTargetDetails, setShowBreakTargetDetails] = useState(false);
+  const [isSubmittingBreaking, setIsSubmittingBreaking] = useState(false);
   const { location } = useHistory();
 
   const [targetSavings, setTargetSavings] = useState<
     API.GetTargetSavingsResponseDto[]
-  >();
+  >([]);
 
   const currentUser = localStoreService.getCurrentUser();
   useEffect(() => {
@@ -34,11 +34,16 @@ export const TargetSavings = () => {
       .get<API.GetTargetSavingsResponseListDto>(
         `/User/GetTargetSavingsByProfileId?profileID=${currentUser?.userId}`
       )
-      .then(({ data }) => setTargetSavings(data.targetSavings));
-  }, [currentUser?.userId, targetSavings?.length]);
+      .then(({ data }) => {
+        // const targets = data.targetSavings?.filter(
+        //   (item) => item.statusflag !== 2
+        // );
+        setTargetSavings(data.targetSavings || []);
+      });
+  }, [targetSavings.length, currentUser?.userId]);
 
   const pieConfig = {
-    data: targetSavings || [],
+    data: targetSavings,
     innerRadius: 0.64,
     radius: 1,
 
@@ -48,7 +53,9 @@ export const TargetSavings = () => {
       content: {
         formatter: (_data1: any, data2: any) => {
           const sum = data2
-            .map((item: API.GetTargetSavingsResponseDto) => item.amt)
+            .map(
+              (item: API.GetTargetSavingsResponseDto) => item.targetAmountInView
+            )
             .reduce((prev: number, next: number) => prev + next);
 
           return `₦${numeral(sum).format("0,0")}`;
@@ -58,7 +65,7 @@ export const TargetSavings = () => {
         formatter: () => "Total",
       },
     },
-    angleField: "amt",
+    angleField: "targetAmountInView",
     colorField: "item",
   };
   const handleSubmit = (
@@ -121,7 +128,7 @@ export const TargetSavings = () => {
                   <Formik
                     key={item.id}
                     initialValues={{
-                      newAmount: item.targetAmountInView,
+                      newAmount: item.amt,
                       profileId: currentUser?.userId,
                       targetId: item.id,
                     }}
@@ -175,7 +182,6 @@ export const TargetSavings = () => {
                                   variant="light"
                                   className="px-4 border"
                                   onClick={() => setShowTargetDetails(true)}
-                                  type="submit"
                                 >
                                   See Details
                                 </Button>
@@ -184,9 +190,6 @@ export const TargetSavings = () => {
                                   variant="danger"
                                   className="px-4"
                                   disabled={isSubmitting}
-                                  // onClick={() =>
-                                  //   setShowUpdateTargetDetails(true)
-                                  // }
                                   type="submit"
                                 >
                                   Update
@@ -277,46 +280,16 @@ export const TargetSavings = () => {
           </div>
         </Modal.Body>
       </Modal>
-      <Modal
-        centered
-        show={showUpdateTargetDetails}
-        aria-labelledby="contained-modal-title-vcenter"
-        onHide={() => setShowUpdateTargetDetails(false)}
-      >
-        <Modal.Header className="bd-0" closeButton></Modal.Header>
-        <Modal.Body className="text-center">
-          <h4 className="mb-3">Update {targetSaving?.item} Target Saving</h4>
-          <p className="mb-3">
-            New Amount: {`₦${numeral(targetSaving?.amt).format("0,0")}`}
-          </p>
-          <p className="mb-4 text-success">
-            Total Amount:{" "}
-            {`₦${numeral(targetSaving?.targetAmountInView).format("0,0.00")}`}
-          </p>
-        </Modal.Body>
-        <div className="row justify-content-center mb-4">
-          <div className="col text-right">
-            <Button className="px-4" variant="primary" type="submit">
-              Update
-            </Button>
-          </div>
-          <div className="col text-left">
-            <Button
-              className="btn-light border-primary px-4"
-              onClick={() => setShowUpdateTargetDetails(false)}
-            >
-              Cancel
-            </Button>
-          </div>
-        </div>
-      </Modal>
+
       <Modal
         centered
         show={showBreakTargetDetails}
         aria-labelledby="contained-modal-title-vcenter"
         onHide={() => setShowBreakTargetDetails(false)}
+        backdrop="static"
+        keyboard={false}
       >
-        <Modal.Header className="bd-0" closeButton></Modal.Header>
+        <Modal.Header className="bd-0"></Modal.Header>
         <Modal.Body className="text-center">
           <h4 className="mb-3">
             Are you sure you want to Break {targetSaving?.item} Target Savings?
@@ -324,13 +297,52 @@ export const TargetSavings = () => {
         </Modal.Body>
         <div className="row justify-content-center mb-4">
           <div className="col text-right">
-            <Button className="px-4" variant="primary">
+            <Button
+              className="px-4"
+              variant="primary"
+              disabled={isSubmittingBreaking}
+              onClick={() => {
+                setIsSubmittingBreaking(true);
+                const input: API.BreakBoxRequestModel = {
+                  targetId: targetSaving?.id,
+                };
+                api
+                  .post<API.BaseResponse>("/User/BreakBox", input)
+                  .then(({ data }) => {
+                    setIsSubmittingBreaking(false);
+                    setShowBreakTargetDetails(false);
+                    if (data.responseCode === "00") {
+                      toast.success(data.responseDescription, {
+                        position: "top-center",
+                      });
+
+                      const targets = targetSavings?.filter(
+                        (target) => target.id !== targetSaving?.id
+                      );
+                      setTargetSavings(targets);
+                    } else {
+                      // const targets = targetSavings?.filter(
+                      //   (target) => target.id !== targetSaving?.id
+                      // );
+                      // setTargetSavings(targets);
+                      toast.error(data.responseDescription, {
+                        position: "top-center",
+                      });
+                    }
+                  })
+                  .catch(() => {
+                    setIsSubmittingBreaking(false);
+                    setShowBreakTargetDetails(false);
+                  });
+              }}
+            >
               Yes
             </Button>
           </div>
           <div className="col text-left">
             <Button
               className="btn-light border-primary px-4"
+              disabled={isSubmittingBreaking}
               onClick={() => setShowBreakTargetDetails(false)}
             >
               No

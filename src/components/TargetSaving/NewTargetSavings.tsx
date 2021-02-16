@@ -1,12 +1,13 @@
 import { Field, Form, Formik } from "formik";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
-import { Redirect, useHistory } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
 import * as Yup from "yup";
 
 import api from "../../config/api.config";
 import { routePath } from "../../constants/route-paths";
+import { useRefresh } from "../../hooks/use-refresh.hooks";
 import { localStoreService } from "../../services";
 import { ErrorMsg } from "../Common/ErrorMsg";
 import { Title } from "../Common/Title";
@@ -14,7 +15,9 @@ import { Title } from "../Common/Title";
 const validationSchema = Yup.object().shape({
   targetPeriod: Yup.number().min(1).required("required"),
   item: Yup.string().required("required"),
+  tokenizedID: Yup.string().required("required"),
   targetAmountInView: Yup.number().min(1).required("required"),
+  amt: Yup.number().min(1).required("required"),
   savingsFrequencyID: Yup.number().min(1).required("required"),
   prefTimeID: Yup.number().min(1).required("required"),
   savingsTypeID: Yup.number().required("required"),
@@ -26,8 +29,12 @@ export const NewTargetSavings = () => {
     API.SavingsFrequencyDTO[]
   >();
   const [timeList, setTimeList] = useState<API.PreferredTimeDTO[]>();
+  const [cards, setCards] = useState<API.CustomerChargeDetail[]>([]);
+  const [selectedCard, setSelectedCard] = useState<API.CustomerChargeDetail>(
+    {}
+  );
   const history = useHistory();
-
+  const refresh = useRefresh(history, routePath.targetSavings.index);
   useEffect(() => {
     api
       .get<API.GetSavingsFrequencyResponseDTO>(
@@ -37,14 +44,13 @@ export const NewTargetSavings = () => {
     api
       .get<API.GetPreferredTimeResponseDTO>("/User/GetAllActivePreferredTimes")
       .then(({ data }) => setTimeList(data.preferredTimes));
-  }, []);
-  const {
-    cardToken,
-    cardTokenizedAmount,
-    cardReference,
-  } = localStoreService.getCardToken();
+    api
+      .get<API.CustomerChargeDetailsDto>(
+        `/User/GetCustomerChargeDetails?emailAddress=${currentUser?.email}`
+      )
+      .then(({ data }) => setCards(data.customerChargeDetails || []));
+  }, [currentUser?.email]);
 
-  if (!cardToken) return <Redirect to={routePath.targetSavings.tokenizeCard} />;
   const initialValues: API.AddTargetSavingsRequestDto = {
     profileID: currentUser?.userId,
     txndate: new Date().toISOString(),
@@ -52,16 +58,16 @@ export const NewTargetSavings = () => {
     prefTimeID: ("" as unknown) as number,
     item: "",
     targetPeriod: "",
-    amt: (cardTokenizedAmount as unknown) as number,
+    amt: ("" as unknown) as number,
     savingsTypeID: ("" as unknown) as number,
     targetAmountInView: ("" as unknown) as number,
-    paystackReference: cardReference || "",
-    tokenizedID: cardToken,
+    tokenizedID: "",
   };
   const handleSubmit = (
     values: API.AddTargetSavingsRequestDto,
     { setSubmitting, resetForm }: any
   ) => {
+    values.paystackReference = selectedCard.paystackRefrerence;
     api
       .post<API.BaseResponse>("/User/SubmitTargetSavings", values)
       .then(({ data }) => {
@@ -69,8 +75,7 @@ export const NewTargetSavings = () => {
         if (data.responseCode === "00") {
           resetForm();
           toast.success(data.responseDescription, { position: "top-center" });
-          history.push(routePath.targetSavings.index);
-          // window.location.href = routePath.targetSavings.index;
+          refresh();
         } else
           toast.error(data.responseDescription, { position: "top-center" });
       })
@@ -86,7 +91,7 @@ export const NewTargetSavings = () => {
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
-        {({ isSubmitting }) => (
+        {({ isSubmitting, handleChange }) => (
           <Form>
             <div className="row">
               <div className="col-lg-12 mb-4">
@@ -138,9 +143,14 @@ export const NewTargetSavings = () => {
             </div>
             <div className="row">
               <div className="mt-4 col-lg-12">
-                <h5 className="mdc-top-app-bar__title mb-0 mb-4 p-0">
-                  Target box savings
-                </h5>
+                <div className="row justify-content-between m-0">
+                  <h5 className="mdc-top-app-bar__title mb-0 mb-4 p-0">
+                    Target box savings
+                  </h5>
+                  <Link to={routePath.targetSavings.tokenizeCard}>
+                    Add Card To Debit
+                  </Link>
+                </div>
               </div>
 
               <div className="col-lg-12">
@@ -160,13 +170,27 @@ export const NewTargetSavings = () => {
                     <Field
                       name="targetAmountInView"
                       type="number"
-                      placeholder="How much do you want to save"
+                      placeholder="Target amount"
                       className="form-control d-block w-100 bdbtm-0 bd-radius-0"
                     />
                     <label htmlFor="targetAmountInView">
-                      How much do you want to save in total?
+                      What is your total target amount?
                     </label>
                     <ErrorMsg inputName="targetAmountInView" />
+                  </div>
+                </div>
+                <div className="form-group mb-0">
+                  <div className="input-group">
+                    <Field
+                      name="amt"
+                      type="number"
+                      placeholder="Amount"
+                      className="form-control d-block w-100 bdbtm-0 bd-radius-0"
+                    />
+                    <label htmlFor="amt">
+                      How much do you want to save frequently?
+                    </label>
+                    <ErrorMsg inputName="amt" />
                   </div>
                 </div>
                 <div className="form-group mb-0">
@@ -227,6 +251,33 @@ export const NewTargetSavings = () => {
                     </Field>
                     <label htmlFor="prefTimeID">At what time of the day?</label>
                     <ErrorMsg inputName="prefTimeID" />
+                  </div>
+                </div>
+                <div className="form-group mb-0">
+                  <div className="input-group">
+                    <Field
+                      as="select"
+                      name="tokenizedID"
+                      className="form-control d-block w-100"
+                      onChange={(e: React.ChangeEvent<any>) => {
+                        handleChange(e);
+                        const card = cards.filter(
+                          (card) => card.authCode === e.target.value
+                        )[0];
+                        setSelectedCard(card);
+                      }}
+                    >
+                      <option value="" disabled>
+                        - Select Card -
+                      </option>
+                      {cards.map((card) => (
+                        <option key={card.authCode} value={card.authCode}>
+                          {`${card.last4} - ${card.cardType}`}
+                        </option>
+                      ))}
+                    </Field>
+                    <label htmlFor="tokenizedID">Card to debit</label>
+                    <ErrorMsg inputName="tokenizedID" />
                   </div>
                 </div>
                 <div className="mt-4 row">

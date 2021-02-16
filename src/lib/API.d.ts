@@ -59,6 +59,7 @@ declare namespace API {
     }
     export interface Authorization {
         authorization_code?: string;
+        last4?: string;
         channel?: string;
         card_type?: string;
         bank?: string;
@@ -325,6 +326,7 @@ declare namespace API {
         title?: string;
         transactionPIN?: string;
         accountTier?: string;
+        deviceId?: string;
     }
     export interface CreditSwitchVendAirtimeRequestDto {
         mobileNo?: string;
@@ -370,6 +372,21 @@ declare namespace API {
         metadata?: {
         };
         risk_action?: string;
+    }
+    export interface CustomerChargeDetail {
+        email?: string;
+        last4?: string;
+        authCode?: string;
+        isProcessed?: boolean;
+        bank?: string;
+        cardType?: string;
+        paystackRefrerence?: string;
+        modifiedDate?: string; // date-time
+    }
+    export interface CustomerChargeDetailsDto {
+        customerChargeDetails?: CustomerChargeDetail[];
+        responseCode?: string;
+        responseDescription?: string;
     }
     export interface DataPlan {
         amount?: number; // int32
@@ -833,6 +850,9 @@ declare namespace API {
         branch?: string;
         serviceProvider?: string;
         trybersReferralCode?: string;
+        loginCount?: number; // int32
+        isLockedOut?: boolean;
+        deviceId?: string;
         responseCode?: string;
         responseDescription?: string;
     }

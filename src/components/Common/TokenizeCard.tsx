@@ -1,7 +1,7 @@
 import { Field, Form, Formik } from "formik";
 import React, { useState } from "react";
 import { Button } from "react-bootstrap";
-import { Redirect, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
 import * as Yup from "yup";
 
@@ -12,10 +12,10 @@ import { ErrorMsg } from "./ErrorMsg";
 import { Title } from "./Title";
 
 const validationSchema = Yup.object().shape({
-  pin: Yup.string().required("required"),
-  amount: Yup.number().positive().required("required"),
   card: Yup.object({
-    cvv: Yup.string().required("required"),
+    cvv: Yup.string()
+      .matches(/^\d{3}$/, "CVV must be 3 digits")
+      .required("required"),
     expiry_month: Yup.number()
       .min(1, "Expiry month must be between 1 and 12")
       .max(12, "Expiry month must be between 1 and 12")
@@ -35,13 +35,9 @@ const TokenizeCard = () => {
   const [isSuccess, setIsSuccess] = useState(false);
   const [paystackResp, setPaystackResp] = useState<API.PaystackResponseData>();
   const currentUser = localStoreService.getCurrentUser();
-  const { cardToken } = localStoreService.getCardToken();
-
-  if (cardToken)
-    return <Redirect to={routePath.targetSavings.createTargetSaving} />;
 
   const initialValues: API.ChargeCustomerRequestDto = {
-    amount: "",
+    amount: "10",
     email: currentUser?.email,
     profileId: currentUser?.userId,
     pin: "",
@@ -105,11 +101,6 @@ const TokenizeCard = () => {
                             position: "top-center",
                           });
                           setIsSuccess(false);
-                          localStoreService.saveCardToken(
-                            data.data?.authorization?.authorization_code || "",
-                            data.data?.amount || 0,
-                            data.data?.reference || ""
-                          );
                           history.replace(
                             routePath.targetSavings.createTargetSaving
                           );
@@ -126,18 +117,6 @@ const TokenizeCard = () => {
               </div>
             ) : (
               <>
-                <div className="form-group mb-0">
-                  <div className="input-group">
-                    <Field
-                      placeholder="How much you want to save?"
-                      type="number"
-                      name="amount"
-                      className="form-control d-block w-100 bdbtm-0 bd-radius-0"
-                    />
-                    <label htmlFor="amount">Amount</label>
-                    <ErrorMsg inputName="amount" />
-                  </div>
-                </div>
                 <div className="form-group mb-0">
                   <div className="input-group">
                     <Field
@@ -180,7 +159,6 @@ const TokenizeCard = () => {
                   <div className="input-group">
                     <Field
                       placeholder="CVV"
-                      type="number"
                       name="card.cvv"
                       className="form-control d-block w-100 bdbtm-0 bd-radius-0"
                     />
@@ -194,7 +172,7 @@ const TokenizeCard = () => {
                     <Field
                       placeholder="PIN"
                       name="pin"
-                      type="number"
+                      type="password"
                       className="form-control d-block w-100 bdbtm-0 bd-radius-0"
                     />
                     <label htmlFor="pin">PIN</label>
