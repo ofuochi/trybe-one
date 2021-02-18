@@ -1,5 +1,4 @@
-import { Pie } from "@ant-design/charts";
-import { Field, Form, Formik } from "formik";
+import { Pie, Progress } from "@ant-design/charts";
 import numeral from "numeral";
 import React, { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
@@ -18,18 +17,19 @@ export const TargetSavings = () => {
   const [
     targetSaving,
     setTargetSaving,
-  ] = useState<API.GetTargetSavingsResponseDto>();
+  ] = useState<API.GetTargetSavingsResponseDto>({});
   const [showTargetDetails, setShowTargetDetails] = useState(false);
   const [showBreakTargetDetails, setShowBreakTargetDetails] = useState(false);
   const [isSubmittingBreaking, setIsSubmittingBreaking] = useState(false);
+  const [shouldShowMore, setShouldShowMore] = useState(false);
   const { location } = useHistory();
 
   const [targetSavings, setTargetSavings] = useState<
     API.GetTargetSavingsResponseDto[]
   >([]);
 
-  const currentUser = localStoreService.getCurrentUser();
   useEffect(() => {
+    const currentUser = localStoreService.getCurrentUser();
     api
       .get<API.GetTargetSavingsResponseListDto>(
         `/User/GetTargetSavingsByProfileId?profileID=${currentUser?.userId}`
@@ -40,13 +40,35 @@ export const TargetSavings = () => {
         // );
         setTargetSavings(data.targetSavings || []);
       });
-  }, [targetSavings.length, currentUser?.userId]);
+  }, []);
+  const colors: string[] = [];
+
+  const pastelColour = (str: string) => {
+    //TODO: adjust base colour values below based on theme
+    const baseRed = 175;
+    const baseGreen = 175;
+    const baseBlue = 175;
+
+    //lazy seeded random hack to get values from 0 - 256
+    //for seed just take bitwise XOR of first two chars
+    let seed = str.charCodeAt(0) ^ str.charCodeAt(1);
+    const rand_1 = Math.abs(Math.sin(seed++) * 10000) % 256;
+    const rand_2 = Math.abs(Math.sin(seed++) * 10000) % 256;
+    const rand_3 = Math.abs(Math.sin(seed++) * 10000) % 256;
+
+    //build colour
+    const r = Math.round((rand_1 + baseRed) / 2);
+    const g = Math.round((rand_2 + baseGreen) / 2);
+    const b = Math.round((rand_3 + baseBlue) / 2);
+
+    return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+  };
+  targetSavings?.forEach((e) => colors.push(pastelColour(`${e.id}${e.item}`)));
 
   const pieConfig = {
     data: targetSavings,
     innerRadius: 0.64,
     radius: 1,
-
     interactions: [{ type: "element-selected" }, { type: "element-active" }],
     appendPadding: 10,
     statistic: {
@@ -67,6 +89,7 @@ export const TargetSavings = () => {
     },
     angleField: "targetAmountInView",
     colorField: "item",
+    color: colors,
   };
   const handleSubmit = (
     values: API.UpdateTargetSavingsRequest,
@@ -124,93 +147,81 @@ export const TargetSavings = () => {
                 <h5 className="mdc-top-app-bar__title mb-0 mb-4 p-0">
                   Target Savings
                 </h5>
-                {targetSavings?.map((item) => (
-                  <Formik
-                    key={item.id}
-                    initialValues={{
-                      newAmount: item.amt,
-                      profileId: currentUser?.userId,
-                      targetId: item.id,
-                    }}
-                    enableReinitialize
-                    onSubmit={handleSubmit}
-                  >
-                    {({ isSubmitting, handleChange }) => (
-                      <Form>
-                        <div
-                          className="col-lg-12"
-                          onClick={() => setTargetSaving(item)}
-                        >
-                          <div className="form-group row justify-content-between m-0">
-                            <div className="col-lg-2 text-left p-0">
-                              <p className="mb-0">{item.item}</p>
-                            </div>
-                            <div className="col-lg-8 pl-0">
-                              <div className="form-group range-d m-0">
-                                <Field
-                                  type="range"
-                                  min="100"
-                                  max={item.targetAmountInView}
-                                  onChange={(e: React.ChangeEvent<any>) => {
-                                    item.amt = e.target.value;
-                                    setTargetSaving(item);
-                                    handleChange(e);
-                                  }}
-                                  step="100"
-                                  name="newAmount"
-                                  className="form-control-range ps0"
-                                />
-                              </div>
-                            </div>
-                            <div className="col-lg-2 p-0">
-                              <p className="smaller mb-0 pt-1">
-                                {`₦${numeral(item.amt).format("0,0")}`}
-                                <span>
-                                  <img
-                                    className="ml-2"
-                                    alt=""
-                                    src="/assets/images/ic-right-angle.svg"
-                                  />
-                                </span>
-                              </p>
-                            </div>
-                          </div>
-                          {targetSaving?.id === item.id ? (
-                            <div>
-                              <div className="row m-0 justify-content-between mt-3">
-                                <Button
-                                  variant="light"
-                                  className="px-4 border"
-                                  onClick={() => setShowTargetDetails(true)}
-                                >
-                                  See Details
-                                </Button>
+                {targetSavings.map((item, index) => (
+                  <div className="col-lg-12" key={item.id}>
+                    <div className="form-group row justify-content-between m-0">
+                      <div className="col-lg-2 text-left p-0">
+                        <p className="mb-0">{item.item}</p>
+                      </div>
+                      <div className="col-lg-8 pl-0">
+                        <Progress
+                          percent={
+                            (item.amt || 1) / (item.targetAmountInView || 1)
+                          }
+                          progressStyle={{
+                            cursor: "pointer",
+                            fillOpacity: 0.7,
+                            strokeOpacity: 0.7,
+                            shadowColor: "grey",
+                            shadowBlur: 10,
+                            shadowOffsetX: 5,
+                            shadowOffsetY: 5,
+                          }}
+                          color={colors[index]}
+                          onEvent={(_chart: any, e: any) => {
+                            if (e.type === "click") {
+                              setShouldShowMore(!shouldShowMore);
+                              console.log(e.type, shouldShowMore);
+                              setTargetSaving(item);
+                            }
+                          }}
+                        />
+                      </div>
+                      <div className="col-lg-2 p-0">
+                        <p className="smaller mb-0 pt-1">
+                          <b>{`₦${numeral(item.targetAmountInView).format(
+                            "0,0"
+                          )}`}</b>
+                          <span>
+                            <img
+                              className="ml-2"
+                              alt=""
+                              src="/assets/images/ic-right-angle.svg"
+                            />
+                          </span>
+                        </p>
+                      </div>
+                    </div>
+                    {targetSaving?.id === item.id && shouldShowMore ? (
+                      <div>
+                        <div className="row m-0 justify-content-between mt-3">
+                          <Button
+                            variant="light"
+                            className="px-4 border"
+                            onClick={() => setShowTargetDetails(true)}
+                          >
+                            See Details
+                          </Button>
 
-                                <Button
-                                  variant="danger"
-                                  className="px-4"
-                                  disabled={isSubmitting}
-                                  type="submit"
-                                >
-                                  Update
-                                </Button>
+                          <Button
+                            variant="danger"
+                            className="px-4"
+                            type="submit"
+                          >
+                            Update
+                          </Button>
 
-                                <Button
-                                  variant="light"
-                                  className="px-4 border-primary"
-                                  onClick={() =>
-                                    setShowBreakTargetDetails(true)
-                                  }
-                                >
-                                  Break Box
-                                </Button>
-                              </div>
-                            </div>
-                          ) : null}
+                          <Button
+                            variant="light"
+                            className="px-4 border-primary"
+                            onClick={() => setShowBreakTargetDetails(true)}
+                          >
+                            Break Box
+                          </Button>
                         </div>
-                      </Form>
-                    )}
-                  </Formik>
+                      </div>
+                    ) : null}
+                  </div>
                 ))}
               </div>
 

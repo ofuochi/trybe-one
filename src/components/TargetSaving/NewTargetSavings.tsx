@@ -34,7 +34,7 @@ export const NewTargetSavings = () => {
     {}
   );
   const history = useHistory();
-  const refresh = useRefresh(history, routePath.targetSavings.index);
+  const refresh = useRefresh(routePath.targetSavings.index);
   useEffect(() => {
     api
       .get<API.GetSavingsFrequencyResponseDTO>(

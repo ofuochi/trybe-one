@@ -45,6 +45,7 @@ export const FormikStepper = ({
             <div className="col-lg-4 float-left">
               <button
                 disabled={isSubmitting}
+                type="button"
                 className="btn btn-lg btn-primary btn-block"
                 onClick={() =>
                   setStep((s) => {

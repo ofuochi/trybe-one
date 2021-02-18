@@ -1,13 +1,13 @@
+import { useHistory } from "react-router-dom";
 import { routePath } from "./../constants/route-paths";
 import { useEffect } from "react";
 
 export const useRefresh = (
-  history: any,
   path: string,
   resetRoute: string = routePath.home
 ) => {
+  const history = useHistory();
   let handler: any;
-
   const refresh = () => {
     history.push(resetRoute);
 
