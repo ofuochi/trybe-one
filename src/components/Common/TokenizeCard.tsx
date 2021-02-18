@@ -108,7 +108,7 @@ const TokenizeCard = () => {
                       })
                       .catch(() => {
                         setIsSuccess(false);
-                        history.push(routePath.cardRequest.new);
+                        history.push(routePath.card.tokenize);
                       });
                   }}
                 >

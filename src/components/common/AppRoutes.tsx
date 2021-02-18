@@ -14,6 +14,7 @@ import { Investments } from "../Investments";
 import { TargetSavings } from "../TargetSaving";
 import { Transactions } from "../Transactions";
 import { AuthRoute } from "./AuthRoute";
+import RequestCard from "./RequestCard";
 import TokenizeCard from "./TokenizeCard";
 
 export const AppRoutes = () => {
@@ -44,8 +45,13 @@ export const AppRoutes = () => {
         isPrivate
       />
       <AuthRoute
-        path={routePath.cardRequest.new}
+        path={routePath.card.tokenize}
         component={TokenizeCard}
+        isPrivate
+      />
+      <AuthRoute
+        path={routePath.card.request}
+        component={RequestCard}
         isPrivate
       />
 

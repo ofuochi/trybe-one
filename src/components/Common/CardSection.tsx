@@ -96,7 +96,7 @@ const CardSection = () => {
           Request for Card
         </h5>
         <div className="col-lg-12 text-center mt-4">
-          <Link className="no-bg bd-0" to={routePath.cardRequest.new}>
+          <Link className="no-bg bd-0" to={routePath.card.request}>
             <img
               className="m-auto"
               alt=""

@@ -3,6 +3,13 @@ export interface CurrentUser {
   email: string;
   name: string;
   nuban: string;
+  firstName: string;
+  lastName: string;
+  dateOfBirth: string;
+  address: string;
+  gender: string;
+  phoneNumber: string;
+  title: string;
 }
 class LocalStoreService {
   clear() {

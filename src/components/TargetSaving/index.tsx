@@ -1,5 +1,6 @@
 import { Pie, Progress } from "@ant-design/charts";
 import numeral from "numeral";
+import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import Modal from "react-bootstrap/Modal";
@@ -63,7 +64,7 @@ export const TargetSavings = () => {
 
     return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
   };
-  targetSavings?.forEach((e) => colors.push(pastelColour(`${e.id}${e.item}`)));
+  targetSavings?.forEach((e) => colors.push(pastelColour(`$${e.item}`)));
 
   const pieConfig = {
     data: targetSavings,
@@ -111,6 +112,36 @@ export const TargetSavings = () => {
         setSubmitting(false);
       });
   };
+  const calculateComplete = ({
+    txndate,
+    targetPeriod,
+    savingsFrequencyID,
+  }: API.GetTargetSavingsResponseDto) => {
+    const start = moment(txndate);
+    // const end = moment(maturitydate);
+    const current = moment(new Date());
+
+    let totalDuration = Number(targetPeriod),
+      currentDuration = current.diff(start, "days");
+
+    if (savingsFrequencyID === 1) {
+      // Daily
+      // totalDuration = end.diff(start, "days");
+      // currentDuration = current.diff(start, "days");
+    } else if (savingsFrequencyID === 2) {
+      // Weekly
+      // totalDuration = end.diff(start, "weeks");
+      // currentDuration = current.diff(start, "weeks");
+    } else {
+      // Monthly
+      // totalDuration = end.diff(start, "months");
+      // currentDuration = current.diff(start, "months");
+      // console.log(startdate, maturitydate, savingsFrequencyID);
+    }
+    const result = currentDuration / totalDuration;
+    // console.log(currentDuration, totalDuration);
+    return result;
+  };
   return (
     <>
       <Title title="Target Savings" />
@@ -155,9 +186,7 @@ export const TargetSavings = () => {
                       </div>
                       <div className="col-lg-8 pl-0">
                         <Progress
-                          percent={
-                            (item.amt || 1) / (item.targetAmountInView || 1)
-                          }
+                          percent={calculateComplete(item)}
                           progressStyle={{
                             cursor: "pointer",
                             fillOpacity: 0.7,
@@ -171,7 +200,7 @@ export const TargetSavings = () => {
                           onEvent={(_chart: any, e: any) => {
                             if (e.type === "click") {
                               setShouldShowMore(!shouldShowMore);
-                              console.log(e.type, shouldShowMore);
+                              // console.log(e.type, shouldShowMore);
                               setTargetSaving(item);
                             }
                           }}
@@ -182,6 +211,7 @@ export const TargetSavings = () => {
                           <b>{`₦${numeral(item.targetAmountInView).format(
                             "0,0"
                           )}`}</b>
+
                           <span>
                             <img
                               className="ml-2"

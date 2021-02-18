@@ -132,11 +132,23 @@ export const CurrentUserStore = types
         });
       } else {
         self.firstName = data.firstName;
+        self.lastName = data.lastName;
         self.dateOfBirth = data.dateOfBirth;
+        self.address = data.address;
+        self.gender = data.gender;
+        self.phoneNumber = data.phoneNumber;
+        self.title = data.title;
         localStoreService.saveAuthToken(data.sessionKey as string, {
           email: data.email as string,
           userId: data.id as string,
           name: data.firstName as string,
+          firstName: data.firstName as string,
+          lastName: data.lastName as string,
+          dateOfBirth: data.dateOfBirth as string,
+          address: data.address as string,
+          gender: data.gender as string,
+          phoneNumber: data.phoneNumber as string,
+          title: data.title as string,
           nuban,
         });
       }

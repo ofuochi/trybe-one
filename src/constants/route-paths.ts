@@ -30,8 +30,9 @@ export const routePath = {
     tokenizeCard: "/target-savings/tokenize-card",
     createTargetSaving: "/target-savings/create-target-saving",
   },
-  cardRequest: {
-    new: "/request-card",
+  card: {
+    tokenize: "/tokenize-card",
+    request: "/request-card",
   },
   login: "/login",
   signup: "/signup",
