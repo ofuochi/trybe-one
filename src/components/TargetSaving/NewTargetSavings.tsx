@@ -1,7 +1,7 @@
 import { Field, Form, Formik } from "formik";
 import React, { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
-import { Link, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import * as Yup from "yup";
 
@@ -33,7 +33,6 @@ export const NewTargetSavings = () => {
   const [selectedCard, setSelectedCard] = useState<API.CustomerChargeDetail>(
     {}
   );
-  const history = useHistory();
   const refresh = useRefresh(routePath.targetSavings.index);
   useEffect(() => {
     api

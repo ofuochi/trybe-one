@@ -5,40 +5,40 @@ import { toast } from "react-toastify";
 import * as Yup from "yup";
 
 import api from "../../config/api.config";
+import { routePath } from "../../constants/route-paths";
+import { useRefresh } from "../../hooks/use-refresh.hooks";
 import { localStoreService } from "../../services";
 import { ErrorMsg } from "./ErrorMsg";
 import { Title } from "./Title";
 
 const validationSchema = Yup.object().shape({
-  productID: Yup.number().required("required"),
   city: Yup.string().required("required"),
   name: Yup.string().required("required"),
   state: Yup.string().required("required"),
   address: Yup.string().required("required"),
-  cardType: Yup.string().required("required"),
-  wallet_ShortCode: Yup.string().required("required"),
 });
 
 const RequestCard = () => {
   const currentUser = localStoreService.getCurrentUser();
-
+  const refresh = useRefresh(routePath.dashboard);
+  const gender = currentUser?.title === "Mr" ? "M" : "F";
   const initialValues: API.VirtualCardRequestDto = {
-    productID: ("" as unknown) as number,
+    productID: 10142,
     email: currentUser?.email,
-    customerUniqueIdentifier: currentUser?.userId,
+    customerUniqueIdentifier: currentUser?.phoneNumber,
     city: "",
     state: "",
     address: currentUser?.address,
-    cardType: "",
+    cardType: "main",
     phoneNumber: currentUser?.phoneNumber,
     name: `${currentUser?.name} ${currentUser?.lastName}`,
-    gender: currentUser?.gender,
+    gender,
     title: currentUser?.title,
-    wallet_ShortCode: "",
+    wallet_ShortCode: "ONB",
   };
   const handleSubmit = (
     values: API.ChargeCustomerRequestDto,
-    { setSubmitting, resetForm }: any
+    { setSubmitting }: any
   ) => {
     api
       .post<API.VirtualCardResponsetDto>("/User/RequestCard", values)
@@ -46,7 +46,7 @@ const RequestCard = () => {
         setSubmitting(false);
 
         if (data.responseCode === "00") {
-          resetForm();
+          refresh();
           toast.success(data.responseMessage, { position: "top-center" });
         } else toast.error(data.responseMessage, { position: "top-center" });
       })
@@ -76,17 +76,7 @@ const RequestCard = () => {
                 <ErrorMsg inputName="name" />
               </div>
             </div>
-            <div className="form-group mb-0">
-              <div className="input-group">
-                <Field
-                  placeholder="Card Type"
-                  name="cardType"
-                  className="form-control d-block w-100 bdbtm-0 bd-radius-0"
-                />
-                <label htmlFor="cardType">Card Type</label>
-                <ErrorMsg inputName="cardType" />
-              </div>
-            </div>
+
             <div className="form-group mb-0">
               <div className="input-group">
                 <Field
@@ -98,7 +88,6 @@ const RequestCard = () => {
                 <ErrorMsg inputName="state" />
               </div>
             </div>
-
             <div className="form-group mb-0">
               <div className="input-group">
                 <Field
@@ -111,29 +100,6 @@ const RequestCard = () => {
               </div>
             </div>
 
-            <div className="form-group mb-0">
-              <div className="input-group">
-                <Field
-                  placeholder="Wallet Code"
-                  name="wallet_ShortCode"
-                  className="form-control d-block w-100 bdbtm-0 bd-radius-0"
-                />
-                <label htmlFor="wallet_ShortCode">Wallet Code</label>
-                <ErrorMsg inputName="wallet_ShortCode" />
-              </div>
-            </div>
-
-            <div className="form-group mb-0">
-              <div className="input-group">
-                <Field
-                  placeholder="Product"
-                  name="productID"
-                  className="form-control d-block w-100 bdbtm-0 bd-radius-0"
-                />
-                <label htmlFor="productID">Product</label>
-                <ErrorMsg inputName="productID" />
-              </div>
-            </div>
             <div className="form-group mb-0">
               <div className="input-group">
                 <Field
