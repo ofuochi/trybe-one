@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from "react";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
+import Slider from "react-slick";
 
 import api from "../../config/api.config";
 import { localStoreService } from "../../services";
@@ -56,6 +57,16 @@ const CardSection = () => {
       number: "",
     },
   };
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    className: "center",
+    centerMode: true,
+    centerPadding: "10px",
+  };
   return (
     <>
       <div className="row m-0 mb-0 d-flex mt-3 justify-content-between">
@@ -76,17 +87,21 @@ const CardSection = () => {
       </div>
 
       {cards.data && cards.data.length > 0 && (
-        <div className="mt-5 row">
+        <div className="mt-3 row">
           <h5 className="mdc-top-app-bar__title font-weight-light ml-4 mb-1 p-0">
             Your Cards
           </h5>
 
-          <div className="cardslides">
+          <div className="cardslides col-lg-12">
+          <Slider {...settings}>
             {cards.data?.map((card, i) => (
               <div key={i} style={{ display: "block" }}>
+                
                 <img alt="" src="/assets/images/cardbg.png" />
+               
               </div>
             ))}
+            </Slider>
           </div>
         </div>
       )}

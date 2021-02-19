@@ -211,7 +211,7 @@ export const NewTargetSavings = () => {
                     <Field
                       as="select"
                       name="savingsFrequencyID"
-                      className="form-control d-block w-100"
+                      className="form-control d-block w-100 bdbtm-0 bd-radius-0"
                     >
                       <option value="" disabled>
                         - Select Frequency -
@@ -235,7 +235,7 @@ export const NewTargetSavings = () => {
                     <Field
                       as="select"
                       name="prefTimeID"
-                      className="form-control d-block w-100"
+                      className="form-control d-block w-100 bdbtm-0 bd-radius-0"
                     >
                       <option value="" disabled>
                         - Select Time -

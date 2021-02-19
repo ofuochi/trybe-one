@@ -154,7 +154,7 @@ export const TargetSavings = () => {
                   <h4>Total Budget</h4>
                 </div>
                 <div className="col-lg-6">
-                  <div className="d-flex row m-0 justify-content-between">
+                  <div className="d-flex row m-0 justify-content-between pie-size">
                     <Pie {...pieConfig} />
                   </div>
                 </div>

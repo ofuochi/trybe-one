@@ -107,7 +107,7 @@ const RequestCard = () => {
                   rows={3}
                   placeholder="Address"
                   name="address"
-                  className="form-control d-block w-100 bdbtm-0 bd-radius-0"
+                  className="form-control d-block w-100 bd-radius-0"
                 />
                 <label htmlFor="address">Address</label>
                 <ErrorMsg inputName="address" />

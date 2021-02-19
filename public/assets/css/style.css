@@ -24258,10 +24258,23 @@ input[type="radio"] label:checked {
   color: #fff;
 }
 
-
+.custom-radio small {
+  position: absolute;
+  right: 20px;
+  top: -20px;
+  font-size: 65%;
+}
 .form-group small {
   position: absolute;
   right: 10px;
   bottom:0;
   font-size: 65%;
+}
+.pie-size canvas{
+  width: 100%!important;
+  height: 200px!important;
+}
+
+.pie-size .g2-html-annotation{
+  font-size: 15px!important;
 }
