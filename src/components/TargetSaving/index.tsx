@@ -1,4 +1,5 @@
 import { Pie, Progress } from "@ant-design/charts";
+import { observer } from "mobx-react-lite";
 import numeral from "numeral";
 import React, { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
@@ -9,12 +10,11 @@ import { toast } from "react-toastify";
 import api from "../../config/api.config";
 import { routePath } from "../../constants/route-paths";
 import { useStore } from "../../hooks/use-store.hooks";
-import { localStoreService } from "../../services";
 import { Title } from "../Common/Title";
 import TokenizeCard from "../Common/TokenizeCard";
 import { NewTargetSavings } from "./NewTargetSavings";
 
-export const TargetSavings = () => {
+export const TargetSavings = observer(() => {
   const [
     targetSaving,
     setTargetSaving,
@@ -26,16 +26,7 @@ export const TargetSavings = () => {
   const { targetStore } = useStore();
   const { location } = useHistory();
 
-  useEffect(() => {
-    const currentUser = localStoreService.getCurrentUser();
-    api
-      .get<API.GetTargetSavingsResponseListDto>(
-        `/User/GetTargetSavingsByProfileId?profileID=${currentUser?.userId}`
-      )
-      .then(({ data }) => {
-        data.targetSavings && targetStore.setTargets(data.targetSavings);
-      });
-  }, [targetStore]);
+  useEffect(() => {}, [targetStore]);
 
   const pieConfig = {
     data: targetStore.targets.map((t) => ({
@@ -51,7 +42,8 @@ export const TargetSavings = () => {
         formatter: (_data1: any, data2: any) => {
           const sum = data2
             .map(
-              (item: API.GetTargetSavingsResponseDto) => item.targetAmountInView
+              ({ targetAmountInView }: API.GetTargetSavingsResponseDto) =>
+                targetAmountInView
             )
             .reduce((prev: number, next: number) => prev + next);
 
@@ -139,11 +131,10 @@ export const TargetSavings = () => {
                           }}
                           color={item.color}
                           onEvent={(_chart: any, e: any) => {
-                            if (e.type === "click") {
-                              setShouldShowMore(!shouldShowMore);
-                              // console.log(e.type, shouldShowMore);
-                              setTargetSaving(item);
-                            }
+                            if (e.type !== "click") return;
+                            setShouldShowMore(!shouldShowMore);
+                            // console.log(e.type, shouldShowMore);
+                            setTargetSaving(item);
                           }}
                         />
                       </div>
@@ -343,4 +334,4 @@ export const TargetSavings = () => {
       </Switch>
     </>
   );
-};
+});
