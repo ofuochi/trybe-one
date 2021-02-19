@@ -68,7 +68,7 @@ const CardSection = observer(() => {
               <div key={i} style={{ display: "block" }}>
                 
                 <img alt="" src="/assets/images/cardbg.png" />
-               
+               <div className="masked-span">* * * * * * * * * * 0934</div>
               </div>
             ))}
             </Slider>

@@ -24281,3 +24281,10 @@ input[type="radio"] label:checked {
 .collection .g2-html-annotation{
   font-size: 12px!important;
 }
+.masked-span{
+  position: absolute;
+    bottom: 30px;
+    color: #fff;
+    margin-left: 15px;
+    margin-right: 15px;
+}
