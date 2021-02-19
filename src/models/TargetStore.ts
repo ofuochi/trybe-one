@@ -6,9 +6,6 @@ const TargetItemModel = types.model({
   amt: types.number,
   id: types.string,
   item: types.string,
-  // savingsFrequencyID: types.string,
-  // creationTime: types.string,
-  // targetPeriod: types.string,
   color: types.string,
   percentageCompletion: types.number,
 });
@@ -19,14 +16,11 @@ export const TargetStore = types
   })
   .actions((self) => ({
     addTarget(t: API.GetTargetSavingsResponseDto) {
-      self.targets.push({
+      self.targets.unshift({
         targetAmountInView: t.targetAmountInView || 0,
         amt: t.amt || 0,
         id: `${t.id}`,
         item: `${t.item}`,
-        // creationTime: `${t.txndate}`,
-        // targetPeriod: `${t.targetPeriod}`,
-        // savingsFrequencyID: `${t.savingsFrequencyID}`,
         percentageCompletion: percentageCompletion(t),
         color: pastelColour(`$${t.item}`),
       });
