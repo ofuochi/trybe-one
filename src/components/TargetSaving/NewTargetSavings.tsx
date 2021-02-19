@@ -1,13 +1,14 @@
 import { Field, Form, Formik } from "formik";
 import React, { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
 import * as Yup from "yup";
 
 import api from "../../config/api.config";
 import { routePath } from "../../constants/route-paths";
 import { useRefresh } from "../../hooks/use-refresh.hooks";
+import { useStore } from "../../hooks/use-store.hooks";
 import { localStoreService } from "../../services";
 import { ErrorMsg } from "../Common/ErrorMsg";
 import { Title } from "../Common/Title";
@@ -29,11 +30,12 @@ export const NewTargetSavings = () => {
     API.SavingsFrequencyDTO[]
   >();
   const [timeList, setTimeList] = useState<API.PreferredTimeDTO[]>();
+  const { targetStore } = useStore();
   const [cards, setCards] = useState<API.CustomerChargeDetail[]>([]);
   const [selectedCard, setSelectedCard] = useState<API.CustomerChargeDetail>(
     {}
   );
-  const refresh = useRefresh(routePath.targetSavings.index);
+  const history = useHistory();
   useEffect(() => {
     api
       .get<API.GetSavingsFrequencyResponseDTO>(
@@ -74,7 +76,8 @@ export const NewTargetSavings = () => {
         if (data.responseCode === "00") {
           resetForm();
           toast.success(data.responseDescription, { position: "top-center" });
-          refresh();
+          targetStore.addTarget(values);
+          history.replace(routePath.targetSavings.index);
         } else
           toast.error(data.responseDescription, { position: "top-center" });
       })
