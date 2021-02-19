@@ -1,62 +1,33 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import { RingProgress } from "@ant-design/charts";
+import { observer } from "mobx-react-lite";
+import numeral from "numeral";
 import React, { useEffect, useState } from "react";
-import Modal from "react-bootstrap/Modal";
-import Button from "react-bootstrap/Button";
+import { Link } from "react-router-dom";
 import Slider from "react-slick";
 
 import api from "../../config/api.config";
-import { localStoreService } from "../../services";
-import { Field, Formik } from "formik";
-import { Form } from "react-bootstrap";
-import { ErrorMsg } from "./ErrorMsg";
-import * as Yup from "yup";
-import { Link } from "react-router-dom";
 import { routePath } from "../../constants/route-paths";
+import { useStore } from "../../hooks/use-store.hooks";
+import { localStoreService } from "../../services";
 
-const validationSchema = Yup.object().shape({
-  pin: Yup.string().required("required"),
-  card: Yup.object({
-    cvv: Yup.string().required("required"),
-    expiry_month: Yup.number()
-      .min(1, "Expiry month must be greater than 0")
-      .required("required"),
-    expiry_year: Yup.number()
-      .min(
-        new Date().getFullYear(),
-        `Expiry year must be at least ${new Date().getFullYear()}`
-      )
-      .required("required"),
-    number: Yup.number().positive("PAN must be positive").required("required"),
-  }),
-});
-
-const CardSection = () => {
+const CardSection = observer(() => {
   const [cards, setCards] = useState<API.GetCardResponseDto>({});
-  // const [show, setShow] = useState(false);
-  // const handleClose = () => setShow(false);
-  // const handleShow = () => setShow(true);
-  const currentUser = localStoreService.getCurrentUser();
+  const { targetStore } = useStore();
   useEffect(() => {
+    const currentUser = localStoreService.getCurrentUser();
     const getCardInput: API.GetCardRequestDto = {
       accountId: currentUser?.nuban,
     };
     api
       .post<API.GetCardResponseDto>("/User/GetActiveCard", getCardInput)
       .then(({ data }) => setCards(data));
+    api
+      .get<API.GetTargetSavingsResponseListDto>(
+        `/User/GetTargetSavingsByProfileId?profileID=${currentUser?.userId}`
+      )
+      .then(({ data }) => targetStore.setTargets(data.targetSavings || []));
   }, []);
-
-  const initialValues: API.ChargeCustomerRequestDto = {
-    amount: "1",
-    email: currentUser?.email,
-    profileId: currentUser?.userId,
-    pin: "",
-    card: {
-      cvv: "",
-      expiry_month: 0,
-      expiry_year: 0,
-      number: "",
-    },
-  };
   const settings = {
     dots: true,
     infinite: true,
@@ -127,153 +98,35 @@ const CardSection = () => {
         </h5>
 
         <ul className="collection bd-0  m-0 pl-3">
-          <li className="d-flex row m-0 mb-4 justify-content-between">
-            <canvas
-              style={{ width: "20px", height: "20px" }}
-              id="doughnutChart"
-            ></canvas>
-            <span
-              style={{ width: "10px", height: "10px" }}
-              className="bg-doughnut1 rounded-20 m-3 mt-4 d-block"
-            ></span>
-            <span className="p-title mt-3 d-block">New Phone</span>
-            <span className="p-title mt-3 d-block text-right">N 952.87</span>
-          </li>
-          <li className="d-flex row m-0 mb-4 justify-content-between">
-            <canvas
-              style={{ width: "20px", height: "20px" }}
-              id="doughnutChart2"
-            ></canvas>
-            <span
-              style={{ width: "10px", height: "10px" }}
-              className="bg-doughnut2 rounded-20 m-3 mt-4 d-block"
-            ></span>
-            <span className="title mt-3 d-block">New Phone</span>
-            <span className="title mt-3 d-block text-right">N 952.87</span>
-          </li>
-          <li className="d-flex row m-0 mb-4 justify-content-between">
-            <canvas
-              style={{ width: "20px", height: "20px" }}
-              id="doughnutChart3"
-            ></canvas>
-            <span
-              style={{ width: "10px", height: "10px" }}
-              className="bg-doughnut3 rounded-20 m-3 mt-4 d-block"
-            ></span>
-            <span className="title mt-3 d-block">New Phone</span>
-            <span className="title mt-3 d-block text-right">N 952.87</span>
-          </li>
+          {targetStore.targets.map((t) => (
+            <li
+              className="d-flex row m-0 mb-4 justify-content-between"
+              key={t.id}
+            >
+              <RingProgress
+                width={50}
+                height={50}
+                percent={t.percentageCompletion}
+                color={t.color}
+              />
+              <span
+                style={{
+                  width: "10px",
+                  height: "10px",
+                  backgroundColor: t.color,
+                }}
+                className="bg-doughnut1 rounded-20 m-3 mt-4 d-block"
+              ></span>
+              <span className="p-title mt-3 d-block">{t.item}</span>
+              <span className="p-title mt-3 d-block text-right">{`₦${numeral(
+                t.targetAmountInView
+              ).format("0,0")}`}</span>
+            </li>
+          ))}
         </ul>
       </div>
-
-      <Modal
-        // show={show}
-        size="lg"
-        aria-labelledby="contained-modal-title-vcenter"
-        centered
-        // onHide={handleClose}
-        backdrop="static"
-        keyboard={false}
-      >
-        <Modal.Header className="bd-0" closeButton>
-          Request for card
-        </Modal.Header>
-        <Modal.Body className="p-4">
-          <Formik
-            initialValues={initialValues}
-            validationSchema={validationSchema}
-            onSubmit={(values, { setSubmitting }) => {
-              console.log(values);
-            }}
-          >
-            {({ isSubmitting }) => (
-              <Form>
-                <div className="form-group mb-0">
-                  <div className="input-group">
-                    <Field
-                      placeholder="Pan"
-                      type="number"
-                      name="card.number"
-                      className="form-control d-block w-100 bdbtm-0 bd-radius-0"
-                    />
-                    <label htmlFor="card.number">Pan</label>
-                    <ErrorMsg inputName="card.number" />
-                  </div>
-                </div>
-                <div className="form-group mb-0">
-                  <div className="input-group">
-                    <Field
-                      placeholder="Expiry Month"
-                      type="number"
-                      name="card.expiry_month"
-                      className="form-control d-block w-100 bdbtm-0 bd-radius-0"
-                    />
-                    <label htmlFor="card.expiry_month">Expiry Month</label>
-                    <ErrorMsg inputName="card.expiry_month" />
-                  </div>
-                </div>
-
-                <div className="form-group mb-0">
-                  <div className="input-group">
-                    <Field
-                      placeholder="Expiry Year"
-                      type="number"
-                      name="card.expiry_year"
-                      className="form-control d-block w-100 bdbtm-0 bd-radius-0"
-                    />
-                    <label htmlFor="card.expiry_year">Expiry Year</label>
-                    <ErrorMsg inputName="card.expiry_year" />
-                  </div>
-                </div>
-
-                <div className="form-group mb-0">
-                  <div className="input-group">
-                    <Field
-                      placeholder="CVV"
-                      type="number"
-                      name="card.cvv"
-                      className="form-control d-block w-100 bdbtm-0 bd-radius-0"
-                    />
-                    <label htmlFor="card.cvv">CVV</label>
-                    <ErrorMsg inputName="card.cvv" />
-                  </div>
-                </div>
-
-                <div className="form-group mb-0">
-                  <div className="input-group">
-                    <Field
-                      placeholder="PIN"
-                      name="pin"
-                      type="number"
-                      className="form-control d-block w-100 bdbtm-0 bd-radius-0"
-                    />
-                    <label htmlFor="pin">PIN</label>
-                    <ErrorMsg inputName="pin" />
-                  </div>
-                </div>
-                <div className="form-group row m-0 justify-content-end mt-4">
-                  <Button
-                    size="lg"
-                    variant="danger"
-                    className="px-5"
-                    type="submit"
-                    disabled={isSubmitting}
-                  >
-                    <img
-                      alt="button"
-                      className="mr-3"
-                      src="/assets/images/ic-send.svg"
-                    />
-                    Send
-                  </Button>
-                </div>
-              </Form>
-            )}
-          </Formik>
-        </Modal.Body>
-      </Modal>
     </>
   );
-};
+});
 
 export default CardSection;

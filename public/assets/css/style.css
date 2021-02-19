@@ -24278,3 +24278,6 @@ input[type="radio"] label:checked {
 .pie-size .g2-html-annotation{
   font-size: 15px!important;
 }
+.collection .g2-html-annotation{
+  font-size: 12px!important;
+}

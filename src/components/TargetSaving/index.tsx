@@ -1,6 +1,5 @@
 import { Pie, Progress } from "@ant-design/charts";
 import numeral from "numeral";
-import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import Modal from "react-bootstrap/Modal";
@@ -9,6 +8,7 @@ import { toast } from "react-toastify";
 
 import api from "../../config/api.config";
 import { routePath } from "../../constants/route-paths";
+import { useStore } from "../../hooks/use-store.hooks";
 import { localStoreService } from "../../services";
 import { Title } from "../Common/Title";
 import TokenizeCard from "../Common/TokenizeCard";
@@ -23,11 +23,8 @@ export const TargetSavings = () => {
   const [showBreakTargetDetails, setShowBreakTargetDetails] = useState(false);
   const [isSubmittingBreaking, setIsSubmittingBreaking] = useState(false);
   const [shouldShowMore, setShouldShowMore] = useState(false);
+  const { targetStore } = useStore();
   const { location } = useHistory();
-
-  const [targetSavings, setTargetSavings] = useState<
-    API.GetTargetSavingsResponseDto[]
-  >([]);
 
   useEffect(() => {
     const currentUser = localStoreService.getCurrentUser();
@@ -36,38 +33,15 @@ export const TargetSavings = () => {
         `/User/GetTargetSavingsByProfileId?profileID=${currentUser?.userId}`
       )
       .then(({ data }) => {
-        // const targets = data.targetSavings?.filter(
-        //   (item) => item.statusflag !== 2
-        // );
-        setTargetSavings(data.targetSavings || []);
+        data.targetSavings && targetStore.setTargets(data.targetSavings);
       });
-  }, []);
-  const colors: string[] = [];
-
-  const pastelColour = (str: string) => {
-    //TODO: adjust base colour values below based on theme
-    const baseRed = 175;
-    const baseGreen = 175;
-    const baseBlue = 175;
-
-    //lazy seeded random hack to get values from 0 - 256
-    //for seed just take bitwise XOR of first two chars
-    let seed = str.charCodeAt(0) ^ str.charCodeAt(1);
-    const rand_1 = Math.abs(Math.sin(seed++) * 10000) % 256;
-    const rand_2 = Math.abs(Math.sin(seed++) * 10000) % 256;
-    const rand_3 = Math.abs(Math.sin(seed++) * 10000) % 256;
-
-    //build colour
-    const r = Math.round((rand_1 + baseRed) / 2);
-    const g = Math.round((rand_2 + baseGreen) / 2);
-    const b = Math.round((rand_3 + baseBlue) / 2);
-
-    return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
-  };
-  targetSavings?.forEach((e) => colors.push(pastelColour(`$${e.item}`)));
+  }, [targetStore]);
 
   const pieConfig = {
-    data: targetSavings,
+    data: targetStore.targets.map((t) => ({
+      targetAmountInView: t.targetAmountInView,
+      item: t.item,
+    })),
     innerRadius: 0.64,
     radius: 1,
     interactions: [{ type: "element-selected" }, { type: "element-active" }],
@@ -90,7 +64,7 @@ export const TargetSavings = () => {
     },
     angleField: "targetAmountInView",
     colorField: "item",
-    color: colors,
+    color: targetStore.targets.map((target) => target.color),
   };
   const handleSubmit = (
     values: API.UpdateTargetSavingsRequest,
@@ -112,43 +86,14 @@ export const TargetSavings = () => {
         setSubmitting(false);
       });
   };
-  const calculateComplete = ({
-    txndate,
-    targetPeriod,
-    savingsFrequencyID,
-  }: API.GetTargetSavingsResponseDto) => {
-    const start = moment(txndate);
-    // const end = moment(maturitydate);
-    const current = moment(new Date());
 
-    let totalDuration = Number(targetPeriod),
-      currentDuration = current.diff(start, "days");
-
-    if (savingsFrequencyID === 1) {
-      // Daily
-      // totalDuration = end.diff(start, "days");
-      // currentDuration = current.diff(start, "days");
-    } else if (savingsFrequencyID === 2) {
-      // Weekly
-      // totalDuration = end.diff(start, "weeks");
-      // currentDuration = current.diff(start, "weeks");
-    } else {
-      // Monthly
-      // totalDuration = end.diff(start, "months");
-      // currentDuration = current.diff(start, "months");
-      // console.log(startdate, maturitydate, savingsFrequencyID);
-    }
-    const result = currentDuration / totalDuration;
-    // console.log(currentDuration, totalDuration);
-    return result;
-  };
   return (
     <>
       <Title title="Target Savings" />
       {location.pathname === routePath.targetSavings.index ? (
         <div className="page-content">
           <div className="row">
-            {targetSavings && targetSavings.length > 0 ? (
+            {targetStore.targets.length > 0 ? (
               <>
                 <div className="col-lg-12">
                   <h4>Total Budget</h4>
@@ -172,31 +117,27 @@ export const TargetSavings = () => {
             </div>
           </div>
 
-          {targetSavings && targetSavings.length > 0 ? (
+          {targetStore.targets.length > 0 ? (
             <>
               <div className="mt-4">
                 <h5 className="mdc-top-app-bar__title mb-0 mb-4 p-0">
                   Target Savings
                 </h5>
-                {targetSavings.map((item, index) => (
-                  <div className="col-lg-12" key={item.id}>
+                {targetStore.targets.map((item) => (
+                  <div className="col-lg-12 mb-4" key={item.id}>
                     <div className="form-group row justify-content-between m-0">
                       <div className="col-lg-2 text-left p-0">
                         <p className="mb-0">{item.item}</p>
                       </div>
                       <div className="col-lg-8 pl-0">
                         <Progress
-                          percent={calculateComplete(item)}
+                          percent={item.percentageCompletion}
                           progressStyle={{
                             cursor: "pointer",
                             fillOpacity: 0.7,
                             strokeOpacity: 0.7,
-                            shadowColor: "grey",
-                            shadowBlur: 10,
-                            shadowOffsetX: 5,
-                            shadowOffsetY: 5,
                           }}
-                          color={colors[index]}
+                          color={item.color}
                           onEvent={(_chart: any, e: any) => {
                             if (e.type === "click") {
                               setShouldShowMore(!shouldShowMore);
@@ -224,7 +165,7 @@ export const TargetSavings = () => {
                     </div>
                     {targetSaving?.id === item.id && shouldShowMore ? (
                       <div>
-                        <div className="row m-0 justify-content-between mt-3">
+                        <div className="row m-0 justify-content-between mt-2 mb-3 col-lg-10">
                           <Button
                             variant="light"
                             className="px-4 border"
@@ -357,10 +298,7 @@ export const TargetSavings = () => {
                         position: "top-center",
                       });
 
-                      const targets = targetSavings?.filter(
-                        (target) => target.id !== targetSaving?.id
-                      );
-                      setTargetSavings(targets);
+                      targetStore.removeTarget(`${targetSaving.id}`);
                     } else {
                       // const targets = targetSavings?.filter(
                       //   (target) => target.id !== targetSaving?.id

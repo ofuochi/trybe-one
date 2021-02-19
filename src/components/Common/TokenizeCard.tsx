@@ -173,7 +173,7 @@ const TokenizeCard = () => {
                       placeholder="PIN"
                       name="pin"
                       type="password"
-                      className="form-control d-block w-100 bdbtm-0 bd-radius-0"
+                      className="form-control d-block w-100 bd-radius-0"
                     />
                     <label htmlFor="pin">PIN</label>
                     <ErrorMsg inputName="pin" />
