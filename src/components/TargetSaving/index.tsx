@@ -143,6 +143,8 @@ export const TargetSavings = observer(() => {
                           }}
                         >
                           <Progress
+                            // height={15}
+                            // autoFit={false}
                             percent={item.percentageCompletion}
                             progressStyle={{
                               cursor: "pointer",
@@ -160,13 +162,11 @@ export const TargetSavings = observer(() => {
                             "0,0"
                           )}`}</b>
 
-                          <span>
-                            <img
-                              className="ml-2"
-                              alt=""
-                              src="/assets/images/ic-right-angle.svg"
-                            />
-                          </span>
+                          <img
+                            className="ml-2"
+                            alt=""
+                            src="/assets/images/ic-right-angle.svg"
+                          />
                         </p>
                       </div>
                     </div>

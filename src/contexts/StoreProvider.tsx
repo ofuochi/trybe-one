@@ -4,7 +4,6 @@ import { CurrentUserStore } from "../models/CurrentUserStore";
 import { NumbersStore } from "../models/NumbersStore";
 import { RootStore } from "../models/RootStore";
 import { SignupFormStore } from "../models/SignupFormStore";
-import { TargetStore } from "../models/TargetStore";
 import { StoreContext } from "./StoreCtx";
 
 export const StoreProvider: React.FC = ({ children }) => {
@@ -12,7 +11,6 @@ export const StoreProvider: React.FC = ({ children }) => {
     const numbersStore = NumbersStore.create();
     const signupFormStore = SignupFormStore.create();
     const currentUserStore = CurrentUserStore.create();
-    // const targetStore = TargetStore.create();
 
     return RootStore.create({
       numbersStore,
