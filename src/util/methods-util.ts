@@ -2,9 +2,9 @@ import moment from "moment";
 
 export const pastelColour = (str: string) => {
   //TODO: adjust base colour values below based on theme
-  const baseRed = 175;
-  const baseGreen = 175;
-  const baseBlue = 175;
+  const baseRed = 128;
+  const baseGreen = 128;
+  const baseBlue = 128;
 
   //lazy seeded random hack to get values from 0 - 256
   //for seed just take bitwise XOR of first two chars
@@ -18,7 +18,7 @@ export const pastelColour = (str: string) => {
   const g = Math.round((rand_2 + baseGreen) / 2);
   const b = Math.round((rand_3 + baseBlue) / 2);
 
-  return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+  return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1)}`;
 };
 export const percentageCompletion = ({
   txndate,

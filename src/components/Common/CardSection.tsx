@@ -4,11 +4,19 @@ import numeral from "numeral";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Slider from "react-slick";
-
 import api from "../../config/api.config";
 import { routePath } from "../../constants/route-paths";
 import { useStore } from "../../hooks/use-store.hooks";
+import { TargetItemModel } from "../../models/TargetStore";
 import { localStoreService } from "../../services";
+
+const maskedPan = (pan: string) => {
+  const first4 = pan.substring(0, 4);
+  const last4 = pan.substring(pan.length - 4);
+
+  const mask = pan.substring(4, pan.length - 4).replace(/\d/g, "*");
+  return `${first4}${mask}${last4}`;
+};
 
 const CardSection = observer(() => {
   const [cards, setCards] = useState<API.GetCardResponseDto>({});
@@ -37,6 +45,7 @@ const CardSection = observer(() => {
     centerMode: true,
     centerPadding: "10px",
   };
+
   return (
     <>
       <div className="row m-0 mb-0 d-flex mt-3 justify-content-between">
@@ -63,14 +72,16 @@ const CardSection = observer(() => {
           </h5>
 
           <div className="cardslides col-lg-12">
-          <Slider {...settings}>
-            {cards.data?.map((card, i) => (
-              <div key={i} style={{ display: "block" }}>
-                
-                <img alt="" src="/assets/images/cardbg.png" />
-               <div className="masked-span">* * * * * * * * * * 0934</div>
-              </div>
-            ))}
+            <Slider {...settings}>
+              {cards.data.map((card, i) => (
+                <div key={i} style={{ display: "block" }}>
+                  <img alt="" src="/assets/images/cardbg.png" />
+
+                  <div className="masked-span">
+                    {maskedPan(`${card.card_number}`)}
+                  </div>
+                </div>
+              ))}
             </Slider>
           </div>
         </div>
@@ -91,14 +102,14 @@ const CardSection = observer(() => {
         </div>
       </div>
 
-      {targetStore.targets.length > 0 ? (
+      {targetStore.targets.size > 0 ? (
         <div className="mt-4 row">
           <h5 className="mdc-top-app-bar__title font-weight-light ml-4 mb-1 p-0">
             Target Saving
           </h5>
 
           <ul className="collection bd-0  m-0 pl-3">
-            {targetStore.targets.map((t) => (
+            {Array.from(targetStore.targets.values()).map((t) => (
               <li
                 className="d-flex row m-0 mb-4 justify-content-between"
                 key={t.id}

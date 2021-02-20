@@ -12,13 +12,13 @@ export const StoreProvider: React.FC = ({ children }) => {
     const numbersStore = NumbersStore.create();
     const signupFormStore = SignupFormStore.create();
     const currentUserStore = CurrentUserStore.create();
-    const targetStore = TargetStore.create();
+    // const targetStore = TargetStore.create();
 
     return RootStore.create({
       numbersStore,
       signupFormStore,
       currentUserStore,
-      targetStore,
+      targetStore: {},
     });
   });
 
