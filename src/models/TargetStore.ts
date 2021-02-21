@@ -5,56 +5,39 @@ import { toast } from "react-toastify";
 import api from "../config/api.config";
 import { percentageCompletion } from "../util/methods-util";
 
-const TargetItemStore = types
-  .model({
-    targetAmountInView: types.number,
-    amt: types.number,
-    id: types.string,
-    item: types.string,
-    color: types.string,
-    accruedInterest: types.number,
-    percentageCompletion: types.number,
-  })
-  .actions((self) => ({
-    updateTargetItem(item: {
-      targetAmountInView: number;
-      amt: number;
-      id: string;
-      item: string;
-      color: string;
-      accruedInterest: number;
-      percentageCompletion: number;
-    }) {
-      self.accruedInterest = item.accruedInterest;
-      self.amt = item.amt;
-      self.color = item.color;
-      self.targetAmountInView = item.targetAmountInView;
-      self.item = item.item;
-      self.id = item.id;
-      self.percentageCompletion = item.percentageCompletion;
-      return { ...self };
-    },
-  }));
+const TargetItemStore = types.model({
+  targetAmountInView: types.number,
+  amt: types.number,
+  id: types.identifier,
+  item: types.string,
+  color: types.string,
+  accruedInterest: types.number,
+  percentageCompletion: types.number,
+});
+
+const createTargetItem = (t: API.GetTargetSavingsResponseDto) => {
+  return TargetItemStore.create({
+    targetAmountInView: t.targetAmountInView as number,
+    amt: t.amt as number,
+    id: `${t.id}`,
+    item: `${t.item}`,
+    accruedInterest: t.int_accrued as number,
+    percentageCompletion: percentageCompletion(t),
+    color: randomcolor({
+      seed: `${t.item}`,
+      luminosity: "random",
+      hue: "random",
+    }),
+  });
+};
 
 export const TargetStore = types
   .model({
     targets: types.map(TargetItemStore),
   })
   .actions((self) => ({
-    addTarget(t: API.GetTargetSavingsResponseDto) {
-      const target = {
-        targetAmountInView: t.targetAmountInView || 0,
-        amt: t.amt || 0,
-        id: `${t.id}`,
-        item: `${t.item}`,
-        accruedInterest: t.int_accrued || 0,
-        percentageCompletion: percentageCompletion(t),
-        color: randomcolor({
-          seed: `${t.item}`,
-          luminosity: "random",
-          hue: "random",
-        }),
-      };
+    addTarget: (t: API.GetTargetSavingsResponseDto) => {
+      const target = createTargetItem(t);
       self.targets.set(`${t.id}`, target);
     },
     updateTarget: flow(function* (input: API.UpdateTargetSavingsRequest) {
@@ -68,23 +51,34 @@ export const TargetStore = types
       if (data.responseCode === "00") {
         toast.success(data.responseDescription, { position: "top-center" });
         const target = self.targets.get(`${input.targetId}`);
-
-        if (target?.id) {
-          const result = self.targets
-            .get(`${input.targetId}`)
-            ?.updateTargetItem({ ...target, amt: input.newAmount || 0 });
-          console.log(result);
+        try {
+          target &&
+            self.targets.put({ ...target, amt: Number(input.newAmount) });
+        } catch (error) {
+          console.error(error);
         }
       } else toast.error(data.responseDescription, { position: "top-center" });
       return data;
     }),
-    setTargets(targets: API.GetTargetSavingsResponseDto[]) {
+    setTargets: (targets: API.GetTargetSavingsResponseDto[]) => {
       self.targets.clear();
-      targets?.forEach((e) => this.addTarget(e));
+      targets?.forEach((e) => self.targets.set(`${e.id}`, createTargetItem(e)));
     },
-    removeTarget(id: string) {
+    removeTarget: flow(function* (id: string) {
+      const input: API.BreakBoxRequestModel = {
+        targetId: id,
+      };
+      const {
+        data,
+      }: { data: API.BaseResponse } = yield api.post<API.BaseResponse>(
+        "/User/BreakBox",
+        input
+      );
       self.targets.delete(id);
-    },
+      if (data.responseCode === "00") {
+        toast.success(data.responseDescription, { position: "top-center" });
+      } else toast.error(data.responseDescription, { position: "top-center" });
+    }),
   }));
 export interface TargetModel extends Instance<typeof TargetStore> {}
 export interface TargetItemModel extends Instance<typeof TargetItemStore> {}

@@ -6,10 +6,8 @@ import React, { useState } from "react";
 import { Button } from "react-bootstrap";
 import Modal from "react-bootstrap/Modal";
 import { Link, Route, Switch, useHistory } from "react-router-dom";
-import { toast } from "react-toastify";
 import * as Yup from "yup";
 
-import api from "../../config/api.config";
 import { routePath } from "../../constants/route-paths";
 import { useStore } from "../../hooks/use-store.hooks";
 import { localStoreService } from "../../services";
@@ -365,29 +363,12 @@ export const TargetSavings = observer(() => {
               disabled={isSubmittingBreaking}
               onClick={() => {
                 setIsSubmittingBreaking(true);
-                const input: API.BreakBoxRequestModel = {
-                  targetId: targetSaving?.id,
-                };
-                api
-                  .post<API.BaseResponse>("/User/BreakBox", input)
-                  .then(({ data }) => {
+
+                targetStore
+                  .removeTarget(`${targetSaving?.id}`)
+                  .then(() => {
                     setIsSubmittingBreaking(false);
                     setShowBreakTargetDetails(false);
-                    if (data.responseCode === "00") {
-                      toast.success(data.responseDescription, {
-                        position: "top-center",
-                      });
-
-                      targetStore.removeTarget(`${targetSaving?.id}`);
-                    } else {
-                      // const targets = targetSavings?.filter(
-                      //   (target) => target.id !== targetSaving?.id
-                      // );
-                      // setTargetSavings(targets);
-                      toast.error(data.responseDescription, {
-                        position: "top-center",
-                      });
-                    }
                   })
                   .catch(() => {
                     setIsSubmittingBreaking(false);
