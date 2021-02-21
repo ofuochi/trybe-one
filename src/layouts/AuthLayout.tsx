@@ -1,4 +1,4 @@
-import CardSection from "../components/Common/CardSection";
+import CardSection from "../components/Common/Cards/CardSection";
 import { Menu } from "../components/Common/Menu";
 import { PageHeader } from "../components/Common/PageHeader";
 

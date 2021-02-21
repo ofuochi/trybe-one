@@ -1,19 +1,30 @@
-import { flow, Instance, types } from "mobx-state-tree";
+import { values } from "mobx";
+import { destroy, flow, Instance, types } from "mobx-state-tree";
 import randomcolor from "randomcolor";
 import { toast } from "react-toastify";
 
 import api from "../config/api.config";
 import { percentageCompletion } from "../util/methods-util";
 
-const TargetItemStore = types.model({
-  targetAmountInView: types.number,
-  amt: types.number,
-  id: types.identifier,
-  item: types.string,
-  color: types.string,
-  accruedInterest: types.number,
-  percentageCompletion: types.number,
-});
+const TargetItemStore = types
+  .model({
+    targetAmountInView: types.number,
+    amt: types.number,
+    id: types.identifier,
+    item: types.string,
+    color: types.string,
+    status: types.number,
+    creationTime: types.string,
+    accruedInterest: types.number,
+    percentageCompletion: types.number,
+  })
+  .actions((self) => ({
+    remove() {
+      destroy(self);
+    },
+  }));
+
+export interface TargetItemModel extends Instance<typeof TargetItemStore> {}
 
 const createTargetItem = (t: API.GetTargetSavingsResponseDto) => {
   return TargetItemStore.create({
@@ -21,8 +32,10 @@ const createTargetItem = (t: API.GetTargetSavingsResponseDto) => {
     amt: t.amt as number,
     id: `${t.id}`,
     item: `${t.item}`,
+    status: t.statusflag as number,
     accruedInterest: t.int_accrued as number,
     percentageCompletion: percentageCompletion(t),
+    creationTime: `${t.txndate}`,
     color: randomcolor({
       seed: `${t.item}`,
       luminosity: "random",
@@ -35,11 +48,18 @@ export const TargetStore = types
   .model({
     targets: types.map(TargetItemStore),
   })
+  .views((self) => ({
+    get getAllTargets() {
+      const targets = (values(self.targets) as unknown) as TargetItemModel[];
+      return targets.sort((a, b) => (a.creationTime > b.creationTime ? 1 : 0));
+    },
+  }))
   .actions((self) => ({
     addTarget: (t: API.GetTargetSavingsResponseDto) => {
       const target = createTargetItem(t);
-      self.targets.set(`${t.id}`, target);
+      self.targets.put(target);
     },
+
     updateTarget: flow(function* (input: API.UpdateTargetSavingsRequest) {
       const {
         data,
@@ -51,19 +71,21 @@ export const TargetStore = types
       if (data.responseCode === "00") {
         toast.success(data.responseDescription, { position: "top-center" });
         const target = self.targets.get(`${input.targetId}`);
-        try {
-          target &&
-            self.targets.put({ ...target, amt: Number(input.newAmount) });
-        } catch (error) {
-          console.error(error);
-        }
+        target && self.targets.put({ ...target, amt: Number(input.newAmount) });
       } else toast.error(data.responseDescription, { position: "top-center" });
       return data;
     }),
-    setTargets: (targets: API.GetTargetSavingsResponseDto[]) => {
+    setTargets: flow(function* (userId: string) {
       self.targets.clear();
-      targets?.forEach((e) => self.targets.set(`${e.id}`, createTargetItem(e)));
-    },
+      const {
+        data,
+      }: {
+        data: API.GetTargetSavingsResponseListDto;
+      } = yield api.get<API.GetTargetSavingsResponseListDto>(
+        `/User/GetTargetSavingsByProfileId?profileID=${userId}`
+      );
+      data.targetSavings?.forEach((e) => self.targets.put(createTargetItem(e)));
+    }),
     removeTarget: flow(function* (id: string) {
       const input: API.BreakBoxRequestModel = {
         targetId: id,
@@ -74,11 +96,13 @@ export const TargetStore = types
         "/User/BreakBox",
         input
       );
+
       self.targets.delete(id);
+
       if (data.responseCode === "00") {
         toast.success(data.responseDescription, { position: "top-center" });
       } else toast.error(data.responseDescription, { position: "top-center" });
+      return data;
     }),
   }));
 export interface TargetModel extends Instance<typeof TargetStore> {}
-export interface TargetItemModel extends Instance<typeof TargetItemStore> {}

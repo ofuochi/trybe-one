@@ -1,14 +1,11 @@
-import { RingProgress } from "@ant-design/charts";
-import { observer } from "mobx-react-lite";
-import numeral from "numeral";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Slider from "react-slick";
-import api from "../../config/api.config";
-import { routePath } from "../../constants/route-paths";
-import { useStore } from "../../hooks/use-store.hooks";
-import { TargetItemModel } from "../../models/TargetStore";
-import { localStoreService } from "../../services";
+
+import api from "../../../config/api.config";
+import { routePath } from "../../../constants/route-paths";
+import { localStoreService } from "../../../services";
+import TargetsView from "./TargetsView";
 
 const maskedPan = (pan: string) => {
   const first4 = pan.substring(0, 4);
@@ -18,9 +15,8 @@ const maskedPan = (pan: string) => {
   return `${first4}${mask}${last4}`;
 };
 
-const CardSection = observer(() => {
+const CardSection = () => {
   const [cards, setCards] = useState<API.GetCardResponseDto>({});
-  const { targetStore } = useStore();
   useEffect(() => {
     const currentUser = localStoreService.getCurrentUser();
     const getCardInput: API.GetCardRequestDto = {
@@ -29,12 +25,8 @@ const CardSection = observer(() => {
     api
       .post<API.GetCardResponseDto>("/User/GetActiveCard", getCardInput)
       .then(({ data }) => setCards(data));
-    api
-      .get<API.GetTargetSavingsResponseListDto>(
-        `/User/GetTargetSavingsByProfileId?profileID=${currentUser?.userId}`
-      )
-      .then(({ data }) => targetStore.setTargets(data.targetSavings || []));
-  }, [targetStore]);
+  }, []);
+
   const settings = {
     dots: true,
     infinite: true,
@@ -102,43 +94,9 @@ const CardSection = observer(() => {
         </div>
       </div>
 
-      {targetStore.targets.size > 0 ? (
-        <div className="mt-4 row">
-          <h5 className="mdc-top-app-bar__title font-weight-light ml-4 mb-1 p-0">
-            Target Saving
-          </h5>
-
-          <ul className="collection bd-0  m-0 pl-3">
-            {Array.from(targetStore.targets.values()).map((t) => (
-              <li
-                className="d-flex row m-0 mb-4 justify-content-between"
-                key={t.id}
-              >
-                <RingProgress
-                  width={50}
-                  height={50}
-                  percent={t.percentageCompletion}
-                  color={t.color}
-                />
-                <span
-                  style={{
-                    width: "10px",
-                    height: "10px",
-                    backgroundColor: t.color,
-                  }}
-                  className="bg-doughnut1 rounded-20 m-3 mt-4 d-block"
-                ></span>
-                <span className="p-title mt-3 d-block">{t.item}</span>
-                <span className="p-title mt-3 d-block text-right">{`₦${numeral(
-                  t.targetAmountInView
-                ).format("0,0")}`}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      ) : null}
+      <TargetsView />
     </>
   );
-});
+};
 
 export default CardSection;

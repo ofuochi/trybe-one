@@ -18,10 +18,11 @@ import RequestCard from "./RequestCard";
 import TokenizeCard from "./TokenizeCard";
 
 export const AppRoutes = () => {
-  const { currentUserStore } = useStore();
+  const { currentUserStore, targetStore } = useStore();
   const currentUser = localStoreService.getCurrentUser();
   if (currentUser) {
     currentUserStore.updatedCurrentUser(currentUser.email);
+    targetStore.setTargets(`${currentUser.userId}`);
   }
 
   return (
