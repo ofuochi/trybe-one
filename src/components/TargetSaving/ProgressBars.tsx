@@ -2,13 +2,13 @@ import { Progress } from "@ant-design/charts";
 import { Field, Formik } from "formik";
 import { observer } from "mobx-react-lite";
 import numeral from "numeral";
-import React, { useState } from "react";
+import { useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import * as Yup from "yup";
-import api from "../../config/api.config";
 
+import api from "../../config/api.config";
 import { routePath } from "../../constants/route-paths";
 import { useStore } from "../../hooks/use-store.hooks";
 import { localStoreService } from "../../services";
