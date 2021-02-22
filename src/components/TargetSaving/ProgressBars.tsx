@@ -58,8 +58,6 @@ const ProgressBars = observer(() => {
                       }}
                     >
                       <Progress
-                        // height={15}
-                        // autoFit={false}
                         percent={item.percentageCompletion}
                         progressStyle={{
                           cursor: "pointer",
@@ -67,11 +65,6 @@ const ProgressBars = observer(() => {
                           strokeOpacity: 0.7,
                         }}
                         color={item.color}
-                        // onEvent={(chart, e) => {
-                        //   if (e.type === "element:click") {
-                        //     console.log(item.id);
-                        //   }
-                        // }}
                         tooltip={{
                           showTitle: true,
                           follow: true,
