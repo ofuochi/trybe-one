@@ -8,6 +8,7 @@ import * as Yup from "yup";
 import Reference from "yup/lib/Reference";
 
 import api from "../../config/api.config";
+import { Naira } from "../../constants/currencies";
 import { routePath } from "../../constants/route-paths";
 import { useStore } from "../../hooks/use-store.hooks";
 import { localStoreService } from "../../services";
@@ -18,11 +19,13 @@ const validationSchema = Yup.object().shape({
   targetPeriod: Yup.number().min(1).required("required"),
   item: Yup.string().required("required"),
   tokenizedID: Yup.string().required("required"),
-  targetAmountInView: Yup.number().min(100).required("required"),
+  targetAmountInView: Yup.number()
+    .min(100, `Target amount must be at least ${Naira}100`)
+    .required("required"),
   amt: Yup.number()
-    .lessThan(
+    .max(
       Yup.ref("targetAmountInView") as Reference<number>,
-      "Amount must be less than the target amount"
+      "Amount must be at most equal to the target amount"
     )
     .moreThan(0)
     .required("required"),

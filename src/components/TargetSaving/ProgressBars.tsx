@@ -81,12 +81,14 @@ const ProgressBars = observer(() => {
 
                       {showOpt && targetSaving.id === item.id ? (
                         <img
+                          style={{ height: 15 }}
                           className="ml-2"
                           alt=""
                           src="/assets/images/ic-down-angle.svg"
                         />
                       ) : (
                         <img
+                          style={{ height: 15 }}
                           className="ml-2"
                           alt=""
                           src="/assets/images/ic-right-angle.svg"
