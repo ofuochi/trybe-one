@@ -1,9 +1,11 @@
 import { Field, Form, Formik } from "formik";
 import React, { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
+import NumberFormat from "react-number-format";
 import { Link, useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
 import * as Yup from "yup";
+import Reference from "yup/lib/Reference";
 
 import api from "../../config/api.config";
 import { routePath } from "../../constants/route-paths";
@@ -16,8 +18,14 @@ const validationSchema = Yup.object().shape({
   targetPeriod: Yup.number().min(1).required("required"),
   item: Yup.string().required("required"),
   tokenizedID: Yup.string().required("required"),
-  targetAmountInView: Yup.number().min(1).required("required"),
-  amt: Yup.number().min(1).required("required"),
+  targetAmountInView: Yup.number().min(100).required("required"),
+  amt: Yup.number()
+    .lessThan(
+      Yup.ref("targetAmountInView") as Reference<number>,
+      "Amount must be less than the target amount"
+    )
+    .moreThan(0)
+    .required("required"),
   savingsFrequencyID: Yup.number().min(1).required("required"),
   prefTimeID: Yup.number().min(1).required("required"),
   savingsTypeID: Yup.number().required("required"),
@@ -92,7 +100,7 @@ export const NewTargetSavings = () => {
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
-        {({ isSubmitting, handleChange }) => (
+        {({ isSubmitting, handleChange, setFieldValue }) => (
           <Form>
             <div className="row">
               <div className="col-lg-12 mb-4">
@@ -170,9 +178,14 @@ export const NewTargetSavings = () => {
                   <div className="input-group">
                     <Field
                       name="targetAmountInView"
-                      type="number"
                       placeholder="Target amount"
                       className="form-control d-block w-100 bdbtm-0 bd-radius-0"
+                      onValueChange={({ value }: any) =>
+                        setFieldValue("targetAmountInView", value)
+                      }
+                      thousandSeparator={true}
+                      prefix={"₦"}
+                      component={NumberFormat}
                     />
                     <label htmlFor="targetAmountInView">
                       What is your total target amount?
@@ -184,9 +197,14 @@ export const NewTargetSavings = () => {
                   <div className="input-group">
                     <Field
                       name="amt"
-                      type="number"
                       placeholder="Amount"
                       className="form-control d-block w-100 bdbtm-0 bd-radius-0"
+                      onValueChange={({ value }: any) =>
+                        setFieldValue("amt", value)
+                      }
+                      thousandSeparator={true}
+                      prefix={"₦"}
+                      component={NumberFormat}
                     />
                     <label htmlFor="amt">
                       How much do you want to save frequently?

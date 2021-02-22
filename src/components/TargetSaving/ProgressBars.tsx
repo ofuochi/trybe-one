@@ -4,6 +4,7 @@ import { observer } from "mobx-react-lite";
 import numeral from "numeral";
 import { useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
+import NumberFormat from "react-number-format";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import * as Yup from "yup";
@@ -21,7 +22,6 @@ const ProgressBars = observer(() => {
   const [showBreakTargetDetails, setShowBreakTargetDetails] = useState(false);
   const [showUpdateTargetDetails, setShowUpdateTargetDetails] = useState(false);
   const [isSubmittingBreaking, setIsSubmittingBreaking] = useState(false);
-  const [isSubmittingForm, setIsSubmittingForm] = useState(false);
   const [showOpt, setShowOpt] = useState(false);
 
   const [
@@ -179,68 +179,72 @@ const ProgressBars = observer(() => {
           </div>
         </Modal.Body>
       </Modal>
-      <Modal
-        centered
-        show={showUpdateTargetDetails}
-        aria-labelledby="contained-modal-title-vcenter"
-        onHide={() => setShowUpdateTargetDetails(false)}
-        backdrop={isSubmittingForm ? "static" : true}
-        keyboard={isSubmittingForm}
-      >
-        <Modal.Header
-          className="bd-0"
-          closeButton={!isSubmittingForm}
-        ></Modal.Header>
-        <Modal.Body className="text-center">
-          <Formik
-            initialValues={initialValues}
-            validationSchema={Yup.object().shape({
-              newAmount: Yup.number()
-                .min(1)
-                .max(
-                  targetSaving?.targetAmountInView || 1,
-                  `New amount cannot be more than target of ₦${numeral(
-                    targetSaving?.targetAmountInView
-                  ).format("0,0")}`
-                )
-                .required("required"),
-            })}
-            onSubmit={async (
-              values: API.UpdateTargetSavingsRequest,
-              { setSubmitting }
-            ) => {
-              setIsSubmittingForm(true);
-              await targetStore.updateTarget(values);
 
-              setSubmitting(false);
-              setIsSubmittingForm(false);
-              setShowUpdateTargetDetails(false);
-            }}
-          >
-            {({ isSubmitting, handleChange }) => (
-              <Form>
+      <Formik
+        initialValues={initialValues}
+        validationSchema={Yup.object().shape({
+          newAmount: Yup.number()
+            .min(1)
+            .max(
+              targetSaving?.targetAmountInView || 1,
+              `New amount cannot be more than target of ₦${numeral(
+                targetSaving?.targetAmountInView
+              ).format("0,0")}`
+            )
+            .required("required"),
+        })}
+        onSubmit={async (
+          values: API.UpdateTargetSavingsRequest,
+          { setSubmitting }
+        ) => {
+          values.targetId = targetSaving.id;
+          await targetStore.updateTarget(values);
+          setSubmitting(false);
+          setShowUpdateTargetDetails(false);
+        }}
+      >
+        {({ isSubmitting, submitForm, setFieldValue }) => (
+          <Form>
+            <Modal
+              centered
+              show={showUpdateTargetDetails}
+              aria-labelledby="contained-modal-title-vcenter"
+              onHide={() => setShowUpdateTargetDetails(false)}
+              backdrop={isSubmitting ? "static" : true}
+              keyboard={isSubmitting}
+            >
+              <Modal.Header
+                className="bd-0"
+                closeButton={!isSubmitting}
+              ></Modal.Header>
+              <Modal.Body className="text-center">
                 <h4 className="mb-3">{targetSaving?.item} Target Saving</h4>
                 <p className="mb-3">
-                  Amount: {`₦${numeral(targetSaving?.amt).format("0,0")}`}
+                  Current Amount:{" "}
+                  {`₦${numeral(targetSaving?.amt).format("0,0")}`}
                 </p>
                 <p className="mb-3">
                   Interest accrued:{" "}
                   {`₦${numeral(targetSaving?.int_accrued).format("0,0.00")}`}
                 </p>
+                <p className="mb-4 text-success">
+                  Total Amount:{" "}
+                  {`₦${numeral(targetSaving?.targetAmountInView).format(
+                    "0,0.00"
+                  )}`}
+                </p>
                 <div className="form-group mb-0">
                   <div className="input-group">
                     <Field
                       name="newAmount"
-                      // displayType="input"
-                      // onValueChange={({ value }: any) => {
-                      //   setNewAmt(value);
-                      //   handleChange(value);
-                      // }}
                       placeholder="New Amount"
                       className="form-control d-block w-100 pl-5 bdbtm-0"
-                      // thousandSeparator={true}
-                      // prefix={"₦"}
-                      // component={NumberFormat}
+                      onValueChange={({ value }: any) =>
+                        setFieldValue("newAmount", value)
+                      }
+                      thousandSeparator={true}
+                      prefix={"₦"}
+                      component={NumberFormat}
                     />
                     <ErrorMsg inputName="newAmount" />
                     <label htmlFor="newAmount">New Amount</label>
@@ -251,18 +255,19 @@ const ProgressBars = observer(() => {
                     <Button
                       className="px-4"
                       variant="primary"
-                      type="submit"
+                      onClick={submitForm}
                       disabled={isSubmitting}
                     >
                       Okay
                     </Button>
                   </div>
                 </div>
-              </Form>
-            )}
-          </Formik>
-        </Modal.Body>
-      </Modal>
+              </Modal.Body>
+            </Modal>
+          </Form>
+        )}
+      </Formik>
+
       <Modal
         centered
         show={showBreakTargetDetails}
