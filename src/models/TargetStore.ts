@@ -86,23 +86,6 @@ export const TargetStore = types
       );
       data.targetSavings?.forEach((e) => self.targets.put(createTargetItem(e)));
     }),
-    removeTarget: flow(function* (id: string) {
-      const input: API.BreakBoxRequestModel = {
-        targetId: id,
-      };
-      const {
-        data,
-      }: { data: API.BaseResponse } = yield api.post<API.BaseResponse>(
-        "/User/BreakBox",
-        input
-      );
-
-      self.targets.delete(id);
-
-      if (data.responseCode === "00") {
-        toast.success(data.responseDescription, { position: "top-center" });
-      } else toast.error(data.responseDescription, { position: "top-center" });
-      return data;
-    }),
+    removeTarget: (id: string) => self.targets.delete(id),
   }));
 export interface TargetModel extends Instance<typeof TargetStore> {}

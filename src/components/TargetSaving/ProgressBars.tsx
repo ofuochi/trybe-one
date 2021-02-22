@@ -1,56 +1,40 @@
 import { Progress } from "@ant-design/charts";
+import { Field, Formik } from "formik";
 import { observer } from "mobx-react-lite";
+import numeral from "numeral";
 import React, { useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import numeral from "numeral";
+import { toast } from "react-toastify";
+import * as Yup from "yup";
+import api from "../../config/api.config";
+
 import { routePath } from "../../constants/route-paths";
 import { useStore } from "../../hooks/use-store.hooks";
-import { Formik, Field } from "formik";
-import { ErrorMsg } from "../Common/ErrorMsg";
-import * as Yup from "yup";
 import { localStoreService } from "../../services";
+import { ErrorMsg } from "../Common/ErrorMsg";
 
 const ProgressBars = observer(() => {
+  const { targetStore } = useStore();
+
   const [showTargetDetails, setShowTargetDetails] = useState(false);
   const [showBreakTargetDetails, setShowBreakTargetDetails] = useState(false);
   const [showUpdateTargetDetails, setShowUpdateTargetDetails] = useState(false);
   const [isSubmittingBreaking, setIsSubmittingBreaking] = useState(false);
   const [isSubmittingForm, setIsSubmittingForm] = useState(false);
-
-  const { targetStore } = useStore();
   const [showOpt, setShowOpt] = useState(false);
+
   const [
     targetSaving,
     setTargetSaving,
   ] = useState<API.GetTargetSavingsResponseDto>({});
+
   const initialValues: API.UpdateTargetSavingsRequest = {
     profileId: localStoreService.getCurrentUser()?.userId,
     newAmount: ("" as unknown) as number,
     targetId: targetSaving?.id,
   };
-  const handleSubmit = async (
-    values: API.UpdateTargetSavingsRequest,
-    { setSubmitting }: any
-  ) => {
-    setIsSubmittingForm(true);
-    await targetStore.updateTarget(values);
 
-    setSubmitting(false);
-    setIsSubmittingForm(false);
-    setShowUpdateTargetDetails(false);
-  };
-  const updateSchema = Yup.object().shape({
-    newAmount: Yup.number()
-      .min(1)
-      .max(
-        targetSaving?.targetAmountInView || 1,
-        `New amount cannot be more than target of ₦${numeral(
-          targetSaving?.targetAmountInView
-        ).format("0,0")}`
-      )
-      .required("required"),
-  });
   return (
     <>
       {targetStore.getAllTargets.length > 0 ? (
@@ -83,6 +67,16 @@ const ProgressBars = observer(() => {
                           strokeOpacity: 0.7,
                         }}
                         color={item.color}
+                        // onEvent={(chart, e) => {
+                        //   if (e.type === "element:click") {
+                        //     console.log(item.id);
+                        //   }
+                        // }}
+                        tooltip={{
+                          showTitle: true,
+                          follow: true,
+                          position: "bottom",
+                        }}
                       />
                     </span>
                   </div>
@@ -100,33 +94,29 @@ const ProgressBars = observer(() => {
                     </p>
                   </div>
                 </div>
-                {showOpt && targetSaving?.id === item.id ? (
-                  <div>
-                    <div className="row m-0 justify-content-between mt-2 mb-3 col-lg-10">
-                      <Button
-                        variant="light"
-                        className="px-4 border"
-                        onClick={() => setShowTargetDetails(true)}
-                      >
-                        See Details
-                      </Button>
-
-                      <Button
-                        variant="danger"
-                        className="px-4"
-                        onClick={() => setShowUpdateTargetDetails(true)}
-                      >
-                        Update
-                      </Button>
-
-                      <Button
-                        variant="light"
-                        className="px-4 border-primary"
-                        onClick={() => setShowBreakTargetDetails(true)}
-                      >
-                        Break Box
-                      </Button>
-                    </div>
+                {showOpt && targetSaving.id === item.id ? (
+                  <div className="row m-0 justify-content-between mt-2 mb-3 col-lg-10">
+                    <Button
+                      variant="light"
+                      className="px-4 border"
+                      onClick={() => setShowTargetDetails(true)}
+                    >
+                      See Details
+                    </Button>
+                    <Button
+                      variant="danger"
+                      className="px-4"
+                      onClick={() => setShowUpdateTargetDetails(true)}
+                    >
+                      Update
+                    </Button>
+                    <Button
+                      variant="light"
+                      className="px-4 border-primary"
+                      onClick={() => setShowBreakTargetDetails(true)}
+                    >
+                      Break Box
+                    </Button>
                   </div>
                 ) : null}
               </div>
@@ -211,8 +201,28 @@ const ProgressBars = observer(() => {
         <Modal.Body className="text-center">
           <Formik
             initialValues={initialValues}
-            validationSchema={updateSchema}
-            onSubmit={handleSubmit}
+            validationSchema={Yup.object().shape({
+              newAmount: Yup.number()
+                .min(1)
+                .max(
+                  targetSaving?.targetAmountInView || 1,
+                  `New amount cannot be more than target of ₦${numeral(
+                    targetSaving?.targetAmountInView
+                  ).format("0,0")}`
+                )
+                .required("required"),
+            })}
+            onSubmit={async (
+              values: API.UpdateTargetSavingsRequest,
+              { setSubmitting }
+            ) => {
+              setIsSubmittingForm(true);
+              await targetStore.updateTarget(values);
+
+              setSubmitting(false);
+              setIsSubmittingForm(false);
+              setShowUpdateTargetDetails(false);
+            }}
           >
             {({ isSubmitting, handleChange }) => (
               <Form>
@@ -282,8 +292,26 @@ const ProgressBars = observer(() => {
               disabled={isSubmittingBreaking}
               onClick={async () => {
                 setIsSubmittingBreaking(true);
+                try {
+                  const input: API.BreakBoxRequestModel = {
+                    targetId: targetSaving.id,
+                  };
+                  const { data } = await api.post<API.BaseResponse>(
+                    "/User/BreakBox",
+                    input
+                  );
+                  setTargetSaving({});
+                  targetStore.removeTarget(`${targetSaving.id}`);
+                  if (data.responseCode === "00") {
+                    toast.success(data.responseDescription, {
+                      position: "top-center",
+                    });
+                  } else
+                    toast.error(data.responseDescription, {
+                      position: "top-center",
+                    });
+                } catch (e) {}
 
-                await targetStore.removeTarget(`${targetSaving.id}`);
                 setIsSubmittingBreaking(false);
                 setShowBreakTargetDetails(false);
               }}
