@@ -1,6 +1,7 @@
 import { Field, Form, Formik } from "formik";
 import React, { useState } from "react";
 import { Button } from "react-bootstrap";
+import NumberFormat from "react-number-format";
 import { useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
 import * as Yup from "yup";
@@ -80,7 +81,7 @@ const TokenizeCard = () => {
         validationSchema={validationSchema}
         onSubmit={handleSubmit}
       >
-        {({ isSubmitting }) => (
+        {({ isSubmitting, setFieldValue }) => (
           <Form>
             {isSuccess ? (
               <div className="form-group row m-0 justify-content-center mt-4">
@@ -121,9 +122,14 @@ const TokenizeCard = () => {
                   <div className="input-group">
                     <Field
                       placeholder="Pan"
-                      type="number"
                       name="card.number"
                       className="form-control d-block w-100 bdbtm-0 bd-radius-0"
+                      onValueChange={({ value }: any) =>
+                        setFieldValue("card.number", value)
+                      }
+                      format="####  ####  ####  ####"
+                      mask="_"
+                      component={NumberFormat}
                     />
                     <label htmlFor="card.number">Pan</label>
                     <ErrorMsg inputName="card.number" />

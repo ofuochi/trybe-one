@@ -1,10 +1,12 @@
 import { Field, Form, Formik } from "formik";
 import React, { ChangeEvent, useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
+import NumberFormat from "react-number-format";
 import { toast } from "react-toastify";
 import * as Yup from "yup";
 
 import api from "../../../config/api.config";
+import { Naira } from "../../../constants/currencies";
 import { localStoreService } from "../../../services";
 import { ErrorMsg } from "../../Common/ErrorMsg";
 
@@ -122,12 +124,17 @@ export const TransferOther = () => {
                 </div>
                 <Field
                   name="amt"
-                  type="number"
                   placeholder="Amount"
                   className="form-control d-block w-100 pl-5 bdbtm-0"
+                  onValueChange={({ value }: any) =>
+                    setFieldValue("amt", value)
+                  }
+                  thousandSeparator={true}
+                  prefix={`${Naira}`}
+                  component={NumberFormat}
                 />
                 <ErrorMsg inputName="amt" />
-                <label>Amount</label>
+                <label htmlFor="amt">Amount</label>
               </div>
             </div>
             <div className="form-group mb-0">
