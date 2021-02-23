@@ -5425,6 +5425,15 @@ a.badge-dark:focus, a.badge-dark.focus {
   border-color: #fdfdfe;
 }
 
+.alert-lite {
+  color: #818182;
+  background: #F9F8FC;
+  border-color: #fdfdfe;
+}
+.bg-lite{
+  background: #F9F8FC;
+}
+
 .alert-light hr {
   border-top-color: #ececf6;
 }

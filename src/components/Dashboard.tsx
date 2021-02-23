@@ -1,8 +1,33 @@
 import React from "react";
+import { RingProgress } from "@ant-design/charts";
 import Slider from "react-slick";
 import { Title } from "./Common/Title";
 
 export const Dashboard = () => {
+  var configprogress = {
+    height: 50,
+    width: 50,
+    autoFit: false,
+    percent: 0.6,
+    color: ['#F4664A', '#E8EDF3'],
+    innerRadius: 0.85,
+    radius: 0.98,
+    statistic: {
+      title: {
+        style: {
+          color: '#3d5',
+          fontSize: '2px',
+          lineHeight: '14px',
+        },
+        formatter: function formatter() {
+          return '<img alt="" src="/assets/images/ic-car.svg" />';
+        },
+      },
+    },
+  };
+
+
+
   const settings = {
     dots: true,
     infinite: false,
@@ -45,7 +70,7 @@ export const Dashboard = () => {
       </div>
 <div className="page-content">
 <div className="row m-0">
-<div className="cardslides col-lg-12 dashboard-slide">
+<div className="cardslides col-lg-12 dashboard-slide p-0">
       <Slider {...settings}>
       <div>
             <div className="slide">
@@ -128,13 +153,57 @@ export const Dashboard = () => {
     </div>
   </div>
 </div>
-</div>
+
 
 <div className="row mt-5">
-  <div className="alert alert-light">
-    
-  </div>
+    <div className="col-lg-12 mb-3">
+   <div className="card shadow-sm mb-4 bd-0 bg-lite">
+    <div className="card-body">
+    <div className="row m-0">
+      <div className="progressdiv col-lg-1 p-0">
+      <RingProgress {...configprogress} />
+      </div>
+      <div className="col-lg-11">
+      <h5 className="d-inline">Free Uber Code</h5> <span className="small">N 3,000:00</span>
+      <div className="d-block">
+        <span className="text-muted small">20 sep, 4:30 pm</span>
+      </div>
+
+      <div className="d-block mt-3">
+        <p className="small">Hi Trybers, welcome to the month os september, here is a free uber coupon for you.
+Enjoy :)</p>
+      </div>
+      </div>
+    </div>
+    </div>
+  </div>     
+    </div>
+
+
+    <div className="col-lg-12 mb-3">
+   <div className="card shadow-sm mb-4 bd-0 bg-lite">
+    <div className="card-body">
+    <div className="row m-0">
+      <div className="progressdiv col-lg-1 p-0">
+      <RingProgress {...configprogress} />
+      </div>
+      <div className="col-lg-11">
+      <h5 className="d-inline">Free Uber Code</h5> <span className="small">N 3,000:00</span>
+      <div className="d-block">
+        <span className="text-muted small">20 sep, 4:30 pm</span>
+      </div>
+
+      </div>
+    </div>
+    </div>
+  </div>     
+    </div>
 </div>
-       </>
+  
+</div>
+
+
+
+     </>
   );
 };

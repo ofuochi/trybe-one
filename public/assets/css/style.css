@@ -24294,3 +24294,9 @@ input[type="radio"] label:checked {
 .line-h70{
   line-height: 70px;
 }
+.progressdiv .g2-html-annotation:nth-child(3){
+  display: none!important;
+}
+.progressdiv .g2-html-annotation:nth-child(2){
+  margin-top: 5px;
+}
