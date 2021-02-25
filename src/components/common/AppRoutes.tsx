@@ -13,6 +13,8 @@ import { Investments } from "../Investments";
 import { TargetSavings } from "../TargetSaving";
 import { Transactions } from "../Transactions";
 import { AuthRoute } from "./AuthRoute";
+import { Forgotpassword} from "../Auth/Forgotpassword"
+import { Resetpassword} from "../Auth/Resetpassword"
 import RequestCard from "./RequestCard";
 import TokenizeCard from "./TokenizeCard";
 
@@ -57,6 +59,8 @@ export const AppRoutes = () => {
 
       <AuthRoute path={routePath.login} component={Login} />
       <AuthRoute path={routePath.signup} component={Signup} />
+      <AuthRoute path={routePath.forgotpassword} component={Forgotpassword} />
+      <AuthRoute path={routePath.resetpassword} component={Resetpassword} />
       <AuthRoute path={routePath.home} exact component={Home} />
       <AuthRoute path={routePath.otp} exact component={Otp} />
       <Redirect to={routePath.dashboard} />

@@ -37,6 +37,7 @@ export const routePath = {
   login: "/login",
   signup: "/signup",
   otp: "/otp",
-  forgotPassword: "/forgot-password",
+  forgotpassword: "/forgotpassword",
+  resetpassword: "/resetpassword",
   home: "/",
 };

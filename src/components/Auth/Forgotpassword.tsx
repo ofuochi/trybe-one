@@ -8,14 +8,14 @@ import { useStore } from "../../hooks/use-store.hooks";
 import { ErrorMsg } from "../Common/ErrorMsg";
 import { Title } from "../Common/Title";
 
+
 const LoginSchema = Yup.object().shape({
   nuban: Yup.string()
     .matches(/^\d+$/, "NUBAN must be digits only")
     .required("required"),
   password: Yup.string().required(),
 });
-
-export const Login = () => {
+export const Forgotpassword = () => {
   const { currentUserStore } = useStore();
   const history = useHistory();
   return (
@@ -57,7 +57,7 @@ export const Login = () => {
           <div className="card bd-0">
             <div className="card-body card-repadd">
               <Formik
-                validationSchema={LoginSchema}
+                     validationSchema={LoginSchema}
                 initialValues={{ nuban: "", password: "" }}
                 onSubmit={(values, { setSubmitting }) => {
                   currentUserStore
@@ -75,54 +75,28 @@ export const Login = () => {
                       <img alt="logo" src="/assets/images/logo.png" />
                     </Link>
                     <h2 className="mb-3 text-primary login-titile text-center mt-5">
-                      Welcome to trybeOne
+                     Password Reset
                     </h2>
                     <p className="desc-login mb-4 text-center">
-                      Please enter your details below to login
+                      Enter your email address and a reset link will be sent to you
                     </p>
-                    <div className="form-group">
+                    <div className="form-group mb-5">
                       <div className="input-group">
                         <Field
                           id="inputEmail"
                           name="nuban"
                           className="form-control d-block w-100"
-                          placeholder="Account Number"
+                          placeholder="Email Address"
                           autoFocus
                         />
-                        <label>Account Number</label>
+                        <label>Email Address</label>
                         <ErrorMsg inputName="nuban" />
                       </div>
                     </div>
-                    <div className="form-group">
-                      <div className="input-group">
-                        <Field
-                          type="password"
-                          id="inputPassword"
-                          name="password"
-                          className="form-control d-block w-100"
-                          placeholder="Password"
-                        />
-                        <ErrorMsg inputName="password" />
-                        <label>Password</label>
-                      </div>
-                    </div>
-
-                    <div className="form-group text-left">
-                      <Link
-                        to={routePath.forgotpassword}
-                        className="text-primary"
-                      >
-                        Forgot Password?
+                   
+                    <Link to={routePath.resetpassword} className="btn btn-lg btn-primary btn-block">
+                         Reset Password
                       </Link>
-                    </div>
-
-                    <button
-                      className="btn btn-lg btn-primary btn-block"
-                      type="submit"
-                      disabled={isSubmitting}
-                    >
-                      Log in
-                    </button>
                     <p className="mt-5 mb-3 lead">
                       New to the Trybe?
                       <Link to={routePath.signup} className="text-primary">
