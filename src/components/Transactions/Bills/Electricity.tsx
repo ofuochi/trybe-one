@@ -21,6 +21,8 @@ export const Electricity = () => {
   const [userDetails, setUserDetails] = useState<
     API.UserResponseModel | undefined
   >();
+  const [billerCategories, setBillerCategories] = useState<API.MyArray[]>([]);
+
   useEffect(() => {
     const currentUser = localStoreService.getCurrentUser();
     api
@@ -29,6 +31,20 @@ export const Electricity = () => {
         { cache: { clearOnStale: true } }
       )
       .then(({ data }) => setUserDetails(data));
+    api
+      .get<API.InterswitchGetBillerCategoryResponseDto>(
+        "/User/GetBillerCategories",
+        { cache: { clearOnStale: true } }
+      )
+      .then(({ data }) => setBillerCategories(data.responseArray || []));
+    api.get<API.GetBillerByCategoryResponse>(
+      `/User/GetBillerByCategory?categoryId=${1}`,
+      { cache: { clearOnStale: true } }
+    );
+    api.get<API.GetPaymentItemResponseDto>(
+      `/User/GetPaymentItem?billerId=${905}`,
+      { cache: { clearOnStale: true } }
+    );
   }, []);
   const sessionID = localStoreService.getAuthToken() || undefined;
   const initialValues: API.CreditSwitchVendAirtimeRequestDto = {
@@ -50,7 +66,7 @@ export const Electricity = () => {
         onSubmit={(values, { setSubmitting, resetForm }) => {
           api
             .post<API.CreditSwitchVendAirtimeResponseDto>(
-              "/User/CreditSwitchVendAirtime",
+              "/User/PayBiller",
               values
             )
             .then(({ data }) => {
@@ -88,7 +104,6 @@ export const Electricity = () => {
             </div>
             <div className="form-group mb-0">
               <div className="input-group">
-            
                 <Field
                   as="select"
                   id="walletNumber"
@@ -96,7 +111,7 @@ export const Electricity = () => {
                   name="walletNumber"
                 >
                   <option value="" disabled>
-                  Select Disco
+                    Select Disco
                   </option>
                   {userDetails?.accountDetails?.map((acct) => (
                     <option key={acct.accountNumber} value={acct.accountNumber}>
@@ -111,7 +126,6 @@ export const Electricity = () => {
 
             <div className="form-group mb-0">
               <div className="input-group">
-       
                 <Field
                   id="mobileNo"
                   placeholder="Enter Amount"
@@ -125,7 +139,6 @@ export const Electricity = () => {
 
             <div className="form-group mb-0">
               <div className="input-group">
-            
                 <Field
                   as="select"
                   id="walletNumber"
@@ -133,7 +146,7 @@ export const Electricity = () => {
                   name="walletNumber"
                 >
                   <option value="" disabled>
-                  Select Account to be debited
+                    Select Account to be debited
                   </option>
                   {userDetails?.accountDetails?.map((acct) => (
                     <option key={acct.accountNumber} value={acct.accountNumber}>
@@ -141,7 +154,9 @@ export const Electricity = () => {
                     </option>
                   ))}
                 </Field>
-                <label htmlFor="walletNumber">Select Account to be debited</label>
+                <label htmlFor="walletNumber">
+                  Select Account to be debited
+                </label>
                 <ErrorMsg inputName="walletNumber" />
               </div>
             </div>
@@ -168,4 +183,3 @@ export const Electricity = () => {
     </div>
   );
 };
-

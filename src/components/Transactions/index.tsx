@@ -6,7 +6,7 @@ import { Title } from "../Common/Title";
 import { Airtime } from "./Airtime";
 import { Bills } from "./Bills";
 import RecentTransactions from "./Recent";
-import { Statment } from "./Statment";
+import { Statement } from "./Statment";
 import { Transfer } from "./Transfers";
 
 export const Transactions = () => {
@@ -134,7 +134,7 @@ export const Transactions = () => {
         <Route path={routePath.transactions.bills.index} component={Bills} />
         <Route
           path={routePath.transactions.statement.index}
-          component={Statment}
+          component={Statement}
         />
       </Switch>
     </div>
