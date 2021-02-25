@@ -1,11 +1,12 @@
-import { observer } from "mobx-react-lite";
-import moment from "moment";
-
 import { useStore } from "../../hooks/use-store.hooks";
 
-export const PageHeader = observer(() => {
+export const PageHeader = () => {
   const { currentUserStore } = useStore();
-
+  const currentDate = new Date().toLocaleString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
   return (
     <header className="mdc-top-app-bar p-0">
       <div className="mdc-top-app-bar__row">
@@ -19,7 +20,7 @@ export const PageHeader = observer(() => {
             </h1>
             <p className="text-muted lead">
               Welcome back {currentUserStore.firstName} |{" "}
-              <span>{moment(new Date()).format("D MMM YYYY")}</span> |{" "}
+              <span>{currentDate}</span> |{" "}
               <span>
                 Partially Cloudy
                 <i
@@ -39,4 +40,4 @@ export const PageHeader = observer(() => {
       </div>
     </header>
   );
-});
+};

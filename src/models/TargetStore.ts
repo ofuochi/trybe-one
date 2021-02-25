@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import api from "../config/api.config";
 import { percentageCompletion } from "../util/methods-util";
 
-const TargetItemStore = types
+const Target = types
   .model({
     targetAmountInView: types.number,
     amt: types.number,
@@ -24,10 +24,8 @@ const TargetItemStore = types
     },
   }));
 
-export interface TargetItemModel extends Instance<typeof TargetItemStore> {}
-
 const createTargetItem = (t: API.GetTargetSavingsResponseDto) => {
-  return TargetItemStore.create({
+  return Target.create({
     targetAmountInView: t.targetAmountInView as number,
     amt: t.amt as number,
     id: `${t.id}`,
@@ -46,7 +44,7 @@ const createTargetItem = (t: API.GetTargetSavingsResponseDto) => {
 
 export const TargetStore = types
   .model({
-    targets: types.map(TargetItemStore),
+    targets: types.map(Target),
   })
   .views((self) => ({
     get getAllTargets() {
@@ -88,4 +86,6 @@ export const TargetStore = types
     }),
     removeTarget: (id: string) => self.targets.delete(id),
   }));
+
+export interface TargetItemModel extends Instance<typeof Target> {}
 export interface TargetModel extends Instance<typeof TargetStore> {}

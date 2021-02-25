@@ -5,6 +5,7 @@ import * as Yup from "yup";
 
 import { routePath } from "../../constants/route-paths";
 import { useStore } from "../../hooks/use-store.hooks";
+import { localStoreService } from "../../services";
 import { ErrorMsg } from "../Common/ErrorMsg";
 import { Title } from "../Common/Title";
 
@@ -16,7 +17,7 @@ const LoginSchema = Yup.object().shape({
 });
 
 export const Login = () => {
-  const { currentUserStore } = useStore();
+  const { currentUserStore, targetStore, cardStore } = useStore();
   const history = useHistory();
   return (
     <div className="container-fluid vh-100">
@@ -64,6 +65,13 @@ export const Login = () => {
                     .login(values.nuban, values.password)
                     .then(() => {
                       setSubmitting(false);
+                      const currentUser = localStoreService.getCurrentUser();
+
+                      if (currentUser) {
+                        currentUserStore.updatedCurrentUser(currentUser.email);
+                        targetStore.setTargets(currentUser.userId);
+                        cardStore.fetchCards(currentUser.nuban);
+                      }
                       history.replace(routePath.dashboard);
                     })
                     .catch(() => setSubmitting(false));
@@ -109,7 +117,7 @@ export const Login = () => {
 
                     <div className="form-group text-left">
                       <Link
-                        to={routePath.forgotpassword}
+                        to={routePath.forgotPassword}
                         className="text-primary"
                       >
                         Forgot Password?
