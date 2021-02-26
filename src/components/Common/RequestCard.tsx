@@ -3,6 +3,7 @@ import React from "react";
 import { Button } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 import * as Yup from "yup";
+import { routePath } from "../../constants/route-paths";
 
 import { useStore } from "../../hooks/use-store.hooks";
 import { localStoreService } from "../../services";
@@ -43,7 +44,7 @@ const RequestCard = () => {
       .requestCard(values)
       .then((isSuccess) => {
         setSubmitting(false);
-        if (isSuccess) history.goBack();
+        if (isSuccess) history.replace(routePath.dashboard);
       })
       .catch(() => setSubmitting(false));
   };
