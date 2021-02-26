@@ -4,7 +4,6 @@ import { Button } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 import * as Yup from "yup";
 
-import { routePath } from "../../constants/route-paths";
 import { useStore } from "../../hooks/use-store.hooks";
 import { localStoreService } from "../../services";
 import { ErrorMsg } from "./ErrorMsg";
@@ -44,8 +43,7 @@ const RequestCard = () => {
       .requestCard(values)
       .then((isSuccess) => {
         setSubmitting(false);
-
-        if (isSuccess) history.replace(routePath.dashboard);
+        if (isSuccess) history.goBack();
       })
       .catch(() => setSubmitting(false));
   };
