@@ -22,7 +22,7 @@ export const AppRoutes = () => {
   const currentUser = localStoreService.getCurrentUser();
   if (currentUser) {
     currentUserStore.updatedCurrentUser(currentUser.email);
-    targetStore.setTargets(`${currentUser.userId}`);
+    targetStore.fetchTargets(`${currentUser.userId}`);
     cardStore.fetchCards(`${currentUser.nuban}`);
   }
 

@@ -53,11 +53,18 @@ export const TargetStore = types
     },
   }))
   .actions((self) => ({
-    addTarget: (t: API.GetTargetSavingsResponseDto) => {
-      const target = createTargetItem(t);
-      self.targets.put(target);
-    },
-
+    createTarget: flow(function* (input: API.AddTargetSavingsRequestDto) {
+      const {
+        data,
+      }: { data: API.BaseResponse } = yield api.post<API.BaseResponse>(
+        "/User/SubmitTargetSavings",
+        input
+      );
+      if (data.responseCode === "00") {
+        toast.success(data.responseDescription, { position: "top-center" });
+      } else toast.error(data.responseDescription, { position: "top-center" });
+      return data.responseCode === "00";
+    }),
     updateTarget: flow(function* (input: API.UpdateTargetSavingsRequest) {
       const {
         data,
@@ -73,7 +80,7 @@ export const TargetStore = types
       } else toast.error(data.responseDescription, { position: "top-center" });
       return data;
     }),
-    setTargets: flow(function* (userId: string) {
+    fetchTargets: flow(function* (userId: string) {
       self.targets.clear();
       const {
         data,
@@ -82,7 +89,9 @@ export const TargetStore = types
       } = yield api.get<API.GetTargetSavingsResponseListDto>(
         `/User/GetTargetSavingsByProfileId?profileID=${userId}`
       );
-      data.targetSavings?.forEach((e) => self.targets.put(createTargetItem(e)));
+      data.targetSavings?.forEach((e) => {
+        if (e.statusflag !== 2) self.targets.put(createTargetItem(e));
+      });
     }),
     removeTarget: (id: string) => self.targets.delete(id),
   }));

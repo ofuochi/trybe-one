@@ -69,7 +69,7 @@ export const Login = () => {
 
                       if (currentUser) {
                         currentUserStore.updatedCurrentUser(currentUser.email);
-                        targetStore.setTargets(currentUser.userId);
+                        targetStore.fetchTargets(currentUser.userId);
                         cardStore.fetchCards(currentUser.nuban);
                       }
                       history.replace(routePath.dashboard);
