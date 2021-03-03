@@ -19363,7 +19363,7 @@ address p {
   font-size: 0.68rem;
 }
 .text-smaller {
-  font-size: 0.65rem;
+  font-size: 0.6rem;
 }
 .icon-lg {
   font-size: 2.5rem;
@@ -24299,4 +24299,11 @@ input[type="radio"] label:checked {
 }
 .progressdiv .g2-html-annotation:nth-child(2){
   margin-top: 5px;
+}
+.w-14p{
+  padding-right: 15px;
+  padding-left: 15px;
+  position: relative;
+  width: 100%;
+
 }

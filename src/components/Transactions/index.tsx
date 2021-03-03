@@ -20,7 +20,7 @@ export const Transactions = () => {
       <Title title="Transactions" />
       <div className="mdc-card info-card info-card--danger overflow-x-auto re-shadow">
         <div className="card-inner row mb-0 d-flex">
-          <div className="text-center">
+          <div className="text-center w-14p">
             <Link to={routePath.transactions.transfer.index}>
               <div className="img-w-42">
                 <img
@@ -32,12 +32,12 @@ export const Transactions = () => {
                   )}
                 />
               </div>
-              <p className="d-block text-smaller text-dark mb-0 mt-0">
+              <p className="d-block text-smaller text-dark mb-0 mt-2">
                 Transfer
               </p>
             </Link>
           </div>
-          <div className="text-center ml-5-re">
+          <div className="text-center w-14p ">
             <Link to={routePath.transactions.bills.index}>
               <div className="img-w-42">
                 <img
@@ -49,12 +49,12 @@ export const Transactions = () => {
                   )}
                 />
               </div>
-              <p className="d-block text-smaller text-dark mb-0 mt-0">
+              <p className="d-block text-smaller text-dark mb-0 mt-2">
                 Pay Bills
               </p>
             </Link>
           </div>
-          <div className="text-center ml-5-re">
+          <div className="text-center w-14p ">
             <Link to={routePath.transactions.airtime.index}>
               <div className="img-w-42">
                 <img
@@ -66,30 +66,30 @@ export const Transactions = () => {
                   )}
                 />
               </div>
-              <p className="d-block text-smaller text-dark mb-0 mt-0">
+              <p className="d-block text-smaller text-dark mb-0 mt-2">
                 Airtime &amp; Data
               </p>
             </Link>
           </div>
-          <div className="text-center ml-5-re">
+          <div className="text-center w-14p ">
             <Link to="#">
               <div className="img-w-42">
                 <img alt="" src="/assets/images/icn-subscription.svg" />
               </div>
-              <p className="d-block text-smaller text-dark mb-0 mt-0">
+              <p className="d-block text-smaller text-dark mb-0 mt-2">
                 Subscription
               </p>
             </Link>
           </div>
-          <div className="text-center ml-5-re">
+          <div className="text-center w-14p ">
             <Link to="#">
               <div className="img-w-42">
                 <img alt="" src="/assets/images/icn-bamboo.svg" />
               </div>
-              <p className="d-block text-smaller text-dark mb-0 mt-0">Bamboo</p>
+              <p className="d-block text-smaller text-dark mb-0 mt-2">Bamboo</p>
             </Link>
           </div>
-          <div className="text-center ml-5-re">
+          <div className="text-center w-14p ">
             <Link to={routePath.transactions.statement.index}>
               <div className="img-w-42">
                 <img
@@ -101,17 +101,17 @@ export const Transactions = () => {
                   )}
                 />
               </div>
-              <p className="d-block text-smaller text-dark mb-0 mt-0">
+              <p className="d-block text-smaller text-dark mb-0 mt-2">
                 Statement
               </p>
             </Link>
           </div>
-          <div className="text-center ml-5-re">
+          <div className="text-center w-14p ">
             <Link to="#">
               <div className="img-w-42">
                 <img alt="" src="/assets/images/icn-more.svg" />
               </div>
-              <p className="d-block text-smaller text-dark mb-0 mt-0">More</p>
+              <p className="d-block text-smaller text-dark mb-0 mt-2">More</p>
             </Link>
           </div>
         </div>

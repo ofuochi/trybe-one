@@ -1301,6 +1301,12 @@ pre code {
     width: auto;
     max-width: 100%;
   }
+
+.w-14p{
+  -ms-flex: 0 0 8.333333%;
+  flex: 0 0 14%;
+  max-width: 14%;
+}
   .col-lg-1 {
     -ms-flex: 0 0 8.333333%;
     flex: 0 0 8.333333%;

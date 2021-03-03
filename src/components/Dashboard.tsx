@@ -30,6 +30,7 @@ const progressConfig = {
 
 const sliderConfig = {
   dots: true,
+  arrows:true,
   infinite: false,
   speed: 500,
   slidesToShow: 2,
@@ -85,7 +86,7 @@ export const Dashboard = () => {
       </div>
       <div className="page-content">
         <div className="row m-0">
-          <div className="cardslides col-lg-12 dashboard-slide p-0">
+          <div className="cardslide col-lg-12 dashboard-slide p-0">
             <Slider {...sliderConfig}>
               <div>
                 <div className="slide">

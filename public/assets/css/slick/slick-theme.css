@@ -69,9 +69,8 @@
     font-family: 'slick';
     font-size: 20px;
     line-height: 1;
-
     opacity: .75;
-    color: white;
+    color: #333;
 
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -79,11 +78,11 @@
 
 .slick-prev
 {
-    left: -25px;
+    left: -15px;
 }
 [dir='rtl'] .slick-prev
 {
-    right: -25px;
+    right: -20px;
     left: auto;
 }
 .slick-prev:before
@@ -97,12 +96,12 @@
 
 .slick-next
 {
-    right: -25px;
+    right: -15px;
 }
 [dir='rtl'] .slick-next
 {
     right: auto;
-    left: -25px;
+    left: -20px;
 }
 .slick-next:before
 {
@@ -201,4 +200,14 @@
 {
     opacity: .75;
     color: black;
+}
+.cardslides .slick-prev {
+display:none!important;
+}
+.cardslides .slick-next {
+display:none!important;
+}
+
+.cardslide .slick-disabled {
+display:none!important;
 }
