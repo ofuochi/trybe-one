@@ -19,6 +19,7 @@ const validationSchema = Yup.object().shape({
 });
 export const ForgotPassword = () => {
   const [isEmailSent, setIsEmailSent] = useState(false);
+  const [userEmail, setUserEmail] = useState("");
   const history = useHistory();
   return (
     <div className="container-fluid vh-100">
@@ -65,6 +66,8 @@ export const ForgotPassword = () => {
                   onSubmit={(values, { setSubmitting }) => {
                     const input: API.RequestPasswordRequest = {
                       password: values.password,
+                      email: userEmail,
+                      otpDetails: { otp: values.otp },
                     };
                     api
                       .post<API.UserResponseModel>(`/User/ResetPassword`, input)
@@ -113,7 +116,6 @@ export const ForgotPassword = () => {
                             type="password"
                             className="form-control d-block w-100"
                             placeholder="Confirm Password"
-                            autoFocus
                           />
                           <label htmlFor="confirmPassword">
                             Confirm Password
@@ -126,7 +128,6 @@ export const ForgotPassword = () => {
                             type="password"
                             className="form-control d-block w-100"
                             placeholder="OTP"
-                            autoFocus
                           />
                           <label htmlFor="otp">OTP</label>
                           <ErrorMsg inputName="otp" />
@@ -165,6 +166,7 @@ export const ForgotPassword = () => {
                         position: "top-center",
                       });
                     else {
+                      setUserEmail(values.email);
                       const input: API.OTPRequestDto = {
                         email: values.email,
                         mobile: data.phoneNumber,

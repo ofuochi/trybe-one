@@ -1,4 +1,14 @@
 declare namespace API {
+    export interface ActivateNewCard {
+        status?: string;
+        responseCode?: string;
+        responseMessage?: string;
+    }
+    export interface ActivateNewCardRequestDto {
+        pan?: string;
+        expiryDate?: string;
+        pin?: string;
+    }
     export interface AdSignInRequest {
         username?: string;
         password?: string;
@@ -20,6 +30,7 @@ declare namespace API {
         maturitydate?: string; // date-time
         txndate?: string; // date-time
         nextRenewalDate?: string; // date-time
+        lockedBy?: string;
     }
     export interface AddUserWithEmailRequestDto {
         bvn?: string;
@@ -204,6 +215,39 @@ declare namespace API {
         paymentCode?: string;
         vat?: string;
     }
+    export interface BlockCardResData {
+        card_number?: string;
+        blocked_at?: string; // date-time
+    }
+    export interface BlockCardResponseDto {
+        status?: string;
+        responseCode?: string;
+        responseMessage?: string;
+        data?: BlockCardResData;
+    }
+    export interface BlogDto {
+        id?: string; // uuid
+        title?: string;
+        author?: string;
+        article?: string;
+        addedDate?: string; // date-time
+        modifiedDate?: string; // date-time
+        responseCode?: string;
+        responseDescription?: string;
+    }
+    export interface BlogObjDto {
+        id?: string; // uuid
+        title?: string;
+        author?: string;
+        article?: string;
+        addedDate?: string; // date-time
+        modifiedDate?: string; // date-time
+    }
+    export interface BlogsDto {
+        blogs?: BlogObjDto[];
+        responseCode?: string;
+        responseDescription?: string;
+    }
     export interface BreakBoxRequestModel {
         targetId?: string; // uuid
     }
@@ -281,6 +325,7 @@ declare namespace API {
         message?: string;
         action?: string;
         paystackReference?: string;
+        maskedPan?: string;
         data?: PaystackResponseData;
         responseCode?: string;
         responseDescription?: string;
@@ -291,6 +336,46 @@ declare namespace API {
     }
     export interface CheckPINResponseDto {
         isFound?: boolean;
+        responseCode?: string;
+        responseDescription?: string;
+    }
+    export interface CommentDto {
+        id?: string; // uuid
+        commenter?: string;
+        blogId?: string; // uuid
+        message?: string;
+        isDeleted?: boolean;
+        isApproved?: boolean;
+        addedDate?: string; // date-time
+        modifiedDate?: string; // date-time
+        responseCode?: string;
+        responseDescription?: string;
+    }
+    export interface CommentObjDto {
+        id?: string; // uuid
+        commenter?: string;
+        blogId?: string; // uuid
+        message?: string;
+        isDeleted?: boolean;
+        isApproved?: boolean;
+        addedDate?: string; // date-time
+        modifiedDate?: string; // date-time
+    }
+    export interface CommentsDto {
+        comments?: CommentObjDto[];
+        responseCode?: string;
+        responseDescription?: string;
+    }
+    export interface CreateBlogRequestDto {
+        title?: string;
+        author?: string;
+        article?: string;
+    }
+    export interface CreateCommentRequestDto {
+        commenter?: string;
+        blogId?: string; // uuid
+        message?: string;
+        isApproved?: boolean;
         responseCode?: string;
         responseDescription?: string;
     }
@@ -337,6 +422,7 @@ declare namespace API {
         walletNumber?: string;
         remark?: string;
         pin?: string;
+        spendingCategoryId?: string; // uuid
     }
     export interface CreditSwitchVendAirtimeResponseDto {
         statusCode?: string;
@@ -360,6 +446,7 @@ declare namespace API {
         walletNumber?: string;
         remark?: string;
         pin?: string;
+        spendingCategoryId?: string; // uuid
     }
     export interface Customer {
         id?: number; // int32
@@ -505,6 +592,22 @@ declare namespace API {
         responseCode?: string;
         responseDescription?: string;
     }
+    export interface GetUserSpendingByCategoryIDRequest {
+        spendIngCategoryID?: string; // uuid
+        userId?: string; // uuid
+        startDate?: string; // date-time
+        endDate?: string; // date-time
+    }
+    export interface GetUserSpendingRequest {
+        userId?: string; // uuid
+        startDate?: string; // date-time
+        endDate?: string; // date-time
+    }
+    export interface GetUserSpendingResponse {
+        spendings?: UserSpending[];
+        responseCode?: string;
+        responseDescription?: string;
+    }
     export interface InstitutionDto {
         id?: number; // int32
         countryId?: number; // int32
@@ -521,6 +624,12 @@ declare namespace API {
         responseArray?: MyArray[];
         responseCode?: string;
         responseDescription?: string;
+    }
+    export interface ManageCardRequestDto {
+        pan?: string;
+        expiryDate?: string;
+        customerUniqueIdentifier?: string;
+        wallet_ShortCode?: string;
     }
     export interface MandateImagesModel {
         images?: string[];
@@ -615,6 +724,7 @@ declare namespace API {
         appId?: number; // int32
         remark?: string;
         pin?: string;
+        spendingCategoryId?: string; // uuid
     }
     export interface PayBillerSubResponse {
         message?: string;
@@ -678,6 +788,7 @@ declare namespace API {
         email?: string;
         password?: string;
         oldPassword?: string;
+        otpDetails?: SubmitOtpRequestDto;
     }
     export interface SavingsFrequencyDTO {
         id?: number; // int32
@@ -741,10 +852,22 @@ declare namespace API {
         balanceAC?: number; // double
         balance?: number; // double
     }
+    export interface UnblockCardData {
+        card_number?: string;
+        unblocked_at?: string; // date-time
+    }
+    export interface UnblockCardResponseDto {
+        status?: string;
+        responseCode?: string;
+        responseMessage?: string;
+        data?: UnblockCardData;
+    }
     export interface UpdateTargetSavingsRequest {
         newAmount?: number; // double
         targetId?: string; // uuid
         profileId?: string; // uuid
+        lockID?: string;
+        lockedBy?: string;
     }
     export interface UploadImageToAzureResponse {
         url?: string;
@@ -760,6 +883,25 @@ declare namespace API {
         emailAddress?: string;
         videoURL?: string;
         sessionKey?: string;
+    }
+    export interface UserComplaintsDTO {
+        topic?: string;
+        details?: string;
+        userID?: string; // uuid
+        id?: string; // uuid
+        addedDate?: string; // date-time
+        comments?: string;
+        status?: boolean;
+    }
+    export interface UserComplaintsDTORequest {
+        topic?: string;
+        details?: string;
+        userID?: string; // uuid
+    }
+    export interface UserComplaintsListDTO {
+        complaints?: UserComplaintsDTO[];
+        responseCode?: string;
+        responseDescription?: string;
     }
     export interface UserNubanDto {
         accountNumber?: string;
@@ -861,6 +1003,25 @@ declare namespace API {
         responseCode?: string;
         responseDescription?: string;
     }
+    export interface UserSpending {
+        categoryId?: string; // uuid
+        categoryName?: string;
+        totalAmount?: number; // double
+    }
+    export interface UserTransactionCategoryDto {
+        categoryName?: string;
+        categoryIcon?: string;
+        categoryDescription?: string;
+        isActive?: boolean;
+        id?: string; // uuid
+        addedDate?: string; // date-time
+        modifiedDate?: string; // date-time
+    }
+    export interface UserTransactionCategoryDtoList {
+        categories?: UserTransactionCategoryDto[];
+        responseCode?: string;
+        responseDescription?: string;
+    }
     export interface UserTransactionRequestDto {
         number?: string;
         startDate?: string; // date-time
@@ -921,6 +1082,7 @@ declare namespace API {
         currencycode?: string;
         transferType?: number; // int32
         pin?: string;
+        spendingCategoryId?: string; // uuid
         nipData?: NIPInterBankInsertDto;
     }
     export interface WalletToSterlingFTRef {
@@ -938,6 +1100,7 @@ declare namespace API {
         currencycode?: string;
         transferType?: number; // int32
         pin?: string;
+        spendingCategoryId?: string; // uuid
     }
     export interface WalletToWalletFTRes {
         message?: string;

@@ -149,7 +149,7 @@ const ProgressBars = observer(() => {
           <div className="col-lg-4 text-right">
             <Link
               className="px-4 btn btn-danger"
-              to={routePath.targetSavings.tokenizeCard}
+              to={routePath.targetSavings.createTargetSaving}
             >
               New Target
             </Link>

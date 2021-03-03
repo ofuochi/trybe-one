@@ -306,7 +306,7 @@ export const NewTargetSavings = () => {
                         className="mr-3"
                         src="/assets/images/ic-send.svg"
                       />
-                      Create Target
+                      Create
                     </Button>
                   </div>
                 </div>
