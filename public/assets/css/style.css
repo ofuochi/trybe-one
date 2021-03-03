@@ -19021,6 +19021,9 @@ a.mdc-list-item {
 .bg-light {
   background: #f0f1f1 !important;
 }
+.bg-danger-alt {
+  background: rgba(242, 97, 94, 0.2);
+}
 
 .text-light {
   color: #f0f1f1 !important;
@@ -23200,6 +23203,15 @@ background:none!important;
 .bdbtm-0{
   border-bottom: none!important;
 }
+.bdtop-0{
+  border-top: none!important;
+}
+.bdright-0{
+  border-right: none!important;
+}
+.bdleft-0{
+  border-left: none!important;
+}
 .collection .collection-item{
   border:none
 }
@@ -23362,6 +23374,73 @@ background: rgba(255, 114, 53, 0.8);
 	background: #FF5364;
   color: #FF5364;
 }
+
+/*Tracking Card*/
+#trackingbar {
+	margin-bottom: 50px;
+	overflow: hidden;
+	/*CSS counters to number the steps*/
+  counter-reset: step;
+  width: 100%;
+  padding:0;
+}
+#trackingbar li {
+	list-style-type: none;
+	font-size: 11px;
+	width: 33.33%;
+	float: left;
+	position: relative;
+}
+#trackingbar li:before {
+	content: counter(step);
+	counter-increment: step;
+	width: 50px;
+	line-height: 50px;
+	display: block;
+	font-size: 10px;
+  color: #808080;
+  background: #808080;
+  border-radius: 20px;
+  margin: auto;
+}
+/*progressbar connectors*/
+#trackingbar li:after {
+	content: '';
+	width: 100%;
+	height: 2px;
+  background: #808080;
+	position: absolute;
+	left: -90%;
+	top: 9px;
+
+}
+#trackingbar li.active:after {
+	content: '';
+	width: 100%;
+	height: 2px;
+  background: #808080;
+	position: absolute;
+	left: -90%;
+	top: 9px;
+
+}
+#trackingbar li:first-child:after {
+	/*connector not needed before the first step*/
+	content: none; 
+}
+#trackingbar li:last-child:before {
+	/*connector not needed before the first step*/
+  margin: auto;
+}
+/*marking active/completed steps green*/
+/*The number of the step and the connector before it = green*/
+#trackingbar li.active:before,  #trackingbar li.active:after{
+	background: #FF5364;
+  color: #FF5364;
+}
+
+
+
 
 .custom-file-input-pass::-webkit-file-upload-button {
   visibility: hidden;
@@ -23731,6 +23810,15 @@ cursor: pointer;
 .w-20{
   width:20px;
  }
+ .w-18{
+  width: 18px!important;
+ }
+ .w-16{
+  width: 16px!important;
+ }
+.bd-rad-5{
+  border-radius: 5px;
+}
 .w-10{
   width:10px;
  } 
@@ -24283,7 +24371,14 @@ input[type="radio"] label:checked {
 }
 .masked-span{
   position: absolute;
-    bottom: 30px;
+    bottom: 40px;
+    color: #fff;
+    margin-left: 15px;
+    margin-right: 15px;
+}
+.masked-cardbtm{
+  position: absolute;
+    bottom: 70px;
     color: #fff;
     margin-left: 15px;
     margin-right: 15px;

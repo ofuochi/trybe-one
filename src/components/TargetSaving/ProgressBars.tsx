@@ -248,7 +248,7 @@ const ProgressBars = observer(() => {
                     <Field
                       name="newAmount"
                       placeholder="New Amount"
-                      className="form-control d-block w-100 pl-5 bdbtm-0"
+                      className="form-control d-block w-100 pl-5"
                       onValueChange={({ value }: any) =>
                         setFieldValue("newAmount", value)
                       }
