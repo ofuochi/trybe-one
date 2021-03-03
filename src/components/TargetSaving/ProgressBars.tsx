@@ -309,6 +309,7 @@ const ProgressBars = observer(() => {
                     input
                   );
                   setTargetSaving({});
+                  setShowOpt(!showOpt);
                   targetStore.removeTarget(`${targetSaving.id}`);
                   if (data.responseCode === "00") {
                     toast.success(data.responseDescription, {

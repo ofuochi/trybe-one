@@ -1,12 +1,11 @@
 import { Field, Form, Formik } from "formik";
 import React from "react";
 import { Button } from "react-bootstrap";
-import { toast } from "react-toastify";
+import { useHistory } from "react-router-dom";
 import * as Yup from "yup";
-
-import api from "../../config/api.config";
 import { routePath } from "../../constants/route-paths";
-import { useRefresh } from "../../hooks/use-refresh.hooks";
+
+import { useStore } from "../../hooks/use-store.hooks";
 import { localStoreService } from "../../services";
 import { ErrorMsg } from "./ErrorMsg";
 import { Title } from "./Title";
@@ -20,7 +19,8 @@ const validationSchema = Yup.object().shape({
 
 const RequestCard = () => {
   const currentUser = localStoreService.getCurrentUser();
-  const refresh = useRefresh(routePath.dashboard);
+  const { cardStore } = useStore();
+  const history = useHistory();
   const gender = currentUser?.title === "Mr" ? "M" : "F";
   const initialValues: API.VirtualCardRequestDto = {
     productID: 10142,
@@ -40,15 +40,11 @@ const RequestCard = () => {
     values: API.ChargeCustomerRequestDto,
     { setSubmitting }: any
   ) => {
-    api
-      .post<API.VirtualCardResponsetDto>("/User/RequestCard", values)
-      .then(({ data }) => {
+    cardStore
+      .requestCard(values)
+      .then((isSuccess) => {
         setSubmitting(false);
-
-        if (data.responseCode === "00") {
-          refresh();
-          toast.success(data.responseMessage, { position: "top-center" });
-        } else toast.error(data.responseMessage, { position: "top-center" });
+        if (isSuccess) history.replace(routePath.dashboard);
       })
       .catch(() => setSubmitting(false));
   };

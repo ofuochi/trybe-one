@@ -40,7 +40,7 @@ const accountDetail = types.model({
 });
 
 export const CurrentUserStore = types
-  .model("CurrentUserStore", {
+  .model({
     id: types.maybe(types.string),
     bvn: types.maybe(types.string),
     dateOfBirth: types.optional(

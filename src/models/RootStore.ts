@@ -1,4 +1,5 @@
 import { Instance, types } from "mobx-state-tree";
+import { CardStore } from "./CardStore";
 
 import { CurrentUserStore } from "./CurrentUserStore";
 import { NumbersStore } from "./NumbersStore";
@@ -10,6 +11,7 @@ export const RootStore = types.model({
   signupFormStore: SignupFormStore,
   currentUserStore: CurrentUserStore,
   targetStore: TargetStore,
+  cardStore: CardStore,
 });
 
 export type RootStoreModel = Instance<typeof RootStore>;

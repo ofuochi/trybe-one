@@ -17,6 +17,7 @@ export const StoreProvider: React.FC = ({ children }) => {
       signupFormStore,
       currentUserStore,
       targetStore: {},
+      cardStore: {},
     });
   });
 

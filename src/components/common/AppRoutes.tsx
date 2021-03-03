@@ -1,4 +1,3 @@
-import React from "react";
 import { Redirect, Switch } from "react-router-dom";
 
 import { routePath } from "../../constants/route-paths";
@@ -13,17 +12,18 @@ import { Investments } from "../Investments";
 import { TargetSavings } from "../TargetSaving";
 import { Transactions } from "../Transactions";
 import { AuthRoute } from "./AuthRoute";
-import { Forgotpassword} from "../Auth/Forgotpassword"
-import { Resetpassword} from "../Auth/Resetpassword"
+import { ForgotPassword } from "../Auth/Forgotpassword";
+import { ResetPassword } from "../Auth/Resetpassword";
 import RequestCard from "./RequestCard";
 import TokenizeCard from "./TokenizeCard";
 
 export const AppRoutes = () => {
-  const { currentUserStore, targetStore } = useStore();
+  const { currentUserStore, targetStore, cardStore } = useStore();
   const currentUser = localStoreService.getCurrentUser();
   if (currentUser) {
     currentUserStore.updatedCurrentUser(currentUser.email);
-    targetStore.setTargets(`${currentUser.userId}`);
+    targetStore.fetchTargets(`${currentUser.userId}`);
+    cardStore.fetchCards(`${currentUser.nuban}`);
   }
 
   return (
@@ -59,8 +59,8 @@ export const AppRoutes = () => {
 
       <AuthRoute path={routePath.login} component={Login} />
       <AuthRoute path={routePath.signup} component={Signup} />
-      <AuthRoute path={routePath.forgotpassword} component={Forgotpassword} />
-      <AuthRoute path={routePath.resetpassword} component={Resetpassword} />
+      <AuthRoute path={routePath.forgotPassword} component={ForgotPassword} />
+      <AuthRoute path={routePath.resetPassword} component={ResetPassword} />
       <AuthRoute path={routePath.home} exact component={Home} />
       <AuthRoute path={routePath.otp} exact component={Otp} />
       <Redirect to={routePath.dashboard} />

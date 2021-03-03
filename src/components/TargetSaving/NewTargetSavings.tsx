@@ -3,7 +3,6 @@ import React, { useEffect, useState } from "react";
 import { Button } from "react-bootstrap";
 import NumberFormat from "react-number-format";
 import { Link, useHistory } from "react-router-dom";
-import { toast } from "react-toastify";
 import * as Yup from "yup";
 import Reference from "yup/lib/Reference";
 
@@ -74,34 +73,25 @@ export const NewTargetSavings = () => {
     targetAmountInView: ("" as unknown) as number,
     tokenizedID: "",
   };
-  const handleSubmit = (
-    values: API.AddTargetSavingsRequestDto,
-    { setSubmitting, resetForm }: any
-  ) => {
-    values.paystackReference = selectedCard.paystackRefrerence;
-    api
-      .post<API.BaseResponse>("/User/SubmitTargetSavings", values)
-      .then(({ data }) => {
-        setSubmitting(false);
-        if (data.responseCode === "00") {
-          resetForm();
-          toast.success(data.responseDescription, { position: "top-center" });
-          targetStore.addTarget(values);
-          history.replace(routePath.targetSavings.index);
-        } else
-          toast.error(data.responseDescription, { position: "top-center" });
-      })
-      .catch(() => {
-        setSubmitting(false);
-      });
-  };
+
   return (
     <div className="page-content">
       <Title title="New Target Savings" />
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
-        onSubmit={handleSubmit}
+        onSubmit={async (values, { setSubmitting }) => {
+          values.paystackReference = selectedCard.paystackRefrerence;
+          try {
+            const isSuccess = await targetStore.createTarget(values);
+            if (isSuccess) {
+              targetStore
+                .fetchTargets(`${currentUser?.userId}`)
+                .then(() => history.replace(routePath.targetSavings.index));
+            }
+          } catch (e) {}
+          setSubmitting(false);
+        }}
       >
         {({ isSubmitting, handleChange, setFieldValue }) => (
           <Form>

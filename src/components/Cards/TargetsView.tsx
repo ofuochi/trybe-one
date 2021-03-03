@@ -2,7 +2,7 @@ import { RingProgress } from "@ant-design/charts";
 import { observer } from "mobx-react-lite";
 import numeral from "numeral";
 
-import { useStore } from "../../../hooks/use-store.hooks";
+import { useStore } from "../../hooks/use-store.hooks";
 
 const TargetsView = observer(() => {
   const { targetStore } = useStore();

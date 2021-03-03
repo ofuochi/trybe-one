@@ -130,7 +130,7 @@ export const TransferOther = () => {
                     setFieldValue("amt", value)
                   }
                   thousandSeparator={true}
-                  prefix={`${Naira}`}
+                  prefix={Naira}
                   component={NumberFormat}
                 />
                 <ErrorMsg inputName="amt" />
