@@ -1,10 +1,7 @@
-import React, { useEffect, useState } from "react";
-import { Link, Route, Switch, useLocation } from "react-router-dom";
 import { Field, Form, Formik } from "formik";
-import { routePath } from "../../../constants/route-paths";
-import { Waste } from "./Waste";
-import { Electricity } from "./Electricity";
+import React, { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
+
 import api from "../../../config/api.config";
 import { localStoreService } from "../../../services";
 import { ErrorMsg } from "../../Common/ErrorMsg";
@@ -17,7 +14,6 @@ export const Bills = () => {
   const [billers, setBillers] = useState<API.Biller[]>([]);
   const [billerItems, setBillerItems] = useState<API.BillerItemList[]>([]);
   const [accts, setAccts] = useState<API.UserNubanDto[]>([]);
-  const { pathname } = useLocation();
 
   useEffect(() => {
     const currentUser = localStoreService.getCurrentUser();
@@ -37,10 +33,6 @@ export const Bills = () => {
       );
   }, []);
 
-  const imgSrc = (currentRoute: string, active: string, inactive: string) =>
-    pathname === currentRoute
-      ? `/assets/images/${active}`
-      : `/assets/images/${inactive}`;
   const initialValues = {
     categoryId: "",
     billerId: "",
@@ -233,50 +225,6 @@ export const Bills = () => {
           </Form>
         )}
       </Formik>
-
-      <div className="text-center d-none">
-        <Link to={routePath.transactions.bills.electricity}>
-          <div className="img-w-42">
-            <img
-              alt="showimg"
-              src={imgSrc(
-                routePath.transactions.bills.electricity,
-                "icn-electricity-active.svg",
-                "icn-electricity.svg"
-              )}
-            />
-          </div>
-          <p className="d-block text-smaller text-dark mb-0 mt-0">
-            Electricity
-          </p>
-        </Link>
-      </div>
-      <div className="text-center d-none ml-6-re">
-        <Link to={routePath.transactions.bills.waste}>
-          <div className="img-w-42">
-            <img
-              alt="showimg"
-              src={imgSrc(
-                routePath.transactions.bills.waste,
-                "icn-waste-active.svg",
-                "icn-waste.svg"
-              )}
-            />
-          </div>
-          <p className="d-block text-smaller text-dark mb-0 mt-0">
-            Waste Managment
-          </p>
-        </Link>
-      </div>
-
-      <Switch>
-        <Route
-          path={routePath.transactions.bills.electricity}
-          component={Electricity}
-        />
-
-        <Route path={routePath.transactions.bills.waste} component={Waste} />
-      </Switch>
     </div>
   );
 };
