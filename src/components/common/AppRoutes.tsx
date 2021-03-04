@@ -14,7 +14,6 @@ import { Transactions } from "../Transactions";
 import { AuthRoute } from "./AuthRoute";
 import { ForgotPassword } from "../Auth/Forgotpassword";
 import { ResetPassword } from "../Auth/Resetpassword";
-import RequestCard from "./RequestCard";
 import TokenizeCard from "./TokenizeCard";
 
 export const AppRoutes = () => {
@@ -49,11 +48,6 @@ export const AppRoutes = () => {
       <AuthRoute
         path={routePath.card.tokenize}
         component={TokenizeCard}
-        isPrivate
-      />
-      <AuthRoute
-        path={routePath.card.request}
-        component={RequestCard}
         isPrivate
       />
 

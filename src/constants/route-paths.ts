@@ -32,7 +32,6 @@ export const routePath = {
   },
   card: {
     tokenize: "/tokenize-card",
-    request: "/request-card",
   },
   login: "/login",
   signup: "/signup",
