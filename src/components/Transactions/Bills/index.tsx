@@ -1,6 +1,9 @@
 import { Field, Form, Formik } from "formik";
 import React, { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
+import NumberFormat from "react-number-format";
+import { toast } from "react-toastify";
+import * as Yup from "yup";
 
 import api from "../../../config/api.config";
 import { localStoreService } from "../../../services";
@@ -13,6 +16,10 @@ export const Bills = () => {
   const [billCategories, setBillCategories] = useState<API.Category[]>([]);
   const [billers, setBillers] = useState<API.Biller[]>([]);
   const [billerItems, setBillerItems] = useState<API.BillerItemList[]>([]);
+  const [
+    selectedBillerItem,
+    setSelectedBillerItem,
+  ] = useState<API.BillerItemList>();
   const [accts, setAccts] = useState<API.UserNubanDto[]>([]);
 
   useEffect(() => {
@@ -38,21 +45,67 @@ export const Bills = () => {
     billerId: "",
     billerItemId: "",
     account: "",
+    amount: "",
+    consumerIdField: "",
+    pin: "",
   };
+  const validationSchema = Yup.object().shape({
+    categoryId: Yup.string().required("required"),
+    billerId: Yup.string().required("required"),
+    billerItemId: Yup.string().required("required"),
+    consumerIdField: Yup.string().required("required"),
+    account: Yup.string().required("required"),
+    pin: Yup.string().required("required"),
+    amount: selectedBillerItem?.isAmountFixed
+      ? Yup.number().optional()
+      : Yup.number().required("required"),
+  });
   return (
     <div className="mt-5">
       <p className="mb-3 lead p-0">Which Bill would you like to pay for?</p>
 
       <Formik
         initialValues={initialValues}
-        onSubmit={(values, actions) => {
-          setTimeout(() => {
-            alert(JSON.stringify(values, null, 2));
-            actions.setSubmitting(false);
-          }, 1000);
+        validationSchema={validationSchema}
+        onSubmit={(values, { setSubmitting, resetForm }) => {
+          const input: API.PayBillerRequestDto = {
+            referenceid: Date.now().toString(),
+            amt: values.amount || selectedBillerItem?.amount,
+            requestType: 0,
+            paymentcode: selectedBillerItem?.paymentCode,
+            mobile: userDetails?.phoneNumber,
+            email: userDetails?.email,
+            subscriberInfo1: values.billerItemId,
+            nuban: values.account,
+            appId: 0,
+            pin: values.pin,
+            transactionType: selectedBillerItem?.isAmountFixed
+              ? "bills"
+              : "vtu",
+            remark: "Payment",
+          };
+          api
+            .post<API.WalletToWalletFTRes>("/User/PayBiller", input)
+            .then(({ data }) => {
+              setSubmitting(false);
+
+              if (data.responseCode === "00") {
+                resetForm();
+                setBillCategories([]);
+                toast.success(data.responseDescription, {
+                  position: "top-center",
+                });
+              } else
+                toast.error(data.responseDescription, {
+                  position: "top-center",
+                });
+            })
+            .catch(() => {
+              setSubmitting(false);
+            });
         }}
       >
-        {({ isSubmitting, handleChange, resetForm, values }) => (
+        {({ isSubmitting, handleChange, resetForm, values, setFieldValue }) => (
           <Form>
             <div className="form-group mb-3">
               <div className="input-group">
@@ -61,6 +114,7 @@ export const Bills = () => {
                   name="categoryId"
                   placeholder="Select Bill"
                   className="form-control d-block w-100"
+                  disabled={isSubmitting}
                   onChange={(e: any) => {
                     resetForm();
                     handleChange(e);
@@ -68,6 +122,7 @@ export const Bills = () => {
                     setBillers([]);
                     setBillerItems([]);
                     setAccts([]);
+                    setSelectedBillerItem(undefined);
 
                     const value = e.target.value;
                     value &&
@@ -104,6 +159,7 @@ export const Bills = () => {
                     as="select"
                     name="billerId"
                     placeholder="Select Biller"
+                    disabled={isSubmitting}
                     onChange={(e: any) => {
                       resetForm({
                         values: {
@@ -111,12 +167,17 @@ export const Bills = () => {
                           account: "",
                           billerId: "",
                           billerItemId: "",
+                          amount: "",
+                          consumerIdField: "",
+                          pin: "",
                         },
                       });
                       handleChange(e);
 
                       setBillerItems([]);
                       setAccts([]);
+                      setSelectedBillerItem(undefined);
+
                       initialValues.account = "";
                       initialValues.billerId = "";
                       initialValues.billerItemId = "";
@@ -157,16 +218,21 @@ export const Bills = () => {
                   <Field
                     as="select"
                     name="billerItemId"
+                    disabled={isSubmitting}
                     placeholder="Select Biller Item"
                     onChange={(e: any) => {
                       handleChange(e);
                       const value = e.target.value;
                       initialValues.account = "";
                       initialValues.billerItemId = "";
-
-                      value
-                        ? setAccts(userDetails?.accountDetails || [])
-                        : setAccts([]);
+                      setSelectedBillerItem(undefined);
+                      if (value) {
+                        setAccts(userDetails?.accountDetails || []);
+                        const biller = billerItems.find((x) => x.id === value);
+                        setSelectedBillerItem(biller);
+                      } else {
+                        setAccts([]);
+                      }
                     }}
                     className="form-control d-block w-100"
                   >
@@ -185,9 +251,51 @@ export const Bills = () => {
                 </div>
               </div>
             ) : null}
+            {selectedBillerItem && (
+              <>
+                <div className="form-group mb-3">
+                  <div className="input-group">
+                    <Field
+                      name="amount"
+                      placeholder="Amount"
+                      className="form-control d-block w-100"
+                      disabled={selectedBillerItem.isAmountFixed}
+                      onValueChange={({ value }: any) => {
+                        handleChange(value);
+                        setFieldValue("amount", value);
+                      }}
+                      defaultValue={
+                        +(selectedBillerItem.amount || 0) === 0
+                          ? ""
+                          : selectedBillerItem.amount
+                      }
+                      thousandSeparator={true}
+                      component={NumberFormat}
+                    />
+
+                    <label htmlFor="amount">Amount</label>
+                    <ErrorMsg inputName="amount" />
+                  </div>
+                </div>
+                <div className="form-group mb-3">
+                  <div className="input-group">
+                    <Field
+                      name="consumerIdField"
+                      placeholder={selectedBillerItem.consumerIdField}
+                      className="form-control d-block w-100"
+                    />
+
+                    <label htmlFor="consumerIdField">
+                      {selectedBillerItem.consumerIdField}
+                    </label>
+                    <ErrorMsg inputName="consumerIdField" />
+                  </div>
+                </div>
+              </>
+            )}
             {accts.length ? (
               <>
-                <div className="form-group mb-5">
+                <div className="form-group mb-3">
                   <div className="input-group">
                     <Field
                       as="select"
@@ -207,6 +315,17 @@ export const Bills = () => {
                     </Field>
                     <label htmlFor="account">Select Account</label>
                     <ErrorMsg inputName="account" />
+                  </div>
+                </div>
+                <div className="form-group mb-3">
+                  <div className="input-group">
+                    <Field
+                      name="pin"
+                      placeholder="PIN"
+                      className="form-control d-block w-100"
+                    />
+                    <label htmlFor="pin">PIN</label>
+                    <ErrorMsg inputName="pin" />
                   </div>
                 </div>
                 <div className="form-group row m-0 justify-content-end mt-4">
