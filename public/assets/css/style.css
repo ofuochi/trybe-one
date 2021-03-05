@@ -23368,10 +23368,31 @@ background: rgba(255, 114, 53, 0.8);
 	/*connector not needed before the first step*/
 	content: none; 
 }
+#trackingbar li:first-child:before {
+  background-image: url(../images/ic-track-step-1.svg)!important;
+  background-color: #C4C4C4!important;
+  background-repeat: no-repeat!important;
+  background-size: 40px!important;
+  background-position: center center!important;
+}
+#trackingbar li:nth-child(2):before {
+  background-image: url(../images/ic-track-step-3.svg)!important;
+  background-color: #C4C4C4!important;
+  background-repeat: no-repeat!important;
+  background-size: 40px!important;
+  background-position: center center!important;
+}
+#trackingbar li:nth-child(3):before {
+  background-image: url(../images/ic-track-step-3.svg)!important;
+  background-color: #C4C4C4!important;
+  background-repeat: no-repeat!important;
+  background-size: 40px!important;
+  background-position: center center!important;
+}
 /*marking active/completed steps green*/
 /*The number of the step and the connector before it = green*/
 #progressbar li.active:before,  #progressbar li.active:after{
-	background: #FF5364;
+	background: #FF5364!important;
   color: #FF5364;
 }
 
@@ -23393,52 +23414,95 @@ background: rgba(255, 114, 53, 0.8);
 }
 #trackingbar li:before {
 	content: counter(step);
-	counter-increment: step;
-	width: 50px;
-	line-height: 50px;
+	counter-increment: none;
+	width: 75px;
+	line-height: 70px;
 	display: block;
 	font-size: 10px;
-  color: #808080;
+  color: #ff536400;
   background: #808080;
-  border-radius: 20px;
+  border-radius: 50%;
+  border-style: double;
+    border-color: #fff;
   margin: auto;
 }
 /*progressbar connectors*/
 #trackingbar li:after {
 	content: '';
-	width: 100%;
-	height: 2px;
+  height: 4px;
   background: #808080;
-	position: absolute;
-	left: -90%;
-	top: 9px;
+  position: absolute;
+  left: -37%;
+  top: 41%;
+  width: 73%;
 
 }
 #trackingbar li.active:after {
 	content: '';
-	width: 100%;
-	height: 2px;
+  height: 4px;
   background: #808080;
-	position: absolute;
-	left: -90%;
-	top: 9px;
-
+  position: absolute;
+  left: -37%;
+  top: 35%;
+  width: 73%;
 }
 #trackingbar li:first-child:after {
 	/*connector not needed before the first step*/
 	content: none; 
 }
-#trackingbar li:last-child:before {
-	/*connector not needed before the first step*/
+
+/*#trackingbar li:last-child:before {
+	connector not needed before the first step
   margin: auto;
+}*/
+
+#trackingbar li.active:first-child:before {
+  background-image: url(../images/ic-track-step-1.svg)!important;
+  background-repeat: no-repeat!important;
+  background-size: 40px!important;
+  background-position: center center!important;
 }
+
+#trackingbar li.active:nth-child(2):before {
+  background-image: url(../images/ic-track-step-2.svg)!important;
+  background-repeat: no-repeat!important;
+  background-size: 40px!important;
+  background-position: center center!important;
+}
+#trackingbar li:nth-child(2):before {
+  background-image: url(../images/ic-track-step-2.svg)!important;
+  background-repeat: no-repeat!important;
+  background-size: 40px!important;
+  background-position: center center!important;
+}
+
+#trackingbar li.active:nth-child(3):before {
+  background-image: url(../images/ic-track-step-3.svg)!important;
+  background-repeat: no-repeat!important;
+  background-size: 40px!important;
+  background-position: center center!important;
+}
+#trackingbar li:nth-child(3):before {
+  background-image: url(../images/ic-track-step-3.svg)!important;
+  background-repeat: no-repeat!important;
+  background-size: 40px!important;
+  background-position: center center!important;
+}
+/* #trackingbar li:last-child:before {
+margin: 0!important;
+} */
 /*marking active/completed steps green*/
 /*The number of the step and the connector before it = green*/
 #trackingbar li.active:before,  #trackingbar li.active:after{
-	background: #FF5364;
-  color: #FF5364;
+	background: #FF5364!important;
+  color: #ff536400;
 }
-
+.lead-info{
+  position: absolute;
+  top: 0px;
+  right: -70px;
+  width: 60%;
+}
 
 
 

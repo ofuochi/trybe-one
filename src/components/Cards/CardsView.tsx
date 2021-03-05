@@ -285,7 +285,7 @@ const CardsView = observer(() => {
                   Card Tracking
                 </Modal.Header>
                 <Modal.Body className="py-0">
-                  <div className="row bg-danger-alt p-2">
+                  <div className="row bg-danger-alt py-2 px-5">
                     <div className="col-lg-4">
                       <p className="mb-1">SHIPPED VIA</p>
                       <p className="mb-0 text-bold">DHL</p>
@@ -302,20 +302,20 @@ const CardsView = observer(() => {
                   <div className="row">
                     <div className="col-lg-12">
                       <ul className="mt-4" id="trackingbar">
-                        <li className="active">
-                          <span className="d-block text-primary">1</span>
-                          <span className="d-block text-primary">
-                            Personal info
+                        <li className="active text-center">
+                          <span className="d-block lead mt-4">
+                          Card Order Placed
                           </span>
+                          <span className="lead-info">Card is currently at Ikeja Terminal</span>
                         </li>
-                        <li className="active">
-                          <span className="d-block text-primary">2</span>
-                          <span className="d-block text-primary">
-                            Social info
+                        <li className="active text-center">
+                          <span className="d-block lead mt-4">
+                          Enroute
                           </span>
+                          <span className="lead-info">Card has been delivered to No 14 timoty street lekki</span>
                         </li>
-                        <li>
-                          <span className="d-block">3</span>
+                        <li className="text-center">
+                          <span className="d-block lead mt-4">Completed</span>
                         </li>
                       </ul>
                     </div>
@@ -337,7 +337,7 @@ const CardsView = observer(() => {
                             className="px-4 btn-lg btn-block"
                             variant="primary"
                           >
-                            Request for Cards
+                            Close
                           </Button>
                         </div>
                       </div>
