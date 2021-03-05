@@ -9,6 +9,8 @@ import * as Yup from "yup";
 import { useStore } from "../../hooks/use-store.hooks";
 import { ErrorMsg } from "../Common/ErrorMsg";
 import { localStoreService } from "../../services";
+import { values } from "mobx";
+import { CardModel } from "../../models/CardStore";
 
 const reqCardValidationSchema = Yup.object().shape({
   city: Yup.string().required("required"),
@@ -32,6 +34,7 @@ const CardsView = observer(() => {
   const [showAddCards, setShowAddCards] = useState(false);
   const [showBlockCards, setShowBlockCards] = useState(false);
   const [showTrackCards, setShowTrackCards] = useState(false);
+  const [ selectedCard, setSelectedCard ] = useState<CardModel | undefined >()
   const { cardStore } = useStore();
   const currentUser = localStoreService.getCurrentUser();
   const initialReqCardValues: API.VirtualCardRequestDto = {
@@ -59,6 +62,18 @@ const CardsView = observer(() => {
         if (isSuccess) setShowAddCards(false);
       })
       .catch(() => setSubmitting(false));
+  };
+
+  const handleCardBlock = (e: any) =>{
+    cardStore
+    .blockCard({
+      customerUniqueIdentifier: currentUser?.nuban,
+      expiryDate: selectedCard?.expiryDate,
+      pan: selectedCard?.pan,
+      wallet_ShortCode: "ONB" 
+    })
+    .then(() => setShowBlockCards(false))
+    .catch(() => setShowBlockCards(false))
   };
   return (
     <>
@@ -93,7 +108,10 @@ const CardsView = observer(() => {
                     <img alt="" src="/assets/images/cardbg.png" />
                     <div className="row masked-cardbtm">
                       <Button
-                        onClick={() => setShowBlockCards(true)}
+                        onClick={() =>{ 
+                          setSelectedCard(card)
+                          setShowBlockCards(true)
+                        }}
                         className="btn btn-sm btn-light mr-2 bd-rad-5"
                       >
                         <i>
@@ -127,7 +145,10 @@ const CardsView = observer(() => {
                     <img
                       className="m-auto"
                       alt=""
-                      onClick={() => setShowAddCards(true)}
+                      onClick={() =>{ 
+                        setShowAddCards(true)
+
+                      }}
                       src="/assets/images/ic-card-request.svg"
                     />
                   </div>
@@ -265,7 +286,11 @@ const CardsView = observer(() => {
                       Just Kidding
                     </Button>
 
-                    <Button className="px-4 btn-lg" variant="secondary">
+                    <Button 
+                      className="px-4 btn-lg" 
+                      variant="secondary" 
+                      onClick={handleCardBlock}
+                    >
                       Yes o
                     </Button>
                   </div>
