@@ -67,7 +67,7 @@ const CardsView = observer(() => {
   const handleCardBlock = (e: any) =>{
     cardStore
     .blockCard({
-      customerUniqueIdentifier: currentUser?.userId,
+      customerUniqueIdentifier: currentUser?.nuban,
       expiryDate: selectedCard?.expiryDate,
       pan: selectedCard?.pan,
       wallet_ShortCode: "ONB" 
