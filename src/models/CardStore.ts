@@ -13,7 +13,7 @@ const maskedPan = (pan: string) => {
 };
 const createCardInstance = (card: API.CardObj) => ({
   blockStatus: card.block_status,
-  pan: `${maskedPan(card.card_number as string)}`,
+  pan: (card.card_number as string),
   provider: card.card_provider,
   cardName: card.card_name,
   expiryDate: card.expiry_date,
@@ -66,6 +66,21 @@ export const CardStore = types
         return true;
       } else toast.error(data.responseMessage, { position: "top-center" });
       return false;
+    }),
+    //block card action 
+    blockCard: flow(function* (input: API.ManageCardRequestDto) {
+      const {
+        data,
+      }: {
+        data: API.BlockCardResponseDto;
+      } = yield api.post<API.BlockCardResponseDto>(
+        "/User/BlockCard", 
+        input
+      );
+      if (data.responseCode === "00") {
+        toast.success(data.responseMessage, {position: "top-center"});
+        //action to block goes here
+      } else toast.error(data.responseMessage, { position: "top-center" });
     }),
   }))
   .views((self) => ({
