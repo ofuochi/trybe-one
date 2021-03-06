@@ -50,3 +50,10 @@ export const percentageCompletion = ({
   // console.log(currentDuration, totalDuration);
   return result;
 };
+export const maskedPan = (pan: string) => {
+  const first4 = pan.substring(0, 4);
+  const last4 = pan.substring(pan.length - 4);
+
+  const mask = pan.substring(4, pan.length - 4).replace(/\d/g, "*");
+  return `${first4}${mask}${last4}`;
+};

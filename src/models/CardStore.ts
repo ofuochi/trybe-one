@@ -4,16 +4,9 @@ import { toast } from "react-toastify";
 
 import api from "../config/api.config";
 
-const maskedPan = (pan: string) => {
-  const first4 = pan.substring(0, 4);
-  const last4 = pan.substring(pan.length - 4);
-
-  const mask = pan.substring(4, pan.length - 4).replace(/\d/g, "*");
-  return `${first4}${mask}${last4}`;
-};
 const createCardInstance = (card: API.CardObj) => ({
   blockStatus: card.block_status,
-  pan: (card.card_number as string),
+  pan: card.card_number as string,
   provider: card.card_provider,
   cardName: card.card_name,
   expiryDate: card.expiry_date,
@@ -43,7 +36,7 @@ export const CardStore = types
         data,
       }: {
         data: API.GetCardResponseDto;
-      } = yield api.post<API.GetCardResponseDto>("/User/GetActiveCard", input);
+      } = yield api.post<API.GetCardResponseDto>("/User/GetAllCard", input);
 
       if (data.responseCode === "00") {
         data.data?.forEach((card) =>
@@ -67,19 +60,29 @@ export const CardStore = types
       } else toast.error(data.responseMessage, { position: "top-center" });
       return false;
     }),
-    //block card action 
+    //block card action
     blockCard: flow(function* (input: API.ManageCardRequestDto) {
       const {
         data,
       }: {
         data: API.BlockCardResponseDto;
-      } = yield api.post<API.BlockCardResponseDto>(
-        "/User/BlockCard", 
-        input
-      );
+      } = yield api.post<API.BlockCardResponseDto>("/User/BlockCard", input);
       if (data.responseCode === "00") {
-        toast.success(data.responseMessage, {position: "top-center"});
-        //action to block goes here
+        const card = self.cardList.get(`${input.pan}`);
+        if (card) card.blockStatus = "BLOCKED";
+        toast.success(data.responseMessage, { position: "top-center" });
+      } else toast.error(data.responseMessage, { position: "top-center" });
+    }),
+    unblockCard: flow(function* (input: API.ManageCardRequestDto) {
+      const {
+        data,
+      }: {
+        data: API.BlockCardResponseDto;
+      } = yield api.post<API.BlockCardResponseDto>("/User/UnblockCard", input);
+      if (data.responseCode === "00") {
+        const card = self.cardList.get(`${input.pan}`);
+        if (card) card.blockStatus = "NOT BLOCKED";
+        toast.success(data.responseMessage, { position: "top-center" });
       } else toast.error(data.responseMessage, { position: "top-center" });
     }),
   }))
