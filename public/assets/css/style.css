@@ -21845,7 +21845,9 @@ address p {
 .table.table-striped tbody tr:nth-child(odd) {
   background: #EEEEEE;
 }
-
+.hoverable{
+  cursor: pointer;
+}
 .table-responsive {
   display: block;
   width: 100%;
@@ -23433,7 +23435,7 @@ background: rgba(255, 114, 53, 0.8);
   background: #808080;
   position: absolute;
   left: -37%;
-  top: 41%;
+  top: 30%;
   width: 73%;
 
 }
@@ -23443,7 +23445,7 @@ background: rgba(255, 114, 53, 0.8);
   background: #808080;
   position: absolute;
   left: -37%;
-  top: 35%;
+  top: 30%;
   width: 73%;
 }
 #trackingbar li:first-child:after {
@@ -23468,6 +23470,7 @@ background: rgba(255, 114, 53, 0.8);
   background-repeat: no-repeat!important;
   background-size: 40px!important;
   background-position: center center!important;
+  background-color: #B04955!important;
 }
 #trackingbar li:nth-child(2):before {
   background-image: url(../images/ic-track-step-2.svg)!important;
@@ -23481,6 +23484,7 @@ background: rgba(255, 114, 53, 0.8);
   background-repeat: no-repeat!important;
   background-size: 40px!important;
   background-position: center center!important;
+  background-color: #3C958A!important;
 }
 #trackingbar li:nth-child(3):before {
   background-image: url(../images/ic-track-step-3.svg)!important;
@@ -23499,9 +23503,15 @@ margin: 0!important;
 }
 .lead-info{
   position: absolute;
-  top: 0px;
+  top: -26px;
   right: -70px;
   width: 60%;
+  padding: 10px;
+  background: #FFFFFF;
+  border: 1px solid #F2615E;
+  box-sizing: border-box;
+  border-radius: 5px;
+  font-size: smaller;
 }
 
 
@@ -24464,5 +24474,7 @@ input[type="radio"] label:checked {
   padding-left: 15px;
   position: relative;
   width: 100%;
-
+}
+.text-title{
+  font-size: 20px;
 }

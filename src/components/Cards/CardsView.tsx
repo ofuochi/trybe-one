@@ -141,9 +141,9 @@ const CardsView = observer(() => {
                   </div>
                 ))}
                 <div style={{ display: "block" }}>
-                  <div className="no-bg bd-0 hoverable">
+                  <div className="no-bg bd-0">
                     <img
-                      className="m-auto"
+                      className="m-auto hoverable"
                       alt=""
                       onClick={() =>{ 
                         setShowAddCards(true)
@@ -160,9 +160,9 @@ const CardsView = observer(() => {
                   Request for Card
                 </h5>
                 <div className="col-lg-12 text-center mt-4">
-                  <div className="no-bg bd-0 hoverable">
+                  <div className="no-bg bd-0">
                     <img
-                      className="m-auto"
+                      className="m-auto hoverable"
                       alt=""
                       onClick={() => setShowAddCards(true)}
                       src="/assets/images/ic-card-request.svg"
@@ -306,41 +306,41 @@ const CardsView = observer(() => {
                 aria-labelledby="contained-modal-title-vcenter"
                 onHide={() => setShowTrackCards(false)}
               >
-                <Modal.Header className="bd-0 bg-primary" closeButton>
+                <Modal.Header className="bd-0 bg-primary text-white text-title text-bold lead" closeButton>
                   Card Tracking
                 </Modal.Header>
                 <Modal.Body className="py-0">
                   <div className="row bg-danger-alt py-2 px-5">
                     <div className="col-lg-4">
-                      <p className="mb-1">SHIPPED VIA</p>
-                      <p className="mb-0 text-bold">DHL</p>
+                      <p className="mb-1 small">SHIPPED VIA</p>
+                      <p className="mb-0 small text-bold">DHL</p>
                     </div>
                     <div className="col-lg-4">
-                      <p className="mb-1">STATUS</p>
-                      <p className="mb-0 text-bold">In Transit</p>
+                      <p className="mb-1 small">STATUS</p>
+                      <p className="mb-0 small text-bold">In Transit</p>
                     </div>
                     <div className="col-lg-4">
-                      <p className="mb-1">EXPECTED DELIVERY DATE</p>
-                      <p className="mb-0 text-bold">Monday, June 14</p>
+                      <p className="mb-1 small">EXPECTED DELIVERY DATE</p>
+                      <p className="mb-0 text-bold small">Monday, June 14</p>
                     </div>
                   </div>
                   <div className="row">
                     <div className="col-lg-12">
-                      <ul className="mt-4" id="trackingbar">
+                      <ul className="pt-5 mt-3" id="trackingbar">
                         <li className="active text-center">
-                          <span className="d-block lead mt-4">
+                          <span className="d-block lead mt-3">
                           Card Order Placed
                           </span>
                           <span className="lead-info">Card is currently at Ikeja Terminal</span>
                         </li>
                         <li className="active text-center">
-                          <span className="d-block lead mt-4">
+                          <span className="d-block lead mt-3">
                           Enroute
                           </span>
                           <span className="lead-info">Card has been delivered to No 14 timoty street lekki</span>
                         </li>
                         <li className="text-center">
-                          <span className="d-block lead mt-4">Completed</span>
+                          <span className="d-block lead mt-3">Completed</span>
                         </li>
                       </ul>
                     </div>
@@ -356,8 +356,8 @@ const CardsView = observer(() => {
                     }}
                   >
                     <Form>
-                      <div className="row justify-content-end mt-5 mb-5">
-                        <div className="col-lg-5">
+                      <div className="row justify-content-end mt-5 mb-3 px-5">
+                        <div className="col-lg-4">
                           <Button
                             className="px-4 btn-lg btn-block"
                             variant="primary"
