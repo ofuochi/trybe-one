@@ -36,6 +36,8 @@ const CardsView = observer(() => {
   const [showTrackCard, setShowTrackCard] = useState(false);
   const [showUnblockCard, setShowUnblockCard] = useState(false);
   const [selectedCard, setSelectedCard] = useState<CardModel | undefined>();
+  const [blockLoading, setBlockLoading] = useState(false);
+  const [unblockLoading, setUnblockLoading] = useState(false);
   const { cardStore } = useStore();
   const currentUser = localStoreService.getCurrentUser();
   const initialReqCardValues: API.VirtualCardRequestDto = {
@@ -66,6 +68,7 @@ const CardsView = observer(() => {
   };
 
   const handleCardBlock = () => {
+    setBlockLoading(true);
     cardStore
       .blockCard({
         customerUniqueIdentifier: currentUser?.nuban,
@@ -73,10 +76,14 @@ const CardsView = observer(() => {
         pan: selectedCard?.pan,
         wallet_ShortCode: "ONB",
       })
-      .then(() => setShowBlockCard(false))
+      .then(() => {
+        setShowBlockCard(false)
+        setBlockLoading(false);
+      })
       .catch(() => setShowBlockCard(false));
   };
   const handleCardUnblock = () => {
+    setUnblockLoading(true);
     cardStore
       .unblockCard({
         customerUniqueIdentifier: currentUser?.nuban,
@@ -84,7 +91,10 @@ const CardsView = observer(() => {
         pan: selectedCard?.pan,
         wallet_ShortCode: "ONB",
       })
-      .then(() => setShowUnblockCard(false))
+      .then(() => {
+        setShowUnblockCard(false)
+        setUnblockLoading(false);
+      })
       .catch(() => setShowUnblockCard(false));
   };
   return (
@@ -319,8 +329,9 @@ const CardsView = observer(() => {
                   <Button
                     className="px-4 btn-lg mr-4"
                     onClick={handleCardUnblock}
+                    disabled={unblockLoading}
                   >
-                    Yes
+                    {unblockLoading ? "Loading..." : "Yes"}
                   </Button>
                   <Button
                     className="px-4 btn-lg"
@@ -338,9 +349,11 @@ const CardsView = observer(() => {
                 size="lg"
                 show={showBlockCard}
                 aria-labelledby="contained-modal-title-vcenter"
+                backdrop="static"
+                keyboard={false}
                 onHide={() => setShowBlockCard(false)}
               >
-                <Modal.Header className="bd-0" closeButton></Modal.Header>
+                <Modal.Header className="bd-0" ></Modal.Header>
                 <Modal.Body className="py-1 px-5 text-center">
                   <h4 className="mb-4">
                     Are you sure you want to block this card
@@ -354,8 +367,9 @@ const CardsView = observer(() => {
                     <Button
                       className="px-4 btn-lg mr-4"
                       onClick={handleCardBlock}
+                      disabled={blockLoading}
                     >
-                      Yes
+                      {blockLoading ? "Loading..." : "Yes"}
                     </Button>
                     <Button
                       className="px-4 btn-lg"
