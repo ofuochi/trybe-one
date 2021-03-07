@@ -30,7 +30,7 @@ const ringConfig = (color: string, percent: number, icon?: string) => ({
   },
 });
 
-const getSpending = async (
+const getTrans = async (
   input: API.GetUserSpendingByCategoryIDRequest
 ): Promise<API.GetUserSpendingResponse | undefined> => {
   try {
@@ -42,6 +42,7 @@ const getSpending = async (
   } catch (e) {}
 };
 
+// Interface to hold the list of categories and corresponding transactions
 interface CategoriesObj {
   [category: string]: {
     category: API.UserTransactionCategoryDto;
@@ -49,37 +50,42 @@ interface CategoriesObj {
   };
 }
 export const SpendTracker = () => {
-  const [catsObj, setCatsObj] = useState<CategoriesObj>({});
+  const [categoriesObj, setCategoriesObj] = useState<CategoriesObj>({});
   useEffect(() => {
-    const transCats: CategoriesObj = {};
     api
       .get<API.UserTransactionCategoryDtoList>(
         "/User/GetAllActiveTransactionCategories"
       )
-      .then(({ data }) => {
-        data.categories?.forEach((c) => {
+      .then(({ data: { categories } }) => {
+        // Get each category and loop through each to get it's corresponding list of transactions
+        categories?.forEach((c) => {
           const user = localStoreService.getCurrentUser();
-          getSpending({
+          const obj: CategoriesObj = {};
+          getTrans({
             spendIngCategoryID: c.id,
             userId: user?.userId,
           }).then((data) => {
-            transCats[`${c.id}`] = {
+            obj[`${c.id}`] = {
               category: c,
               transactions: data?.spendings || [],
             };
-            setCatsObj({ ...transCats });
+            // Set each of the objects.
+            // TODO: Consider abstracting this implementation in a store
+            setCategoriesObj({ ...obj });
           });
         });
       });
   }, []);
 
-  const trs = Object.keys(catsObj).map((k) => catsObj[k].transactions.length);
+  const trs = Object.keys(categoriesObj).map(
+    (k) => categoriesObj[k].transactions.length
+  );
   const totalTransCount = trs.length === 0 ? 0 : trs.reduce((a, b) => a + b);
 
   const pieConfig = {
-    data: Object.keys(catsObj).map((k) => ({
-      categoryName: catsObj[k].category.categoryName,
-      total: catsObj[k].transactions
+    data: Object.keys(categoriesObj).map((k) => ({
+      categoryName: categoriesObj[k].category.categoryName,
+      total: categoriesObj[k].transactions
         .map((c) => c.totalAmount || 0)
         .reduce((a, b) => a + b),
     })),
@@ -108,10 +114,11 @@ export const SpendTracker = () => {
     },
     angleField: "total",
     colorField: "categoryName",
-    color: Object.keys(catsObj).map((k) =>
-      randCol(k + catsObj[k].category.categoryName)
+    color: Object.keys(categoriesObj).map((k) =>
+      randCol(k + categoriesObj[k].category.categoryName)
     ),
   };
+
   return (
     <>
       <Title title="Spend Tracker" />
@@ -152,7 +159,7 @@ export const SpendTracker = () => {
         </div>
 
         <div className="row">
-          {Object.keys(catsObj).length > 0 ? (
+          {Object.keys(categoriesObj).length > 0 ? (
             <div className="col-lg-12">
               <h5 className="mdc-top-app-bar__title font-weight-light mb-3 p-0">
                 Categories
@@ -160,33 +167,37 @@ export const SpendTracker = () => {
             </div>
           ) : null}
 
-          {Object.keys(catsObj).map((categoryId) => (
-            <div key={catsObj[categoryId].category.id} className="col-lg-3 p-0">
+          {Object.keys(categoriesObj).map((categoryId) => (
+            <div
+              key={categoriesObj[categoryId].category.id}
+              className="col-lg-3 p-0"
+            >
               <div className="d-flex row m-0 mb-4 justify-content-left">
                 <div className="spendtracker-cat">
                   <RingProgress
                     {...ringConfig(
                       randCol(
-                        categoryId + catsObj[categoryId].category.categoryName
+                        categoryId +
+                          categoriesObj[categoryId].category.categoryName
                       ),
-                      catsObj[categoryId].transactions.length / totalTransCount,
-                      catsObj[categoryId].category.categoryIcon
+                      categoriesObj[categoryId].transactions.length /
+                        totalTransCount,
+                      categoriesObj[categoryId].category.categoryIcon
                     )}
                   />
                 </div>
                 <div className="pl-2">
                   <span className="mt-0 smaller d-block">
-                    {catsObj[categoryId].category.categoryName}
+                    {categoriesObj[categoryId].category.categoryName}
                   </span>
                   <span className="mt-1 small d-block text-bold">
-                    {`${Naira}${numeral(
-                      catsObj[categoryId].transactions
-                        .map((c) => c.totalAmount || 0)
-                        .reduce((a, b) => a + b)
-                    ).format("0,0.00")}`}
+                    {`${Naira}${getTotal(categoriesObj, categoryId).format(
+                      "0,0.00"
+                    )}`}
                   </span>
                   <span className="mt-1 smaller d-block text-muted">
-                    {catsObj[categoryId].transactions.length} Transaction(s)
+                    {categoriesObj[categoryId].transactions.length}{" "}
+                    Transaction(s)
                   </span>
                 </div>
               </div>
@@ -197,3 +208,10 @@ export const SpendTracker = () => {
     </>
   );
 };
+function getTotal(catsObj: CategoriesObj, categoryId: string) {
+  return numeral(
+    catsObj[categoryId].transactions
+      .map((c) => c.totalAmount || 0)
+      .reduce((a, b) => a + b)
+  );
+}
