@@ -30,7 +30,7 @@ const progressConfig = {
 
 const sliderConfig = {
   dots: true,
-  arrows:true,
+  arrows: true,
   infinite: false,
   speed: 500,
   slidesToShow: 2,
@@ -157,10 +157,7 @@ export const Dashboard = () => {
               <div className="card-body text-center">
                 <div className="row">
                   <i>
-                    <img
-                      alt="img-alt"
-                      src="assets/images/ic-dash-earn.svg"
-                    />{" "}
+                    <img alt="img-alt" src="assets/images/ic-dash-earn.svg" />{" "}
                   </i>
                   <h4 className="line-h70">Earn</h4>
                 </div>
@@ -173,10 +170,7 @@ export const Dashboard = () => {
               <div className="card-body text-center">
                 <div className="row">
                   <i>
-                    <img
-                      alt="img-alt"
-                      src="assets/images/ic-dash-learn.svg"
-                    />{" "}
+                    <img alt="img-alt" src="assets/images/ic-dash-learn.svg" />{" "}
                   </i>
                   <h4 className="line-h70">Learn</h4>
                 </div>
@@ -189,10 +183,7 @@ export const Dashboard = () => {
               <div className="card-body text-center">
                 <div className="row">
                   <i>
-                    <img
-                      alt="img-alt"
-                      src="assets/images/ic-dash-fun.svg"
-                    />{" "}
+                    <img alt="img-alt" src="assets/images/ic-dash-fun.svg" />{" "}
                   </i>
                   <h4 className="line-h70">Fun</h4>
                 </div>

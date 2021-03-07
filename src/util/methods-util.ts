@@ -1,4 +1,5 @@
 import moment from "moment";
+import randomcolor from "randomcolor";
 
 export const pastelColour = (str: string) => {
   //TODO: adjust base colour values below based on theme
@@ -57,3 +58,10 @@ export const maskedPan = (pan: string) => {
   const mask = pan.substring(4, pan.length - 4).replace(/\d/g, "*");
   return `${first4}${mask}${last4}`;
 };
+
+export const randCol = (seed: string) =>
+  randomcolor({
+    seed,
+    luminosity: "random",
+    hue: "random",
+  });

@@ -1,10 +1,9 @@
 import { values } from "mobx";
 import { destroy, flow, Instance, types } from "mobx-state-tree";
-import randomcolor from "randomcolor";
 import { toast } from "react-toastify";
 
 import api from "../config/api.config";
-import { percentageCompletion } from "../util/methods-util";
+import { percentageCompletion, randCol } from "../util/methods-util";
 
 const Target = types
   .model({
@@ -34,11 +33,7 @@ const createTargetItem = (t: API.GetTargetSavingsResponseDto) => {
     accruedInterest: t.int_accrued as number,
     percentageCompletion: percentageCompletion(t),
     creationTime: `${t.txndate}`,
-    color: randomcolor({
-      seed: `${t.item}`,
-      luminosity: "random",
-      hue: "random",
-    }),
+    color: randCol(`${t.item}`),
   });
 };
 

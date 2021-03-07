@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { CurrentUserStore } from "../models/CurrentUserStore";
+import { LoaderStore } from "../models/LoaderStore";
 import { NumbersStore } from "../models/NumbersStore";
 import { RootStore } from "../models/RootStore";
 import { SignupFormStore } from "../models/SignupFormStore";
@@ -11,6 +12,7 @@ export const StoreProvider: React.FC = ({ children }) => {
     const numbersStore = NumbersStore.create();
     const signupFormStore = SignupFormStore.create();
     const currentUserStore = CurrentUserStore.create();
+    const loaderStore = LoaderStore.create();
 
     return RootStore.create({
       numbersStore,
@@ -18,6 +20,7 @@ export const StoreProvider: React.FC = ({ children }) => {
       currentUserStore,
       targetStore: {},
       cardStore: {},
+      loaderStore,
     });
   });
 

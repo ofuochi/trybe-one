@@ -8,6 +8,7 @@ import numeral from "numeral";
 import api from "../../../config/api.config";
 import { localStoreService } from "../../../services";
 import { ErrorMsg } from "../../Common/ErrorMsg";
+import { useStore } from "../../../hooks/use-store.hooks";
 
 export const Bills = () => {
   const [userDetails, setUserDetails] = useState<
@@ -21,7 +22,9 @@ export const Bills = () => {
     setSelectedBillerItem,
   ] = useState<API.BillerItemList>();
   const [accts, setAccts] = useState<API.UserNubanDto[]>([]);
-
+  const {
+    loaderStore: { setShowLoader },
+  } = useStore();
   useEffect(() => {
     const currentUser = localStoreService.getCurrentUser();
     api
@@ -73,6 +76,7 @@ export const Bills = () => {
         initialValues={initialValues}
         validationSchema={validationSchema}
         onSubmit={(values, { setSubmitting, resetForm }) => {
+          setShowLoader(true);
           const input: API.PayBillerRequestDto = {
             referenceid: Date.now().toString(),
             amt: values.amount || selectedBillerItem?.amount,
@@ -93,7 +97,7 @@ export const Bills = () => {
             .post<API.WalletToWalletFTRes>("/User/PayBiller", input)
             .then(({ data }) => {
               setSubmitting(false);
-
+              setShowLoader(false);
               if (data.responseCode === "00") {
                 resetForm();
                 setBillCategories([]);
@@ -107,6 +111,7 @@ export const Bills = () => {
             })
             .catch(() => {
               setSubmitting(false);
+              setShowLoader(false);
             });
         }}
       >

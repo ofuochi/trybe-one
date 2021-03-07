@@ -1,4 +1,3 @@
-import React from "react";
 import { NavLink, Link, useHistory } from "react-router-dom";
 
 import { routePath } from "../constants/route-paths";
@@ -47,7 +46,7 @@ export const SideNavbar = () => {
             </NavLink>
           </div>
           <div className="mdc-list-item mdc-drawer-item">
-            <Link className="mdc-drawer-link" to={routePath.spendtracker}>
+            <NavLink className="mdc-drawer-link" to={routePath.spendTracker}>
               Spend Tracker
               <i
                 className="mdc-list-item__start-detail mdc-drawer-item-icon ml-auto"
@@ -55,7 +54,7 @@ export const SideNavbar = () => {
               >
                 <img alt="" src="/assets/images/ic-spendtracker.svg" />
               </i>
-            </Link>
+            </NavLink>
           </div>
 
           <div className="mdc-list-item mdc-drawer-item">

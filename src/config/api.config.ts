@@ -5,7 +5,7 @@ import { setup } from "axios-cache-adapter";
 import { authService, localStoreService } from "../services";
 import { envConfig } from "./env.config";
 
-const api = setup({
+const api = axios.create({
   baseURL: envConfig.apiBaseUrl,
   cache: { maxAge: 15 * 60 * 1000 },
 });
