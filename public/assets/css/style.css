@@ -24469,6 +24469,16 @@ input[type="radio"] label:checked {
 .progressdiv .g2-html-annotation:nth-child(2){
   margin-top: 5px;
 }
+
+.spendtracker-cat .g2-html-annotation:nth-child(3){
+  display: none!important;
+}
+.spendtracker-cat .g2-html-annotation:nth-child(2){
+  margin: 20% auto;
+}
+.spendtracker-cat .g2-html-annotation:nth-child(2) img{
+  width: 60%;
+}
 .w-14p{
   padding-right: 15px;
   padding-left: 15px;

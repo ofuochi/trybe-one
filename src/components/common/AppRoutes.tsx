@@ -9,6 +9,7 @@ import { Signup } from "../Auth/Signup";
 import { Dashboard } from "../Dashboard";
 import { Home } from "../Home";
 import { Investments } from "../Investments";
+import { Spendtracker } from "../Spendtracker";
 import { TargetSavings } from "../TargetSaving";
 import { Transactions } from "../Transactions";
 import { AuthRoute } from "./AuthRoute";
@@ -37,6 +38,12 @@ export const AppRoutes = () => {
       <AuthRoute
         path={routePath.investments}
         component={Investments}
+        isPrivate
+      />
+
+      <AuthRoute
+        path={routePath.spendtracker}
+        component={Spendtracker}
         isPrivate
       />
 

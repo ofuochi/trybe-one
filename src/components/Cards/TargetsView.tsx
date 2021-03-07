@@ -10,12 +10,15 @@ const TargetsView = observer(() => {
   return (
     <>
       {targetStore.getAllTargets.length > 0 ? (
-        <div className="mt-4 row">
-          <h5 className="mdc-top-app-bar__title font-weight-light ml-4 mb-1 p-0">
+        <div className="mt-5 row">
+<div className="col-lg-12 mb-1">
+<h5 className="mdc-top-app-bar__title font-weight-light ml-4 mb-1 p-0">
             Target Saving
           </h5>
+</div>
 
-          <ul className="collection bd-0  m-0 pl-3">
+        <div className="col-lg-12">
+           <ul className="collection bd-0  m-0 pl-3">
             {targetStore.getAllTargets.map((t) => (
               <li
                 className="d-flex row m-0 mb-4 justify-content-between"
@@ -42,6 +45,8 @@ const TargetsView = observer(() => {
               </li>
             ))}
           </ul>
+        </div>
+         
         </div>
       ) : null}
     </>

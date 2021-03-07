@@ -25,6 +25,7 @@ export const routePath = {
   },
 
   investments: "/investments",
+  spendtracker: "/spendtracker",
   targetSavings: {
     index: "/target-savings",
     tokenizeCard: "/target-savings/tokenize-card",

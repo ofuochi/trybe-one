@@ -35,6 +35,9 @@ const sliderConfig = {
   speed: 500,
   slidesToShow: 2,
   slidesToScroll: 1,
+  className: "center",
+  centerMode: true,
+  centerPadding: "10px",
 
   responsive: [
     {
@@ -156,7 +159,7 @@ export const Dashboard = () => {
                   <i>
                     <img
                       alt="img-alt"
-                      src="assets/images/ic-dash-earn.json].svg"
+                      src="assets/images/ic-dash-earn.svg"
                     />{" "}
                   </i>
                   <h4 className="line-h70">Earn</h4>
@@ -172,7 +175,7 @@ export const Dashboard = () => {
                   <i>
                     <img
                       alt="img-alt"
-                      src="assets/images/ic-dash-learn.json].svg"
+                      src="assets/images/ic-dash-learn.svg"
                     />{" "}
                   </i>
                   <h4 className="line-h70">Learn</h4>
@@ -188,7 +191,7 @@ export const Dashboard = () => {
                   <i>
                     <img
                       alt="img-alt"
-                      src="assets/images/ic-dash-fun.json].svg"
+                      src="assets/images/ic-dash-fun.svg"
                     />{" "}
                   </i>
                   <h4 className="line-h70">Fun</h4>

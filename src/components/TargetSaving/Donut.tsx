@@ -43,9 +43,6 @@ const Donut = observer(() => {
     <>
       {targetStore.getAllTargets.length > 0 ? (
         <>
-          <div className="col-lg-12">
-            <h4>Total Budget</h4>
-          </div>
           <div className="col-lg-6">
             <div className="d-flex row m-0 justify-content-between pie-size">
               <Pie {...pieConfig} />

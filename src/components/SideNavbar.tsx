@@ -47,7 +47,7 @@ export const SideNavbar = () => {
             </NavLink>
           </div>
           <div className="mdc-list-item mdc-drawer-item">
-            <Link className="mdc-drawer-link" to="spend-tracker.html">
+            <Link className="mdc-drawer-link" to={routePath.spendtracker}>
               Spend Tracker
               <i
                 className="mdc-list-item__start-detail mdc-drawer-item-icon ml-auto"
@@ -73,7 +73,7 @@ export const SideNavbar = () => {
             </NavLink>
           </div>
           <div className="mdc-list-item mdc-drawer-item">
-            <Link className="mdc-drawer-link" to="accounts.html">
+            <Link className="mdc-drawer-link" to="/">
               Accounts
               <i
                 className="mdc-list-item__start-detail mdc-drawer-item-icon ml-auto"

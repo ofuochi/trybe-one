@@ -15,6 +15,9 @@ export const TargetSavings = () => {
       {location.pathname === routePath.targetSavings.index ? (
         <div className="page-content">
           <div className="row">
+          <div className="col-lg-12">
+            <h4>Total Budget</h4>
+          </div>
             <Donut />
             <div className="col-lg-6">
               <div className="alert alert-danger p-4">
