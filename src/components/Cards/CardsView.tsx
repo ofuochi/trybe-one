@@ -1,16 +1,15 @@
-import { observer } from "mobx-react-lite";
-import React from "react";
 import { Field, Formik } from "formik";
-import Slider from "react-slick";
+import { observer } from "mobx-react-lite";
 import { useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
+import Slider from "react-slick";
 import * as Yup from "yup";
 
 import { useStore } from "../../hooks/use-store.hooks";
-import { ErrorMsg } from "../Common/ErrorMsg";
-import { localStoreService } from "../../services";
-import { values } from "mobx";
 import { CardModel } from "../../models/CardStore";
+import { localStoreService } from "../../services";
+import { maskedPan } from "../../util/methods-util";
+import { ErrorMsg } from "../Common/ErrorMsg";
 
 const reqCardValidationSchema = Yup.object().shape({
   city: Yup.string().required("required"),
@@ -32,10 +31,11 @@ const settings = {
 };
 
 const CardsView = observer(() => {
-  const [showAddCards, setShowAddCards] = useState(false);
-  const [showBlockCards, setShowBlockCards] = useState(false);
-  const [showTrackCards, setShowTrackCards] = useState(false);
-  const [ selectedCard, setSelectedCard ] = useState<CardModel | undefined >()
+  const [showRequestCard, setShowRequestCard] = useState(false);
+  const [showBlockCard, setShowBlockCard] = useState(false);
+  const [showTrackCard, setShowTrackCard] = useState(false);
+  const [showUnblockCard, setShowUnblockCard] = useState(false);
+  const [selectedCard, setSelectedCard] = useState<CardModel | undefined>();
   const { cardStore } = useStore();
   const currentUser = localStoreService.getCurrentUser();
   const initialReqCardValues: API.VirtualCardRequestDto = {
@@ -60,21 +60,32 @@ const CardsView = observer(() => {
       .requestCard(values)
       .then((isSuccess) => {
         setSubmitting(false);
-        if (isSuccess) setShowAddCards(false);
+        if (isSuccess) setShowRequestCard(false);
       })
       .catch(() => setSubmitting(false));
   };
 
-  const handleCardBlock = (e: any) =>{
+  const handleCardBlock = () => {
     cardStore
-    .blockCard({
-      customerUniqueIdentifier: currentUser?.nuban,
-      expiryDate: selectedCard?.expiryDate,
-      pan: selectedCard?.pan,
-      wallet_ShortCode: "ONB" 
-    })
-    .then(() => setShowBlockCards(false))
-    .catch(() => setShowBlockCards(false))
+      .blockCard({
+        customerUniqueIdentifier: currentUser?.nuban,
+        expiryDate: selectedCard?.expiryDate,
+        pan: selectedCard?.pan,
+        wallet_ShortCode: "ONB",
+      })
+      .then(() => setShowBlockCard(false))
+      .catch(() => setShowBlockCard(false));
+  };
+  const handleCardUnblock = () => {
+    cardStore
+      .unblockCard({
+        customerUniqueIdentifier: currentUser?.nuban,
+        expiryDate: selectedCard?.expiryDate,
+        pan: selectedCard?.pan,
+        wallet_ShortCode: "ONB",
+      })
+      .then(() => setShowUnblockCard(false))
+      .catch(() => setShowUnblockCard(false));
   };
   return (
     <>
@@ -108,37 +119,64 @@ const CardsView = observer(() => {
                   <div key={i} style={{ display: "block" }}>
                     <img alt="" src="/assets/images/cardbg.png" />
                     <div className="row masked-cardbtm">
-                      <Button
-                        onClick={() =>{ 
-                          setSelectedCard(card)
-                          setShowBlockCards(true)
-                        }}
-                        className="btn btn-sm btn-light mr-2 bd-rad-5"
-                      >
-                        <i>
-                          <img
-                            className="w-16 float-left mr-2 mt-1"
-                            alt="showimg"
-                            src="/assets/images/ic-block-card.svg"
-                          />
-                        </i>
-                        <span className="text-smaller">Block Card</span>
-                      </Button>
-                      <Button
-                        onClick={() => setShowTrackCards(true)}
-                        className="btn btn-sm btn-light"
-                      >
-                        <i>
-                          <img
-                            className="w-16 float-left mr-2 mt-1"
-                            alt="showimg"
-                            src="/assets/images/ic-track-card.svg"
-                          />
-                        </i>
-                        <span className="text-smaller">Track Card</span>
-                      </Button>
+                      {card.blockStatus === "BLOCKED" ? (
+                        <Button
+                          onClick={() => {
+                            setSelectedCard(card);
+                            setShowUnblockCard(true);
+                          }}
+                          className="btn btn-sm btn-light mr-2 bd-rad-5"
+                        >
+                          <i>
+                            <img
+                              className="w-16 float-left mr-2 mt-1"
+                              alt="showimg"
+                              src="/assets/images/ic-block-card.svg"
+                            />
+                          </i>
+                          <span className="text-smaller">Unblock Card</span>
+                        </Button>
+                      ) : (
+                        <>
+                          <Button
+                            onClick={() => {
+                              setSelectedCard(card);
+                              setShowBlockCard(true);
+                            }}
+                            className="btn btn-sm btn-light mr-2 bd-rad-5"
+                          >
+                            <i>
+                              <img
+                                className="w-16 float-left mr-2 mt-1"
+                                alt="showimg"
+                                src="/assets/images/ic-block-card.svg"
+                              />
+                            </i>
+                            <span className="text-smaller">Block Card</span>
+                          </Button>
+
+                          <Button
+                            onClick={() => setShowTrackCard(true)}
+                            className="btn btn-sm btn-light"
+                          >
+                            <i>
+                              <img
+                                className="w-16 float-left mr-2 mt-1"
+                                alt="showimg"
+                                src="/assets/images/ic-track-card.svg"
+                              />
+                            </i>
+                            <span className="text-smaller">Track Card</span>
+                          </Button>
+                        </>
+                      )}
                     </div>
-                    <div className="masked-span">{card.pan}</div>
+                    <div className="masked-span">
+                      {maskedPan(card.pan)}
+                      {card.blockStatus === "BLOCKED" ? (
+                        <b style={{ color: "red" }}> BLOCKED</b>
+                      ) : null}
+                    </div>
                   </div>
                 ))}
                 <div style={{ display: "block" }}>
@@ -146,9 +184,8 @@ const CardsView = observer(() => {
                     <img
                       className="m-auto hoverable"
                       alt=""
-                      onClick={() =>{ 
-                        setShowAddCards(true)
-
+                      onClick={() => {
+                        setShowRequestCard(true);
                       }}
                       src="/assets/images/ic-card-request.svg"
                     />
@@ -165,7 +202,7 @@ const CardsView = observer(() => {
                     <img
                       className="m-auto hoverable"
                       alt=""
-                      onClick={() => setShowAddCards(true)}
+                      onClick={() => setShowRequestCard(true)}
                       src="/assets/images/ic-card-request.svg"
                     />
                   </div>
@@ -182,9 +219,9 @@ const CardsView = observer(() => {
                   <div>
                     <Modal
                       size="lg"
-                      show={showAddCards}
+                      show={showRequestCard}
                       aria-labelledby="contained-modal-title-vcenter"
-                      onHide={() => setShowAddCards(false)}
+                      onHide={() => setShowRequestCard(false)}
                       centered
                       backdrop={isSubmitting ? "static" : true}
                       keyboard={isSubmitting}
@@ -263,36 +300,69 @@ const CardsView = observer(() => {
               )}
             </Formik>
 
+            <Modal
+              centered
+              size="lg"
+              show={showUnblockCard}
+              aria-labelledby="contained-modal-title-vcenter"
+              backdrop="static"
+              keyboard={false}
+              onHide={() => setShowUnblockCard(false)}
+            >
+              <Modal.Header className="bd-0"></Modal.Header>
+              <Modal.Body className="py-1 px-5 text-center">
+                <h4 className="mb-4">
+                  Are you sure you want to unblock this card
+                </h4>
+
+                <div className="row justify-content-center mt-5 mb-5">
+                  <Button
+                    className="px-4 btn-lg mr-4"
+                    onClick={handleCardUnblock}
+                  >
+                    Yes
+                  </Button>
+                  <Button
+                    className="px-4 btn-lg"
+                    variant="secondary"
+                    onClick={() => setShowUnblockCard(false)}
+                  >
+                    Cancel
+                  </Button>
+                </div>
+              </Modal.Body>
+            </Modal>
             <div>
               <Modal
                 centered
                 size="lg"
-                show={showBlockCards}
+                show={showBlockCard}
                 aria-labelledby="contained-modal-title-vcenter"
-                onHide={() => setShowBlockCards(false)}
+                onHide={() => setShowBlockCard(false)}
               >
                 <Modal.Header className="bd-0" closeButton></Modal.Header>
                 <Modal.Body className="py-1 px-5 text-center">
                   <h4 className="mb-4">
                     Are you sure you want to block this card
                   </h4>
-
                   <div className="row justify-content-center mt-5 mb-5 flex-column">
                     <img alt="showimg" src="/assets/images/ic-successful.svg" />
                     <p className="mt-3">Card blocked successfully</p>
                   </div>
 
                   <div className="row justify-content-center mt-5 mb-5">
-                    <Button className="px-4 btn-lg mr-4" variant="primary">
-                      Just Kidding
-                    </Button>
-
-                    <Button 
-                      className="px-4 btn-lg" 
-                      variant="secondary" 
+                    <Button
+                      className="px-4 btn-lg mr-4"
                       onClick={handleCardBlock}
                     >
-                      Yes o
+                      Yes
+                    </Button>
+                    <Button
+                      className="px-4 btn-lg"
+                      variant="secondary"
+                      onClick={() => setShowBlockCard(false)}
+                    >
+                      Cancel
                     </Button>
                   </div>
                 </Modal.Body>
@@ -303,11 +373,14 @@ const CardsView = observer(() => {
               <Modal
                 centered
                 size="lg"
-                show={showTrackCards}
+                show={showTrackCard}
                 aria-labelledby="contained-modal-title-vcenter"
-                onHide={() => setShowTrackCards(false)}
+                onHide={() => setShowTrackCard(false)}
               >
-                <Modal.Header className="bd-0 bg-primary text-white text-title text-bold lead" closeButton>
+                <Modal.Header
+                  className="bd-0 bg-primary text-white text-title text-bold lead"
+                  closeButton
+                >
                   Card Tracking
                 </Modal.Header>
                 <Modal.Body className="py-0">
@@ -330,15 +403,17 @@ const CardsView = observer(() => {
                       <ul className="pt-5 mt-3" id="trackingbar">
                         <li className="active text-center">
                           <span className="d-block lead mt-3">
-                          Card Order Placed
+                            Card Order Placed
                           </span>
-                          <span className="lead-info">Card is currently at Ikeja Terminal</span>
+                          <span className="lead-info">
+                            Card is currently at Ikeja Terminal
+                          </span>
                         </li>
                         <li className="active text-center">
-                          <span className="d-block lead mt-3">
-                          Enroute
+                          <span className="d-block lead mt-3">Enroute</span>
+                          <span className="lead-info">
+                            Card has been delivered to No 14 timoty street lekki
                           </span>
-                          <span className="lead-info">Card has been delivered to No 14 timoty street lekki</span>
                         </li>
                         <li className="text-center">
                           <span className="d-block lead mt-3">Completed</span>
