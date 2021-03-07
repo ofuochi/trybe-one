@@ -1,11 +1,13 @@
 import axios from "axios";
 import { toast, ToastOptions } from "react-toastify";
+import { setup } from "axios-cache-adapter";
 
 import { authService, localStoreService } from "../services";
 import { envConfig } from "./env.config";
 
-const api = axios.create({
+const api = setup({
   baseURL: envConfig.apiBaseUrl,
+  cache: { maxAge: 15 * 60 * 1000 },
 });
 api.interceptors.request.use(
   (config) => {

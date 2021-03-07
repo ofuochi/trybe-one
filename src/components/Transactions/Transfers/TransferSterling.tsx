@@ -38,8 +38,7 @@ export const TransferSterling = () => {
     const currentUser = localStoreService.getCurrentUser();
     api
       .get<API.UserResponseModel>(
-        `/User/GetUserByEmail?email=${currentUser?.email}`,
-        { cache: { clearOnStale: true } }
+        `/User/GetUserByEmail?email=${currentUser?.email}`
       )
       .then(({ data }) => setUserAccts(data.accountDetails));
   }, []);

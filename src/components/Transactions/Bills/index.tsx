@@ -1,10 +1,10 @@
 import { Field, Form, Formik } from "formik";
 import React, { useEffect, useState } from "react";
-import Button from "react-bootstrap/Button";
+import { Button, Spinner } from "react-bootstrap";
 import NumberFormat from "react-number-format";
 import { toast } from "react-toastify";
 import * as Yup from "yup";
-
+import numeral from "numeral";
 import api from "../../../config/api.config";
 import { localStoreService } from "../../../services";
 import { ErrorMsg } from "../../Common/ErrorMsg";
@@ -26,29 +26,28 @@ export const Bills = () => {
     const currentUser = localStoreService.getCurrentUser();
     api
       .get<API.UserResponseModel>(
-        `/User/GetUserByEmail?email=${currentUser?.email}`,
-        { cache: { clearOnStale: true } }
+        `/User/GetUserByEmail?email=${currentUser?.email}`
       )
       .then(({ data }) => setUserDetails(data));
     api
       .get<API.InterswitchGetBillerCategoryResponseDto>(
-        "/User/GetBillerCategories",
-        { cache: { clearOnStale: true } }
+        "/User/GetBillerCategories"
       )
       .then(({ data }) =>
         setBillCategories(data.responseArray?.[0]?.categories || [])
       );
   }, []);
 
-  const initialValues = {
-    categoryId: "",
+  let initialValues = {
+    amount: selectedBillerItem?.amount || "",
+    account: "",
     billerId: "",
     billerItemId: "",
-    account: "",
-    amount: "",
+    categoryId: "",
     consumerIdField: "",
     pin: "",
   };
+  const amt = +(selectedBillerItem?.amount || 0);
   const validationSchema = Yup.object().shape({
     categoryId: Yup.string().required("required"),
     billerId: Yup.string().required("required"),
@@ -57,8 +56,14 @@ export const Bills = () => {
     account: Yup.string().required("required"),
     pin: Yup.string().required("required"),
     amount: selectedBillerItem?.isAmountFixed
-      ? Yup.number().optional()
-      : Yup.number().required("required"),
+      ? Yup.number().notRequired()
+      : Yup.number()
+          .min(
+            amt <= 0 ? 1 : amt,
+            `min amount is ${numeral(amt <= 0 ? 1 : amt).format("0,0.00")}`
+          )
+          .default(amt)
+          .required("required"),
   });
   return (
     <div className="mt-5">
@@ -128,8 +133,7 @@ export const Bills = () => {
                     value &&
                       api
                         .get<API.GetBillerByCategoryResponse>(
-                          `/User/GetBillerByCategory?categoryId=${value}`,
-                          { cache: { clearOnStale: true } }
+                          `/User/GetBillerByCategory?categoryId=${value}`
                         )
                         .then(({ data }) => {
                           setBillers(
@@ -185,8 +189,7 @@ export const Bills = () => {
                       value &&
                         api
                           .get<API.GetPaymentItemResponseDto>(
-                            `/User/GetPaymentItem?billerId=${value}`,
-                            { cache: { clearOnStale: true } }
+                            `/User/GetPaymentItem?billerId=${value}`
                           )
                           .then(({ data }) => {
                             setBillerItems(
@@ -222,16 +225,25 @@ export const Bills = () => {
                     placeholder="Select Biller Item"
                     onChange={(e: any) => {
                       handleChange(e);
+
                       const value = e.target.value;
-                      initialValues.account = "";
-                      initialValues.billerItemId = "";
+                      resetForm({
+                        values: {
+                          categoryId: values.categoryId,
+                          account: values.account,
+                          billerId: values.billerId,
+                          billerItemId: value,
+                          amount: "",
+                          consumerIdField: "",
+                          pin: values.pin,
+                        },
+                      });
                       setSelectedBillerItem(undefined);
+
                       if (value) {
                         setAccts(userDetails?.accountDetails || []);
                         const biller = billerItems.find((x) => x.id === value);
-                        setSelectedBillerItem(biller);
-                      } else {
-                        setAccts([]);
+                        setTimeout(() => setSelectedBillerItem(biller));
                       }
                     }}
                     className="form-control d-block w-100"
@@ -291,56 +303,69 @@ export const Bills = () => {
                     <ErrorMsg inputName="consumerIdField" />
                   </div>
                 </div>
+                {accts.length ? (
+                  <>
+                    <div className="form-group mb-3">
+                      <div className="input-group">
+                        <Field
+                          as="select"
+                          name="account"
+                          placeholder="Select Account"
+                          className="form-control d-block w-100"
+                        >
+                          <option value="" disabled>
+                            -Select Account-
+                          </option>
+
+                          {accts.map((u) => (
+                            <option
+                              key={u.accountNumber}
+                              value={u.accountNumber}
+                            >
+                              {u.accountNumber}
+                            </option>
+                          ))}
+                        </Field>
+                        <label htmlFor="account">Select Account</label>
+                        <ErrorMsg inputName="account" />
+                      </div>
+                    </div>
+                    <div className="form-group mb-3">
+                      <div className="input-group">
+                        <Field
+                          name="pin"
+                          placeholder="PIN"
+                          type="password"
+                          className="form-control d-block w-100"
+                        />
+                        <label htmlFor="pin">PIN</label>
+                        <ErrorMsg inputName="pin" />
+                      </div>
+                    </div>
+                    <div className="form-group row m-0 justify-content-end mt-4">
+                      {isSubmitting ? (
+                        <Button size="lg" variant="danger" disabled>
+                          <Spinner animation="grow" role="status">
+                            <span className="sr-only">Loading...</span>
+                          </Spinner>{" "}
+                          Paying...
+                        </Button>
+                      ) : (
+                        <Button
+                          size="lg"
+                          variant="danger"
+                          className="px-5"
+                          type="submit"
+                          disabled={isSubmitting}
+                        >
+                          Pay
+                        </Button>
+                      )}
+                    </div>
+                  </>
+                ) : null}
               </>
             )}
-            {accts.length ? (
-              <>
-                <div className="form-group mb-3">
-                  <div className="input-group">
-                    <Field
-                      as="select"
-                      name="account"
-                      placeholder="Select Account"
-                      className="form-control d-block w-100"
-                    >
-                      <option value="" disabled>
-                        -Select Account-
-                      </option>
-
-                      {accts.map((u) => (
-                        <option key={u.accountNumber} value={u.accountNumber}>
-                          {u.accountNumber}
-                        </option>
-                      ))}
-                    </Field>
-                    <label htmlFor="account">Select Account</label>
-                    <ErrorMsg inputName="account" />
-                  </div>
-                </div>
-                <div className="form-group mb-3">
-                  <div className="input-group">
-                    <Field
-                      name="pin"
-                      placeholder="PIN"
-                      className="form-control d-block w-100"
-                    />
-                    <label htmlFor="pin">PIN</label>
-                    <ErrorMsg inputName="pin" />
-                  </div>
-                </div>
-                <div className="form-group row m-0 justify-content-end mt-4">
-                  <Button
-                    size="lg"
-                    variant="danger"
-                    className="px-5"
-                    type="submit"
-                    disabled={isSubmitting}
-                  >
-                    Pay
-                  </Button>
-                </div>
-              </>
-            ) : null}
           </Form>
         )}
       </Formik>
