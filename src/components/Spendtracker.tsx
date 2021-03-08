@@ -52,6 +52,7 @@ interface CategoriesObj {
 export const SpendTracker = () => {
   const [categoriesObj, setCategoriesObj] = useState<CategoriesObj>({});
   useEffect(() => {
+    const obj: CategoriesObj = {};
     api
       .get<API.UserTransactionCategoryDtoList>(
         "/User/GetAllActiveTransactionCategories"
@@ -60,7 +61,6 @@ export const SpendTracker = () => {
         // Get each category and loop through each to get it's corresponding list of transactions
         categories?.forEach((c) => {
           const user = localStoreService.getCurrentUser();
-          const obj: CategoriesObj = {};
           getTrans({
             spendIngCategoryID: c.id,
             userId: user?.userId,
