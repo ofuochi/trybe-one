@@ -3,21 +3,21 @@ import { Redirect, Switch } from "react-router-dom";
 import { routePath } from "../../constants/route-paths";
 import { useStore } from "../../hooks/use-store.hooks";
 import { localStoreService } from "../../services";
+import { AccountsLayout } from "../Accounts";
+import { ForgotPassword } from "../Auth/Forgotpassword";
 import { Login } from "../Auth/Login";
 import { Otp } from "../Auth/Otp";
+import { ResetPassword } from "../Auth/Resetpassword";
 import { Signup } from "../Auth/Signup";
 import { Dashboard } from "../Dashboard";
 import { Home } from "../Home";
 import { Investments } from "../Investments";
-import { SpendTracker } from "../Spendtracker";
+import { SpendTracker } from "../SpendTracker";
 import { TargetSavings } from "../TargetSaving";
 import { Transactions } from "../Transactions";
-import { AccountsLayout } from "../Accounts/index";
 import { AuthRoute } from "./AuthRoute";
-import { ForgotPassword } from "../Auth/Forgotpassword";
-import { ResetPassword } from "../Auth/Resetpassword";
-import TokenizeCard from "./TokenizeCard";
 import { Loader } from "./Loader";
+import TokenizeCard from "./TokenizeCard";
 
 export const AppRoutes = () => {
   const { currentUserStore, targetStore, cardStore } = useStore();
