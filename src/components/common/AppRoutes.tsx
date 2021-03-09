@@ -9,9 +9,10 @@ import { Signup } from "../Auth/Signup";
 import { Dashboard } from "../Dashboard";
 import { Home } from "../Home";
 import { Investments } from "../Investments";
-import { SpendTracker } from "../SpendTracker";
+import { SpendTracker } from "../Spendtracker";
 import { TargetSavings } from "../TargetSaving";
 import { Transactions } from "../Transactions";
+import { AccountsLayout } from "../Accounts/index";
 import { AuthRoute } from "./AuthRoute";
 import { ForgotPassword } from "../Auth/Forgotpassword";
 import { ResetPassword } from "../Auth/Resetpassword";
@@ -57,6 +58,11 @@ export const AppRoutes = () => {
         <AuthRoute
           path={routePath.card.tokenize}
           component={TokenizeCard}
+          isPrivate
+        />
+        <AuthRoute
+          path={routePath.accounts}
+          component={AccountsLayout}
           isPrivate
         />
 

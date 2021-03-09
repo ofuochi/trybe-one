@@ -17,6 +17,7 @@ export const Loader = observer(() => {
       keyboard={false}
       backdrop="static"
       dialogClassName="modal-loader"
+      style={{ background: "blue" }}
     >
       <Modal.Body className="py-1 px-5 text-center justify-content-center mt-5 mb-5 flex-column">
         <Spinner animation="grow" />
