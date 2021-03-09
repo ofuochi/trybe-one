@@ -72,7 +72,10 @@ export const SideNavbar = () => {
             </NavLink>
           </div>
           <div className="mdc-list-item mdc-drawer-item">
-            <Link className="mdc-drawer-link" to="/">
+            <NavLink 
+              className="mdc-drawer-link" 
+              to={routePath.accounts}
+            >
               Accounts
               <i
                 className="mdc-list-item__start-detail mdc-drawer-item-icon ml-auto"
@@ -80,7 +83,7 @@ export const SideNavbar = () => {
               >
                 <img alt="" src="/assets/images/ic-account.svg" />
               </i>
-            </Link>
+            </NavLink>
           </div>
           <div className="mdc-list-item mdc-drawer-item">
             <span
