@@ -1,6 +1,7 @@
 import { Field, Formik } from "formik";
 import { observer } from "mobx-react-lite";
 import { useState } from "react";
+import { toast } from "react-toastify";
 import { Button, Form, Modal } from "react-bootstrap";
 import Slider from "react-slick";
 import * as Yup from "yup";
@@ -40,6 +41,7 @@ const CardsView = observer(() => {
   const [selectedCard, setSelectedCard] = useState<CardModel | undefined>();
   const [blockLoading, setBlockLoading] = useState(false);
   const [unblockLoading, setUnblockLoading] = useState(false);
+  const [trackLoading, setTrackLoading] = useState(false);
   const [complainValues, setComplianValues] = useState<API.UserComplaintsDTORequest | undefined>();
   const { cardStore } = useStore();
   const currentUser = localStoreService.getCurrentUser();
@@ -106,17 +108,21 @@ const CardsView = observer(() => {
   const handleComplaints = async (
     input: typeof complainValues
   ): Promise<API.UserComplaintsListDTO | undefined> => {
+    setTrackLoading(true);
     try {
       const { data } = await api.post<API.UserComplaintsListDTO>(
         "User/AddUserComplaints",
         input
       );
+      toast.success("Complaint Sent Successfully", { position: "top-center" });
       setComplianValues({
         ...complainValues,
         userID: currentUser?.userId,
         topic: "",
         details: ""
       })
+      setTrackLoading(false);
+      setShowComplains(false);
       return data;
     } catch (e) {}
   };
@@ -474,6 +480,7 @@ const CardsView = observer(() => {
                           <Button
                             className="px-4 btn-lg btn-block"
                             variant="primary"
+                            disabled={trackLoading}
                           >
                             Close
                           </Button>
@@ -569,7 +576,7 @@ const CardsView = observer(() => {
                             variant="primary"
                             onClick= {() => handleComplaints(values)}
                           >
-                            Send
+                            {trackLoading ? "Sending..." : "Send"}
                           </Button>
                         </div>
                       </div>
