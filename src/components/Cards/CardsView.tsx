@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Button, Form, Modal } from "react-bootstrap";
 import Slider from "react-slick";
 import * as Yup from "yup";
+import api from "../../config/api.config";
 
 import { useStore } from "../../hooks/use-store.hooks";
 import { CardModel } from "../../models/CardStore";
@@ -31,7 +32,6 @@ const settings = {
 };
 
 const CardsView = observer(() => {
-
   const [showRequestCard, setShowRequestCard] = useState(false);
   const [ShowComplains, setShowComplains] = useState(false);
   const [showBlockCard, setShowBlockCard] = useState(false);
@@ -40,7 +40,8 @@ const CardsView = observer(() => {
   const [selectedCard, setSelectedCard] = useState<CardModel | undefined>();
   const [blockLoading, setBlockLoading] = useState(false);
   const [unblockLoading, setUnblockLoading] = useState(false);
-  const { cardStore } = useStore();  
+  const [complainValues, setComplianValues] = useState<API.UserComplaintsDTORequest | undefined>();
+  const { cardStore } = useStore();
   const currentUser = localStoreService.getCurrentUser();
 
   const initialReqCardValues: API.VirtualCardRequestDto = {
@@ -80,12 +81,11 @@ const CardsView = observer(() => {
         wallet_ShortCode: "ONB",
       })
       .then(() => {
-        setShowBlockCard(false)
+        setShowBlockCard(false);
         setBlockLoading(false);
       })
       .catch(() => setShowBlockCard(false));
   };
-  
 
   const handleCardUnblock = () => {
     setUnblockLoading(true);
@@ -97,10 +97,28 @@ const CardsView = observer(() => {
         wallet_ShortCode: "ONB",
       })
       .then(() => {
-        setShowUnblockCard(false)
+        setShowUnblockCard(false);
         setUnblockLoading(false);
       })
       .catch(() => setShowUnblockCard(false));
+  };
+
+  const handleComplaints = async (
+    input: typeof complainValues
+  ): Promise<API.UserComplaintsListDTO | undefined> => {
+    try {
+      const { data } = await api.post<API.UserComplaintsListDTO>(
+        "User/AddUserComplaints",
+        input
+      );
+      setComplianValues({
+        ...complainValues,
+        userID: currentUser?.userId,
+        topic: "",
+        details: ""
+      })
+      return data;
+    } catch (e) {}
   };
   return (
     <>
@@ -468,32 +486,29 @@ const CardsView = observer(() => {
             </div>
           </div>
 
-
-
-
-
-            <div className="col-lg-12 mt-5">
-             <Button
-             
-             onClick={() => {
-              setShowComplains(true);
-            }}
-             className="btn btn-lg btn-block btn-light mr-2 bd-rad-5 btn-outline-dark">
-              <h5 className="mdc-top-app-bar__title font-weight-light ml-4 mb-0 p-0"> <i>
-                <img
-                  className="w-16 mr-3"
-                  alt="showimg"
-                  src="/assets/images/ic-customer.svg"
-                />
-              </i>Complains</h5>
-            </Button> 
-
-
+          <div className="col-lg-12 mt-5">
+            <Button
+              onClick={() => {
+                setShowComplains(true);
+              }}
+              className="btn btn-lg btn-block btn-light mr-2 bd-rad-5 btn-outline-dark"
+            >
+              <h5 className="mdc-top-app-bar__title font-weight-light ml-4 mb-0 p-0">
+                {" "}
+                <i>
+                  <img
+                    className="w-16 mr-3"
+                    alt="showimg"
+                    src="/assets/images/ic-customer.svg"
+                  />
+                </i>
+                Complains
+              </h5>
+            </Button>
 
             <div>
               <Modal
                 centered
-
                 show={ShowComplains}
                 aria-labelledby="contained-modal-title-vcenter"
                 onHide={() => setShowComplains(false)}
@@ -505,9 +520,8 @@ const CardsView = observer(() => {
                   Leave us a message
                 </Modal.Header>
                 <Modal.Body className="py-0">
-
                   <Formik
-                    initialValues={{ billers: "electricity" }}
+                    initialValues={{ topic: "", details: "" }}
                     onSubmit={(values, actions) => {
                       setTimeout(() => {
                         alert(JSON.stringify(values, null, 2));
@@ -515,83 +529,59 @@ const CardsView = observer(() => {
                       }, 1000);
                     }}
                   >
+                    {({ values }) => (
                     <Form>
+                      <div className="row mt-5 mb-3 px-5">
+                        <div className="col-lg-12 p-0">
+                          <div className="form-group">
+                            <div className="input-group">
+                              <Field
+                                name="topic"
+                                placeholder="Topic"
+                                className="form-control d-block w-100"
+                                // value={}
+                              />
+                              <label>Your Topic</label>
+                              <ErrorMsg inputName="topic" />
+                            </div>
+                          </div>
 
-                    <div className="row mt-5 mb-3 px-5">
-                    <div className="col-lg-12 p-0">
-                    <div className="form-group">
-              <div className="input-group">
-                <Field
-                  name="toacct"
-                  placeholder="Name"
-                  className="form-control d-block w-100"
-                />
-                <label>Your Name</label>
-                <ErrorMsg inputName="toacct" />
-              </div>
-            </div>
-
-            <div className="form-group">
-              <div className="input-group">
-                <Field
-                  name="toacct"
-                  placeholder="Email Address"
-                  className="form-control d-block w-100"
-                />
-                <label>Email Address</label>
-                <ErrorMsg inputName="toacct" />
-              </div>
-            </div>
-
-            <div className="form-group">
-              <div className="input-group">
-                <Field
-                  name="toacct"
-                  placeholder="Email Address"
-                  className="form-control d-block w-100"
-                />
-                <label>Subject of Message</label>
-                <ErrorMsg inputName="toacct" />
-              </div>
-            </div>
-
-            <div className="form-group">
-              <div className="input-group">
-                <Field
-                  name="toacct"
-                  as="textarea"
-                  placeholder="Email Address"
-                  row
-                  className="form-control d-block w-100"
-                />
-                <label>How can we help</label>
-                <ErrorMsg inputName="toacct" />
-              </div>
-            </div>
-                    </div>
-                    </div>
+                          <div className="form-group">
+                            <div className="input-group">
+                              <Field
+                                name="details"
+                                as="textarea"
+                                placeholder="Details"
+                                row
+                                className="form-control d-block w-100"
+                              />
+                              <label>Details</label>
+                              <ErrorMsg inputName="details" />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
 
                       <div className="row justify-content-start my-4 mb-3 px-5">
                         <div className="col-lg-4 p-0">
                           <Button
                             className="px-4 btn-lg btn-block"
                             variant="primary"
+                            onClick= {() => handleComplaints(values)}
                           >
                             Send
                           </Button>
                         </div>
                       </div>
                     </Form>
+                    )}
                   </Formik>
                 </Modal.Body>
               </Modal>
             </div>
-            </div>
-            
+          </div>
         </div>
-    
-    
-    )}
+      )}
     </>
   );
 });

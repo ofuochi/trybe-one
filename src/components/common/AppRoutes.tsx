@@ -13,7 +13,7 @@ import { Dashboard } from "../Dashboard";
 import { Home } from "../Home";
 import { Learning } from "../Learning";
 import { Investments } from "../Investments";
-import { SpendTracker } from "../SpendTracker";
+import { SpendTracker } from "../Spendtracker";
 import { TargetSavings } from "../TargetSaving";
 import { Transactions } from "../Transactions";
 import { AuthRoute } from "./AuthRoute";
