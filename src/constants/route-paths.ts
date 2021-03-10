@@ -25,7 +25,7 @@ export const routePath = {
   },
 
   investments: "/investments",
-  spendTracker: "/spending-tracker",
+  spendTracker: "/spendingtracker",
   targetSavings: {
     index: "/target-savings",
     tokenizeCard: "/target-savings/tokenize-card",
@@ -43,4 +43,5 @@ export const routePath = {
   forgotPassword: "/forgot-password",
   resetPassword: "/reset-password",
   home: "/",
+  learning: "/learning",
 };

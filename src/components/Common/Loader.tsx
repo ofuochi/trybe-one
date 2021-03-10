@@ -10,17 +10,17 @@ export const Loader = observer(() => {
   return (
     <Modal
       centered
-      size="lg"
+      size="sm"
       show={show}
       aria-labelledby="contained-modal-title-vcenter"
       onHide={() => setShowLoader(false)}
       keyboard={false}
       backdrop="static"
-      dialogClassName="modal-loader"
-      style={{ background: "blue" }}
-    >
-      <Modal.Body className="py-1 px-5 text-center justify-content-center mt-5 mb-5 flex-column">
-        <Spinner animation="grow" />
+      dialogClassName="modal-loader"    >
+      <Modal.Body style={{ background: "rgba(255,255,255, .5)" }} className="py-1 px-5 text-center justify-content-center mt-5 mb-5 no-bg m-auto text-center flex-column">
+
+    <div className="nb-spinner m-auto"></div>
+
       </Modal.Body>
     </Modal>
   );

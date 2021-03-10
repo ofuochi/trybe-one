@@ -1,6 +1,9 @@
 import { RingProgress } from "@ant-design/charts";
 import numeral from "numeral";
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { routePath } from "../constants/route-paths";
+import { NavLink, useHistory } from "react-router-dom";
 import Slider from "react-slick";
 
 import api from "../config/api.config";
@@ -166,8 +169,9 @@ export const Dashboard = () => {
           </div>
 
           <div className="col-lg-4">
-            <div className="card shadow-sm">
-              <div className="card-body text-center">
+          <NavLink className="mdc-drawer-link" to={routePath.learning}>
+          <div className="card shadow-sm">
+          <div className="card-body text-center">
                 <div className="row">
                   <i>
                     <img alt="img-alt" src="assets/images/ic-dash-learn.svg" />{" "}
@@ -175,7 +179,9 @@ export const Dashboard = () => {
                   <h4 className="line-h70">Learn</h4>
                 </div>
               </div>
-            </div>
+              </div>
+            </NavLink>
+           
           </div>
 
           <div className="col-lg-4">
@@ -197,9 +203,10 @@ export const Dashboard = () => {
             <div className="card shadow-sm mb-4 bd-0 bg-lite">
               <div className="card-body">
                 <div className="row m-0">
-                  <div className="progressdiv col-lg-1 p-0">
+                  <div className="progressdiv col-lg-1 p-0"> 
                     <RingProgress {...progressConfig} />
                   </div>
+                  <button type="button" className="close abs-close-btn"><img alt="img-alt" src="assets/images/ic-close-btn.svg" /> <span className="sr-only">Close</span></button>
                   <div className="col-lg-11">
                     <h5 className="d-inline">Free Uber Code</h5>{" "}
                     <span className="small">N 3,000:00</span>
@@ -226,6 +233,7 @@ export const Dashboard = () => {
                   <div className="progressdiv col-lg-1 p-0">
                     <RingProgress {...progressConfig} />
                   </div>
+                  <button type="button" className="close abs-close-btn"><img alt="img-alt" src="assets/images/ic-close-btn.svg" /> <span className="sr-only">Close</span></button>
                   <div className="col-lg-11">
                     <h5 className="d-inline">Free Uber Code</h5>{" "}
                     <span className="small">N 3,000:00</span>

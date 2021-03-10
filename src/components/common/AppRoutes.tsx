@@ -11,6 +11,7 @@ import { ResetPassword } from "../Auth/Resetpassword";
 import { Signup } from "../Auth/Signup";
 import { Dashboard } from "../Dashboard";
 import { Home } from "../Home";
+import { Learning } from "../Learning";
 import { Investments } from "../Investments";
 import { SpendTracker } from "../SpendTracker";
 import { TargetSavings } from "../TargetSaving";
@@ -44,6 +45,7 @@ export const AppRoutes = () => {
           isPrivate
         />
 
+        <AuthRoute path={routePath.learning} component={Learning} isPrivate />
         <AuthRoute
           path={routePath.spendTracker}
           component={SpendTracker}
@@ -65,7 +67,7 @@ export const AppRoutes = () => {
           component={AccountsLayout}
           isPrivate
         />
-
+        <AuthRoute path={routePath.learning} component={Learning} />
         <AuthRoute path={routePath.login} component={Login} />
         <AuthRoute path={routePath.signup} component={Signup} />
         <AuthRoute path={routePath.forgotPassword} component={ForgotPassword} />

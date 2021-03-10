@@ -61,7 +61,7 @@ export const AccountsLayout = () => {
               </button>
               <p className="mt-5 mb-3 lead">
                 New to the Trybe?
-                <Link to={routePath.signup} className="text-primary">
+                <Link to={routePath.signup} className="text-primary ml-2">
                   Sign up here
                 </Link>
               </p>
