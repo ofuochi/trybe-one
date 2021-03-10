@@ -45,7 +45,7 @@ export const AppRoutes = () => {
           isPrivate
         />
 
-        <AuthRoute path={routePath.learning} component={Learning} isPrivate />
+        <AuthRoute path={routePath.learning} component={Learning} />
         <AuthRoute
           path={routePath.spendTracker}
           component={SpendTracker}
