@@ -1,14 +1,13 @@
-import React, { useState } from "react";
 import { Field, Form, Formik } from "formik";
-import { routePath } from "../../constants/route-paths";
-import * as Yup from "yup";
-import { Link } from "react-router-dom";
-import { Title } from "../Common/Title";
+import React, { useState } from "react";
 import { Button } from "react-bootstrap";
-import { ErrorMsg } from "../Common/ErrorMsg";
-import api from "../../config/api.config";
 import { toast } from "react-toastify";
+import * as Yup from "yup";
+
+import api from "../../config/api.config";
 import { localStoreService } from "../../services";
+import { ErrorMsg } from "../Common/ErrorMsg";
+import { Title } from "../Common/Title";
 
 export const AccountsLayout = () => {
   const [loading, setLoading] = useState(false);
@@ -125,60 +124,64 @@ export const AccountsLayout = () => {
           <div className="col-md-10 col-lg-10 col-sm-12 col-xs-12">
             <Formik
               validationSchema={validationSchema}
-              initialValues={{ oldPassword: "", password: "", confirmPassword: "" }}
-              onSubmit={(values, actions) => {
+              initialValues={{
+                oldPassword: "",
+                password: "",
+                confirmPassword: "",
+              }}
+              onSubmit={(values, { setSubmitting }) => {
                 setTimeout(() => {
                   alert(JSON.stringify(values, null, 2));
-                  actions.setSubmitting(false);
+                  setSubmitting(false);
                 }, 1000);
               }}
             >
-              {({ values }) => (
+              {({ isSubmitting }) => (
                 <Form className="text-center">
                   <div className="form-group">
                     <div className="input-group">
                       <Field
-                        id="oldPassword"
                         name="oldPassword"
                         className="form-control d-block w-100"
                         placeholder="Current Password"
                         autoFocus
                       />
-                      <label>Current Password</label>
+                      <label htmlFor="oldPassword">New Password</label>
+                      <ErrorMsg inputName="oldPassword" />
                     </div>
                   </div>
                   <div className="form-group">
                     <div className="input-group">
                       <Field
                         type="password"
-                        id="Password"
                         name="password"
                         className="form-control d-block w-100"
                         placeholder="New Password"
                       />
-                      <label>New Password</label>
+                      <label htmlFor="password">New Password</label>
+                      <ErrorMsg inputName="password" />
                     </div>
                   </div>
                   <div className="form-group">
                     <div className="input-group">
                       <Field
                         type="password"
-                        id="confirmPassword"
                         name="confirmPassword"
                         className="form-control d-block w-100"
                         placeholder="Confirm Password"
                       />
-                      <label>Confirm Password</label>
+                      <label htmlFor="confirmPassword">Confirm Password</label>
+                      <ErrorMsg inputName="confirmPassword" />
                     </div>
                   </div>
-                  <button
+                  <Button
                     className="btn btn-lg btn-primary btn-block"
                     type="submit"
-                    disabled={loading}
-                    onClick={() => handleUpdateValue(values)}
+                    disabled={isSubmitting}
+                    // onClick={() => handleUpdateValue(values)}
                   >
-                    {loading ? "Saving..." : "Save New Password"}
-                  </button>
+                    {isSubmitting ? "Saving..." : "Save New Password"}
+                  </Button>
                 </Form>
               )}
             </Formik>
