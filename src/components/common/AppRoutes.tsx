@@ -12,7 +12,7 @@ import { Signup } from "../Auth/Signup";
 import { Dashboard } from "../Dashboard";
 import { Home } from "../Home";
 import { Learning } from "../Learning";
-import { Investments } from "../Investments";
+import { Investments } from "../Investments/index";
 import { SpendTracker } from "../Spendtracker";
 import { TargetSavings } from "../TargetSaving";
 import { Transactions } from "../Transactions";
