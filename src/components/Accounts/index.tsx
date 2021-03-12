@@ -1,21 +1,28 @@
 import { Field, Form, Formik } from "formik";
-import React, { useState } from "react";
+import { useState } from "react";
 import { Button } from "react-bootstrap";
 import { toast } from "react-toastify";
 import * as Yup from "yup";
 
 import api from "../../config/api.config";
+import { useStore } from "../../hooks/use-store.hooks";
 import { localStoreService } from "../../services";
 import { ErrorMsg } from "../Common/ErrorMsg";
 import { Title } from "../Common/Title";
 
+interface ResetPwDetails {
+  oldPassword: string;
+  password: string;
+  confirmPassword: string;
+}
+
 export const AccountsLayout = () => {
-  const [loading, setLoading] = useState(false);
-  const [isEmailSent, setIsEmailSent] = useState(false);
-  const [updateValues, setUpdateValues] = useState<
-    API.RequestPasswordRequest | undefined
-  >();
-  const [otpValues, setOtpValues] = useState<API.OTPRequestDto | undefined>();
+  const {
+    loaderStore: { setShowLoader },
+  } = useStore();
+  const [resetPwDetails, setResetPwDetails] = useState<ResetPwDetails>();
+  const [isDetailsCollected, setIsDetailsCollected] = useState(false);
+
   const currentUser = localStoreService.getCurrentUser();
 
   const validationSchema = Yup.object().shape({
@@ -24,69 +31,49 @@ export const AccountsLayout = () => {
     confirmPassword: Yup.string()
       .oneOf([Yup.ref("password"), null], "Passwords don't match!")
       .required("Required"),
-    // otp: Yup.string().required("required"),
   });
 
-  const handleOtp = async (
-    input: typeof otpValues
-  ): Promise<API.OtpResponse | undefined> => {
-    try {
-      const { data } = await api.post<API.OtpResponse>(
-        "User/GenerateOTP",
-        input
-      );
-      setOtpValues({
-        ...otpValues,
-        clientID: currentUser?.userId,
-        mobile: currentUser?.phoneNumber,
-      });
-      if (data.responseCode === "1") {
-        setIsEmailSent(true);
-        toast.success("OTP has been set to your Email", {
-          position: "top-center",
-        });
-      }
-      setLoading(false);
-      toast.success(data.responseCode, { position: "top-center" });
-      return data;
-    } catch (e) {}
-  };
-  const handleUpdateValue = async (
-    input: typeof updateValues
-  ): Promise<API.UserResponseModel | undefined> => {
-    setLoading(true);
-    // handleOtp(otpValues);
-    try {
-      console.log("hi there! ");
-      const { data } = await api.post<API.UserResponseModel>(
-        "User/UpdatePassword",
-        input
-      );
-      setUpdateValues({
-        ...updateValues,
-        email: currentUser?.email,
-        password: "",
-      });
-      setLoading(false);
-      setIsEmailSent(true);
-      toast.success(data.responseCode, { position: "top-center" });
-      return data;
-    } catch (e) {}
-  };
   return (
     <>
       <Title title="Accounts" />
       <div className="container accountWrapper px-4 mt-5">
         <h5 className="mb-4">Change Password</h5>
-        {isEmailSent ? (
+        {isDetailsCollected ? (
           <div className="col-md-10 col-lg-10 col-sm-12 col-xs-12">
             <Formik
               initialValues={{ otp: "" }}
-              onSubmit={(values, actions) => {
-                setTimeout(() => {
-                  alert(JSON.stringify(values, null, 2));
-                  actions.setSubmitting(false);
-                }, 1000);
+              validationSchema={Yup.object().shape({
+                otp: Yup.string().required("required"),
+              })}
+              onSubmit={async (values, { setSubmitting }) => {
+                setShowLoader(true);
+                const input: API.RequestPasswordRequest = {
+                  email: currentUser?.email,
+                  otpDetails: {
+                    otp: values.otp,
+                    reference: currentUser?.phoneNumber,
+                  },
+                  oldPassword: resetPwDetails?.oldPassword,
+                  password: resetPwDetails?.password,
+                };
+                try {
+                  const { data } = await api.post<API.UserResponseModel>(
+                    "User/UpdatePassword",
+                    input
+                  );
+                  if (data.responseCode === "00") {
+                    toast.success(data.responseDescription, {
+                      position: "top-center",
+                    });
+                  } else {
+                    toast.error(data.responseDescription, {
+                      position: "top-center",
+                    });
+                  }
+                } catch (e) {}
+                setSubmitting(false);
+                setShowLoader(false);
+                setIsDetailsCollected(false);
               }}
             >
               {({ isSubmitting }) => (
@@ -129,11 +116,36 @@ export const AccountsLayout = () => {
                 password: "",
                 confirmPassword: "",
               }}
-              onSubmit={(values, { setSubmitting }) => {
-                setTimeout(() => {
-                  alert(JSON.stringify(values, null, 2));
-                  setSubmitting(false);
-                }, 1000);
+              onSubmit={(values, { setSubmitting, resetForm }) => {
+                setShowLoader(true);
+                setResetPwDetails({
+                  oldPassword: values.oldPassword,
+                  password: values.password,
+                  confirmPassword: values.confirmPassword,
+                });
+                var input: API.OTPRequestDto = {
+                  clientID: "1",
+                  email: currentUser?.email,
+                  mobile: currentUser?.phoneNumber,
+                };
+                api
+                  .post<API.OtpResponse>("User/GenerateOTP", input)
+                  .then(({ data }) => {
+                    if (data.responseCode === "1") {
+                      setIsDetailsCollected(true);
+                    } else {
+                      toast.error("Could not reset your password", {
+                        position: "top-center",
+                      });
+                    }
+                    setSubmitting(false);
+                    setShowLoader(false);
+                  })
+                  .catch(() => {
+                    setSubmitting(false);
+                    setShowLoader(false);
+                  });
+                resetForm();
               }}
             >
               {({ isSubmitting }) => (
@@ -142,11 +154,12 @@ export const AccountsLayout = () => {
                     <div className="input-group">
                       <Field
                         name="oldPassword"
+                        type="password"
                         className="form-control d-block w-100"
                         placeholder="Current Password"
                         autoFocus
                       />
-                      <label htmlFor="oldPassword">New Password</label>
+                      <label htmlFor="oldPassword">Current Password</label>
                       <ErrorMsg inputName="oldPassword" />
                     </div>
                   </div>
@@ -178,7 +191,6 @@ export const AccountsLayout = () => {
                     className="btn btn-lg btn-primary btn-block"
                     type="submit"
                     disabled={isSubmitting}
-                    // onClick={() => handleUpdateValue(values)}
                   >
                     {isSubmitting ? "Saving..." : "Save New Password"}
                   </Button>
