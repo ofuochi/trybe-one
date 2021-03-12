@@ -117,12 +117,6 @@ export const AccountsLayout = () => {
                   >
                     Reset Password
                   </Button>
-                  <p className="mt-5 mb-3 lead">
-                    New to the Trybe?{" "}
-                    <Link to={routePath.signup} className="text-primary">
-                      Sign up here
-                    </Link>
-                  </p>
                 </Form>
               )}
             </Formik>
@@ -185,12 +179,6 @@ export const AccountsLayout = () => {
                   >
                     {loading ? "Saving..." : "Save New Password"}
                   </button>
-                  <p className="mt-5 mb-3 lead">
-                    New to the Trybe?
-                    <Link to={routePath.signup} className="text-primary ml-2">
-                      Sign up here
-                    </Link>
-                  </p>
                 </Form>
               )}
             </Formik>

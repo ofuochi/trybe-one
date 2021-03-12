@@ -39,7 +39,6 @@ const sliderConfig = {
   slidesToShow: 2,
   slidesToScroll: 1,
   className: "center",
-  centerMode: true,
   centerPadding: "10px",
 
   responsive: [

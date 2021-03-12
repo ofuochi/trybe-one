@@ -1,20 +1,16 @@
-import React, { useEffect } from "react";
-import "aos/dist/aos.css";
 import AOS from "aos";
-import { NavLink, useHistory } from "react-router-dom";
-import Pagefooter from "./Common/Pagefooter";
-
-import Nav from "react-bootstrap/Nav";
-import Navbar from "react-bootstrap/Navbar";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import Card from "react-bootstrap/Card";
-
-import Container from "react-bootstrap/Container";
-
-import { routePath } from "../constants/route-paths";
-import { Title } from "./Common/Title";
+import "aos/dist/aos.css";
+import React, { useEffect } from "react";
 import { Button } from "react-bootstrap";
+import Card from "react-bootstrap/Card";
+import Col from "react-bootstrap/Col";
+import Container from "react-bootstrap/Container";
+import Row from "react-bootstrap/Row";
+import { useHistory } from "react-router-dom";
+import { routePath } from "../constants/route-paths";
+import { LandingHeader } from "./Common/LandingHeader";
+import Pagefooter from "./Common/Pagefooter";
+import { Title } from "./Common/Title";
 
 export const Home = () => {
   const history = useHistory();
@@ -26,42 +22,7 @@ export const Home = () => {
     <>
       <Title title="Home" />
 
-      <Navbar expand="lg" fixed="top" className="bg-white">
-        <div className="container">
-          <Navbar.Brand>
-            <NavLink to={routePath.home} className="brand-logo">
-              <img alt="logo" src="/assets/images/logo.png" />
-            </NavLink>
-          </Navbar.Brand>
-          <Navbar.Toggle aria-controls="basic-navbar-nav" />
-          <Navbar.Collapse id="basic-navbar-nav">
-            <Nav className="ml-auto">
-              <Nav.Link>
-                <span className="padd-btn">Ambassador</span>
-              </Nav.Link>
-              <Nav.Link>
-                <span className="padd-btn">FAQ</span>
-              </Nav.Link>
-              <Nav.Link>
-                <span
-                  className="padd-btn text-primary mr-4"
-                  onClick={() => history.push(routePath.login)}
-                >
-                  Login
-                </span>
-              </Nav.Link>
-              <Nav.Link>
-                <span
-                  className="btn btn-sm padd-btnr btn-primary"
-                  onClick={() => history.push(routePath.signup)}
-                >
-                  Join Trybe
-                </span>
-              </Nav.Link>
-            </Nav>
-          </Navbar.Collapse>
-        </div>
-      </Navbar>
+      <LandingHeader />
 
       <main role="main">
         <section className="mt-5">
