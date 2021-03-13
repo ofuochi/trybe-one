@@ -157,7 +157,6 @@ export const AccountsLayout = () => {
                         type="password"
                         className="form-control d-block w-100"
                         placeholder="Current Password"
-                        autoFocus
                       />
                       <label htmlFor="oldPassword">Current Password</label>
                       <ErrorMsg inputName="oldPassword" />
