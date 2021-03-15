@@ -90,6 +90,11 @@
     display: block;
     width: 95%;
 }
+.blog-slide .slick-slide img {
+    display: block;
+    width: 100%;
+}
+
 .slick-slide.slick-loading img
 {
     display: none;
